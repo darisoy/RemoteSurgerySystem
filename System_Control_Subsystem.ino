@@ -1,20 +1,20 @@
-//System Control Subsystem 
-//#include "SCSV.h"
-unsigned int temperatureRaw;
-unsigned int systolicPressRaw;
-unsigned int diastolicPressRaw;
-unsigned int pulseRateRaw;
-
-unsigned char* tempCorrected;
-unsigned char* systolicPressCorrected;
-unsigned char* diastolicPressCorrected;
-unsigned char* pulseRateCorrected;
-
-unsigned short batteryState;
-
-unsigned char bpOutOfRange;
-unsigned char tempOutOfRange;
-unsigned char pulseOutOfRange;
+//System Control Subsystem
+#include  "dataStructs.h"
+// unsigned int temperatureRaw;
+// unsigned int systolicPressRaw;
+// unsigned int diastolicPressRaw;
+// unsigned int pulseRateRaw;
+//
+// unsigned char* tempCorrected;
+// unsigned char* systolicPressCorrected;
+// unsigned char* diastolicPressCorrected;
+// unsigned char* pulseRateCorrected;
+//
+// unsigned short batteryState;
+//
+// unsigned char bpOutOfRange;
+// unsigned char tempOutOfRange;
+// unsigned char pulseOutOfRange;
 
 //variables for the measurement function
 int tempCount;
@@ -28,7 +28,7 @@ int* pSystolicFunction;
 
 //bool bpHigh;
 //bool tempHigh;
-//bool pulseLow; 
+//bool pulseLow;
 
 void setup() {
 
@@ -37,12 +37,12 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   initialize();
-  measure(
+  measure(void* measureDataPtr);
 }
 
 void initialize(){
   //initializing the global variables
-  temperatureRaw = 75;                          
+  temperatureRaw = 75;
   systolicPressRaw = 80;
   diastolicPressRaw = 80;
   pulseRateRaw = 50;
@@ -57,16 +57,17 @@ void initialize(){
 //  bpHigh = FALSE;
 //  tempHigh = FALSE;
 //  pulseLow = FALSE;
-  
+
 }
 
 void measure(void* ptr){
+  
   int * pTempCount = &tempCount;
   int * pSysCount = &sysCount;
   int * pDiaCount = &diaCount;
   int * pPulseCount = &pulseCount;
   int * pTempBool = 0;                   //temperatureRawData should be decreasing
-  int * pPulseBool = 0; 
+  int * pPulseBool = 0;
   temperatureRawData(pTempCount, pTempBool);
   systolicPressRawData(pSysCount);
   diastolicPressRawData(pDiaCount);

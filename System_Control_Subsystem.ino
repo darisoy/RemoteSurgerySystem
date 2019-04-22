@@ -1,22 +1,9 @@
 //System Control Subsystem
 #include  "dataStructs.h"
-// unsigned int temperatureRaw;
-// unsigned int systolicPressRaw;
-// unsigned int diastolicPressRaw;
-// unsigned int pulseRateRaw;
-//
-// unsigned char* tempCorrected;
-// unsigned char* systolicPressCorrected;
-// unsigned char* diastolicPressCorrected;
-// unsigned char* pulseRateCorrected;
-//
-// unsigned short batteryState;
-//
-// unsigned char bpOutOfRange;
-// unsigned char tempOutOfRange;
-// unsigned char pulseOutOfRange;
+#include "Measure.h"
 
 //variables for the measurement function
+void* measureDataStruct;
 int tempCount;
 int pulseCount;
 int sysCount;
@@ -37,7 +24,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   initialize();
-  measure(void* measureDataPtr);
+  measure((void*) measureDataStruct);
 }
 
 void initialize(){
@@ -60,8 +47,7 @@ void initialize(){
 
 }
 
-void measure(void* ptr){
-  
+void measureFunction(void* measureDataStruct){
   int * pTempCount = &tempCount;
   int * pSysCount = &sysCount;
   int * pDiaCount = &diaCount;

@@ -39,7 +39,7 @@ struct controlComputeData{
   unsigned int* pPulseRateRaw;
   unsigned char* pTempCorrected;                        //pointer to the first element in the array
   unsigned char* pSystolicPressCorrected;
-  unsigned char* pDiasCorrected;
+  unsigned char* pDiastolicPressCorrected;
   unsigned char* pPulseRateCorrected;
 }ComputeData;
 

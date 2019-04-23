@@ -65,35 +65,61 @@ double sys = 0;
 double d = 0;
 double pres = 0;
 double bat = 0;
-char testing[20];
+int timer = 0;
+char dataTransfered[5];
 
 void loop(void) {
-    Serial1.readBytes(testing, 20);
-    Serial.println(testing);
-    if (testing[0] == 'T') {
-        tft.setCursor(0, 0);
-        tft.setTextColor(GREEN, BLACK);
-        tft.setTextSize(2);
-        tft.println("results from UNO:");
-        temp = ((testing[1] - '0') * 100) + ((testing[2] - '0') * 10) + ((testing[3] - '0') * 1);
-        sys  = ((testing[5] - '0') * 100) + ((testing[6] - '0') * 10) + ((testing[7] - '0') * 1);
-        d    = ((testing[9] - '0') * 100) + ((testing[10] - '0') * 10) + ((testing[11] - '0') * 1);
-        pres = ((testing[13] - '0') * 100) + ((testing[14] - '0') * 10) + ((testing[15] - '0') * 1);
-        bat  = ((testing[17] - '0') * 100) + ((testing[18] - '0') * 10) + ((testing[19] - '0') * 1);
-        tft.print("temp = ");
-        tft.print(temp);
-        tft.println("   ");
-        tft.print("sys  = ");
-        tft.print(sys);
-        tft.println("   ");
-        tft.print("dia  = ");
-        tft.print(d);
-        tft.println("   ");
-        tft.print("pres = ");
-        tft.print(pres);
-        tft.println("   ");
-        tft.print("bat  = ");
-        tft.print(bat);
-        tft.println("   ");
+    Serial1.readBytes(dataTransfered, 5);
+    if (timer % 100 == 0) {
+        Serial1.println("TRXXX");
     }
+    if (timer % 200 == 0) {
+        Serial1.println("SRXXX");
+    }
+    if (timer % 300 == 0) {
+        Serial1.println("DRXXX");
+    }
+    if (timer % 400 == 0) {
+        Serial1.println("PRXXX");
+    }
+    if (timer % 500 == 0) {
+        Serial1.println("BRXXX");
+    }
+
+    if (dataTransfered[0] == 'T' && dataTransfered[1] == 'V') {
+        temp = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+    }
+    if (dataTransfered[0] == 'S' && dataTransfered[1] == 'V') {
+        sys = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+    }
+    if (dataTransfered[0] == 'D' && dataTransfered[1] == 'V') {
+        d = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+    }
+    if (dataTransfered[0] == 'P' && dataTransfered[1] == 'V') {
+        pres = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+    }
+    if (dataTransfered[0] == 'B' && dataTransfered[1] == 'V') {
+        bat = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+    }
+
+    tft.setCursor(0, 0);
+    tft.setTextColor(GREEN, BLACK);
+    tft.setTextSize(2);
+    tft.println("results from UNO:");
+    tft.print("temp = ");
+    tft.print(temp);
+    tft.println("   ");
+    tft.print("sys  = ");
+    tft.print(sys);
+    tft.println("   ");
+    tft.print("dia  = ");
+    tft.print(d);
+    tft.println("   ");
+    tft.print("pres = ");
+    tft.print(pres);
+    tft.println("   ");
+    tft.print("bat  = ");
+    tft.print(bat);
+    tft.println("   ");
+    timer++;
 }

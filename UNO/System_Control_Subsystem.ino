@@ -18,56 +18,66 @@ int* pSystolicFunction;
 //bool pulseLow;
 
 void setup() {
+  initialize();
   Serial.begin(9600);
 }
 
-String temp;
-String sys;
-String dia;
-String pres;
-String bat;
+
+char dataTransfered[5];
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  initialize();
   measureFunction((void*) measureDataStruct);
-  Serial.print("T");
-  if (temperatureRaw < 10) {
-    Serial.print("00");
-  } else if (temperatureRaw < 100) {
-    Serial.print("0");
+  Serial.readBytes(dataTransfered, 5);
+  if (dataTransfered[0] == 'T' && dataTransfered[1] == 'R') {
+    Serial.print("TV");
+    if (temperatureRaw < 10) {
+      Serial.print("00");
+    } else if (temperatureRaw < 100) {
+      Serial.print("0");
+    }
+    Serial.println(temperatureRaw);
   }
-  Serial.print(temperatureRaw);
-  Serial.print("S");
-  if (systolicPressRaw < 10) {
-    Serial.print("00");
-  } else if (systolicPressRaw < 100) {
-    Serial.print("0");
+
+  if (dataTransfered[0] == 'S' && dataTransfered[1] == 'R') {
+    Serial.print("SV");
+    if (systolicPressRaw < 10) {
+      Serial.print("00");
+    } else if (systolicPressRaw < 100) {
+      Serial.print("0");
+    }
+    Serial.println(systolicPressRaw);
   }
-  Serial.print(systolicPressRaw);
-  Serial.print("D");
-  if (diastolicPressRaw < 10) {
-    Serial.print("00");
-  } else if (diastolicPressRaw < 100) {
-    Serial.print("0");
+
+  if (dataTransfered[0] == 'D' && dataTransfered[1] == 'R') {
+    Serial.print("DV");
+    if (diastolicPressRaw < 10) {
+      Serial.print("00");
+    } else if (diastolicPressRaw < 100) {
+      Serial.print("0");
+    }
+    Serial.println(diastolicPressRaw);
   }
-  Serial.print(diastolicPressRaw);
-  Serial.print("P");
-  if (pulseRateRaw < 10) {
-    Serial.print("00");
-  } else if (pulseRateRaw < 100) {
-    Serial.print("0");
+
+  if (dataTransfered[0] == 'P' && dataTransfered[1] == 'R') {
+    Serial.print("PV");
+    if (pulseRateRaw < 10) {
+      Serial.print("00");
+    } else if (pulseRateRaw < 100) {
+      Serial.print("0");
+    }
+    Serial.println(pulseRateRaw);
   }
-  Serial.print(pulseRateRaw);
-  Serial.print("B");
-//  if (temperatureRaw < 10) {
-//    Serial.print("00");
-//  } else if (temperatureRaw < 100) {
-//    Serial.print("0");
-//  }
-//  Serial.print(temperatureRaw);
-  Serial.println("100");
-  delay(3000);
+
+  if (dataTransfered[0] == 'D' && dataTransfered[1] == 'R') {
+    Serial.print("BV");
+  //  if (temperatureRaw < 10) {
+  //    Serial.print("00");
+  //  } else if (temperatureRaw < 100) {
+  //    Serial.print("0");
+  //  }
+  //  Serial.print(temperatureRaw);
+    Serial.println("100");
+  }
 }
 
 void initialize(){
@@ -84,9 +94,6 @@ void initialize(){
   bpOutOfRange = 0;
   tempOutOfRange = 0;
   pulseOutOfRange = 0;
-//  bpHigh = FALSE;
-//  tempHigh = FALSE;
-//  pulseLow = FALSE;
 }
 
 void measureFunction(void* measureDataStruct){
@@ -94,40 +101,38 @@ void measureFunction(void* measureDataStruct){
   int * pSysCount = &sysCount;
   int * pDiaCount = &diaCount;
   int * pPulseCount = &pulseCount;
-  int * pTempBool = 0;                   //temperatureRawData should be decreasing
-  int * pPulseBool = 0;
-  temperatureRawData(pTempCount, pTempBool);
+  temperatureRawData(pTempCount);
   systolicPressRawData(pSysCount);
   diastolicPressRawData(pDiaCount);
-  pulseRateRawData(pPulseCount, pPulseBool);
+  pulseRateRawData(pPulseCount);
 }
 
-void temperatureRawData(int* pCount, int* pTempBool){
-  if (pTempBool){
-    if (*pCount % 2){
+int pTempBool = 0;
+void temperatureRawData(int* pCount){
+  if (pTempBool == 1){
+    if (*pCount % 2 == 0){
       temperatureRaw += 2;
     }else {
       temperatureRaw--;
     }
   }else {
-    if (*pCount % 2){
+    if (*pCount % 2 == 0){
       temperatureRaw -= 2;
     }else{
       temperatureRaw++;
     }
   }
   if (temperatureRaw < 15){
-    *pTempBool = 1;
-  }
-  if (temperatureRaw > 50){
-    *pTempBool = 0;
+    pTempBool = 1;
+  }else if (temperatureRaw > 50){
+    pTempBool = 0;
   }
   (*pCount)++;
 }
 
 void systolicPressRawData(int* pCount){
   if (systolicPressRaw <= 100){
-    if (*pCount % 2){
+    if (*pCount % 2 == 0){
       systolicPressRaw += 3;
     }else {
       systolicPressRaw--;
@@ -144,7 +149,7 @@ void systolicPressRawData(int* pCount){
 
 void diastolicPressRawData(int* pCount){
   if (diastolicPressRaw >= 40){
-    if (*pCount % 2){
+    if (*pCount % 2 == 0){
       diastolicPressRaw -= 2;
     }else {
       diastolicPressRaw++;
@@ -159,25 +164,26 @@ void diastolicPressRawData(int* pCount){
   (*pCount)++;
 }
 
-void pulseRateRawData(int* pCount, int* pPulseBool){
-  if (*pPulseBool){
-    if (*pCount % 2){
+int pPulseBool = 0;
+void pulseRateRawData(int* pCount){
+  if (pPulseBool == 1){
+    if (*pCount % 2 == 0){
       pulseRateRaw++;
     }else {
       pulseRateRaw -= 3;
     }
   }else {
-    if (*pCount % 2){
+    if (*pCount % 2 == 0){
       pulseRateRaw--;
     }else {
       pulseRateRaw +=3;
     }
   }
   if (pulseRateRaw > 40){
-    *pPulseBool = 1;
+    pPulseBool = 1;
   }
   if (pulseRateRaw < 15){
-    *pPulseBool = 0;
+    pPulseBool = 0;
   }
   (*pCount)++;
 }

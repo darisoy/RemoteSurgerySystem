@@ -60,15 +60,40 @@ void setup(void) {
     Serial1.begin(9600);
 }
 
-double temp = 0;
-double sys = 0;
-double d = 0;
-double pres = 0;
-double bat = 0;
+//raw data
+double temperatureRaw = 0;
+double systolicPressRaw = 0;
+double diastolicPressRaw = 0;
+double pulseRateRaw = 0;
+double batteryState = 0;
+
+//computed data
+double tempCorrected = 0;
+double sysCorrected = 0;
+double diasCorrected = 0;
+double prCorrected = 0;
+
+//warning booleans
+boolean tempGoodBool = true;
+boolean sysGoodBool = true;
+boolean diaGoodBool = true;
+boolean prGoodBool = true;
+boolean batteryGoodBool = true;
+
 int timer = 0;
 char dataTransfered[5];
 
 void loop(void) {
+
+    //Serial1.readBytes(testing, 20);
+    // if (testing[0] == 'T' && testing[4] == 'S' && testing[8] == 'D' && testing[12] == 'P' && testing[16] == 'B') {
+    //     temperatureRaw = ((testing[1] - '0') * 100) + ((testing[2] - '0') * 10) + ((testing[3] - '0') * 1);
+    //     systolicPressRaw = ((testing[5] - '0') * 100) + ((testing[6] - '0') * 10) + ((testing[7] - '0') * 1);
+    //     diastolicPressRaw = ((testing[9] - '0') * 100) + ((testing[10] - '0') * 10) + ((testing[11] - '0') * 1);
+    //     pulseRateRaw = ((testing[13] - '0') * 100) + ((testing[14] - '0') * 10) + ((testing[15] - '0') * 1);
+    //     batteryState  = ((testing[17] - '0') * 100) + ((testing[18] - '0') * 10) + ((testing[19] - '0') * 1);
+    // }
+
     Serial1.readBytes(dataTransfered, 5);
     if (timer % 100 == 0) {
         Serial1.println("TRXXX");
@@ -87,39 +112,89 @@ void loop(void) {
     }
 
     if (dataTransfered[0] == 'T' && dataTransfered[1] == 'V') {
-        temp = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+        temperatureRaw = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+        tempCorrected = 5 + (0.75 * temperatureRaw);
     }
     if (dataTransfered[0] == 'S' && dataTransfered[1] == 'V') {
-        sys = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+        systolicPressRaw = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+        sysCorrected = 9 + (2 * systolicPressRaw);
     }
     if (dataTransfered[0] == 'D' && dataTransfered[1] == 'V') {
-        d = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+        diastolicPressRaw = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+        diasCorrected = 6 + (1.5 * diastolicPressRaw);
     }
     if (dataTransfered[0] == 'P' && dataTransfered[1] == 'V') {
-        pres = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+        pulseRateRaw = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+        prCorrected = 8 + (3 * pulseRateRaw);
     }
     if (dataTransfered[0] == 'B' && dataTransfered[1] == 'V') {
-        bat = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+        batteryState = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
     }
+    calculateWarnings();
+    displayResults();
+}
 
+void calculateWarnings() {
+    tempGoodBool = (tempCorrected <= 37.8) && (tempCorrected >= 36.1);
+    sysGoodBool = (sysCorrected == 120);
+    diaGoodBool = (diasCorrected == 80);
+    prGoodBool = (prCorrected >= 60) && (prCorrected <= 100);
+    batteryGoodBool = (batteryState >= 20);
+}
+
+void displayResults() {
     tft.setCursor(0, 0);
-    tft.setTextColor(GREEN, BLACK);
     tft.setTextSize(2);
-    tft.println("results from UNO:");
-    tft.print("temp = ");
-    tft.print(temp);
-    tft.println("   ");
-    tft.print("sys  = ");
-    tft.print(sys);
-    tft.println("   ");
-    tft.print("dia  = ");
-    tft.print(d);
-    tft.println("   ");
-    tft.print("pres = ");
-    tft.print(pres);
-    tft.println("   ");
-    tft.print("bat  = ");
-    tft.print(bat);
+
+    tft.setTextColor(WHITE, BLACK);
+    tft.println("results from patient:");
+    tft.print("Temperature: ");
+    if (tempGoodBool) {
+        tft.setTextColor(GREEN, BLACK);
+    } else {
+        tft.setTextColor(RED, BLACK);
+    }
+    tft.print(tempCorrected);
+    tft.println(" C   ");
+
+    tft.setTextColor(WHITE, BLACK);
+    tft.print("Systolic P: ");
+    if (sysGoodBool) {
+        tft.setTextColor(GREEN, BLACK);
+    } else {
+        tft.setTextColor(RED, BLACK);
+    }
+    tft.print(sysCorrected);
+    tft.println(" mm Hg ");
+
+    tft.setTextColor(WHITE, BLACK);
+    tft.print("Diastolic P: ");
+    if (diaGoodBool) {
+        tft.setTextColor(GREEN, BLACK);
+    } else {
+        tft.setTextColor(RED, BLACK);
+    }
+    tft.print(diasCorrected);
+    tft.println(" mm Hg ");
+
+    tft.setTextColor(WHITE, BLACK);
+    tft.print("Pulse rate: ");
+    if (prCorrected) {
+        tft.setTextColor(GREEN, BLACK);
+    } else {
+        tft.setTextColor(RED, BLACK);
+    }
+    tft.print(prCorrected);
+    tft.println(" BPM ");
+
+    tft.setTextColor(WHITE, BLACK);
+    tft.print("Batter: ");
+    if (batteryGoodBool) {
+        tft.setTextColor(GREEN, BLACK);
+    } else {
+        tft.setTextColor(RED, BLACK);
+    }
+    tft.print(batteryState);
     tft.println("   ");
     timer++;
 }

@@ -22,7 +22,7 @@
 #define SYS_REQ 22
 #define DIA_REQ 21
 #define PUL_REQ 20
-#define BAT_REQ 19
+//#define BAT_REQ 19
 
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 void setup(void) {
@@ -35,7 +35,7 @@ void setup(void) {
     pinMode(SYS_REQ, OUTPUT);
     pinMode(DIA_REQ, OUTPUT);
     pinMode(PUL_REQ, OUTPUT);
-    pinMode(BAT_REQ, OUTPUT);
+    // pinMode(BAT_REQ, OUTPUT);
 
     initialize();
 }
@@ -120,7 +120,7 @@ void initialize() {
     systolicPressRaw = 0;
     diastolicPressRaw = 0;
     pulseRateRaw = 0;
-    batteryState = 0;
+    batteryState = 200;
 
     //computed data
     tempCorrected = 0;
@@ -159,11 +159,11 @@ void sendMeasure() {
     } else {
         digitalWrite(PUL_REQ, LOW);
     }
-    if (timer == 250) {
-        digitalWrite(BAT_REQ, HIGH);
-    } else {
-        digitalWrite(BAT_REQ, LOW);
-    }
+    // if (timer == 250) {
+    //     digitalWrite(BAT_REQ, HIGH);
+    // } else {
+    //     digitalWrite(BAT_REQ, LOW);
+    // }
 }
 
 void getRawData() {
@@ -180,9 +180,9 @@ void getRawData() {
     if (dataTransfered[0] == 'P' && dataTransfered[1] == 'V') {
         pulseRateRaw = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
     }
-    if (dataTransfered[0] == 'B' && dataTransfered[1] == 'V') {
-        batteryState = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
-    }
+    // if (dataTransfered[0] == 'B' && dataTransfered[1] == 'V') {
+    //     batteryState = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
+    // }
 }
 
 void compute() {
@@ -190,6 +190,10 @@ void compute() {
     sysCorrected = 9 + (2 * systolicPressRaw);
     diasCorrected = 6 + (1.5 * diastolicPressRaw);
     prCorrected = 8 + (3 * pulseRateRaw);
+    batteryState--;
+    if (batteryState <= 0) {
+        batteryState = 200;
+    }
 }
 
 void calculateWarnings() {

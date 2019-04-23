@@ -6,7 +6,7 @@
 #define SYS_REQ 12
 #define DIA_REQ 11
 #define PUL_REQ 10
-#define BAT_REQ  9
+// #define BAT_REQ  9
 
 //variables for the measurement function
 void* measureDataStruct;
@@ -28,12 +28,20 @@ void setup() {
     pinMode(12, INPUT);
     pinMode(11, INPUT);
     pinMode(10, INPUT);
-    pinMode(9, INPUT);
+    //pinMode(9, INPUT);
 }
 
 void loop() {
+    int * pTempCount = &tempCount;
+    int * pSysCount = &sysCount;
+    int * pDiaCount = &diaCount;
+    int * pPulseCount = &pulseCount;
+    temperatureRawData(pTempCount);
+    systolicPressRawData(pSysCount);
+    diastolicPressRawData(pDiaCount);
+    pulseRateRawData(pPulseCount);
+    batteryStateData();
     measureFunction((void*) measureDataStruct);
-    communications();
 }
 
 void initialize(){
@@ -51,18 +59,6 @@ void initialize(){
     bpOutOfRange = 0;
     tempOutOfRange = 0;
     pulseOutOfRange = 0;
-}
-
-void measureFunction(void* measureDataStruct){
-    int * pTempCount = &tempCount;
-    int * pSysCount = &sysCount;
-    int * pDiaCount = &diaCount;
-    int * pPulseCount = &pulseCount;
-    temperatureRawData(pTempCount);
-    systolicPressRawData(pSysCount);
-    diastolicPressRawData(pDiaCount);
-    pulseRateRawData(pPulseCount);
-    batteryStateData();
 }
 
 int pTempBool = 0;
@@ -146,60 +142,60 @@ void pulseRateRawData(int* pCount){
   (*pCount)++;
 }
 
-int pPulseBool = 0;
-void batteryStateData(){
-  batteryState--;
-}
+// int pPulseBool = 0;
+// void batteryStateData(){
+//   batteryState--;
+// }
 
-void communications() {
-    if (digitalRead(TEM_REQ) == HIGH) {
-      Serial.print("TV");
-      if (temperatureRaw < 10) {
-        Serial.print("00");
-      } else if (temperatureRaw < 100) {
-        Serial.print("0");
-      }
-      Serial.println(temperatureRaw);
-    }
-
-    if (digitalRead(SYS_REQ) == HIGH) {
-      Serial.print("SV");
-      if (systolicPressRaw < 10) {
-        Serial.print("00");
-      } else if (systolicPressRaw < 100) {
-        Serial.print("0");
-      }
-      Serial.println(systolicPressRaw);
-    }
-
-    if (digitalRead(DIA_REQ) == HIGH) {
-      Serial.print("DV");
-      if (diastolicPressRaw < 10) {
-        Serial.print("00");
-      } else if (diastolicPressRaw < 100) {
-        Serial.print("0");
-      }
-      Serial.println(diastolicPressRaw);
-    }
-
-    if (digitalRead(PUL_REQ) == HIGH) {
-      Serial.print("PV");
-      if (pulseRateRaw < 10) {
-        Serial.print("00");
-      } else if (pulseRateRaw < 100) {
-        Serial.print("0");
-      }
-      Serial.println(pulseRateRaw);
-    }
-
-    if (digitalRead(BAT_REQ) == HIGH) {
-      Serial.print("BV");
-      if (batteryState < 10) {
-         Serial.print("00");
-      } else if (batteryState < 100) {
-         Serial.print("0");
-      }
-      Serial.print(batteryState);
-      Serial.println("100");
-    }
-}
+// void communications() {
+//     if (digitalRead(TEM_REQ) == HIGH) {
+//       Serial.print("TV");
+//       if (temperatureRaw < 10) {
+//         Serial.print("00");
+//       } else if (temperatureRaw < 100) {
+//         Serial.print("0");
+//       }
+//       Serial.println(temperatureRaw);
+//     }
+//
+//     if (digitalRead(SYS_REQ) == HIGH) {
+//       Serial.print("SV");
+//       if (systolicPressRaw < 10) {
+//         Serial.print("00");
+//       } else if (systolicPressRaw < 100) {
+//         Serial.print("0");
+//       }
+//       Serial.println(systolicPressRaw);
+//     }
+//
+//     if (digitalRead(DIA_REQ) == HIGH) {
+//       Serial.print("DV");
+//       if (diastolicPressRaw < 10) {
+//         Serial.print("00");
+//       } else if (diastolicPressRaw < 100) {
+//         Serial.print("0");
+//       }
+//       Serial.println(diastolicPressRaw);
+//     }
+//
+//     if (digitalRead(PUL_REQ) == HIGH) {
+//       Serial.print("PV");
+//       if (pulseRateRaw < 10) {
+//         Serial.print("00");
+//       } else if (pulseRateRaw < 100) {
+//         Serial.print("0");
+//       }
+//       Serial.println(pulseRateRaw);
+//     }
+//
+//     if (digitalRead(BAT_REQ) == HIGH) {
+//       Serial.print("BV");
+//       if (batteryState < 10) {
+//          Serial.print("00");
+//       } else if (batteryState < 100) {
+//          Serial.print("0");
+//       }
+//       Serial.print(batteryState);
+//       Serial.println("100");
+//     }
+// }

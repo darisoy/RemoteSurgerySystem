@@ -18,56 +18,13 @@ int* pSystolicFunction;
 //bool pulseLow;
 
 void setup() {
-  Serial.begin(9600);
-}
 
-String temp;
-String sys;
-String dia;
-String pres;
-String bat;
+}
 
 void loop() {
   // put your main code here, to run repeatedly:
   initialize();
-  measureFunction((void*) measureDataStruct);
-  Serial.print("T");
-  if (temperatureRaw < 10) {
-    Serial.print("00");
-  } else if (temperatureRaw < 100) {
-    Serial.print("0");
-  }
-  Serial.print(temperatureRaw);
-  Serial.print("S");
-  if (systolicPressRaw < 10) {
-    Serial.print("00");
-  } else if (systolicPressRaw < 100) {
-    Serial.print("0");
-  }
-  Serial.print(systolicPressRaw);
-  Serial.print("D");
-  if (diastolicPressRaw < 10) {
-    Serial.print("00");
-  } else if (diastolicPressRaw < 100) {
-    Serial.print("0");
-  }
-  Serial.print(diastolicPressRaw);
-  Serial.print("P");
-  if (pulseRateRaw < 10) {
-    Serial.print("00");
-  } else if (pulseRateRaw < 100) {
-    Serial.print("0");
-  }
-  Serial.print(pulseRateRaw);
-  Serial.print("B");
-//  if (temperatureRaw < 10) {
-//    Serial.print("00");
-//  } else if (temperatureRaw < 100) {
-//    Serial.print("0");
-//  }
-//  Serial.print(temperatureRaw);
-  Serial.println("100");
-  delay(3000);
+  measure((void*) measureDataStruct);
 }
 
 void initialize(){
@@ -87,6 +44,7 @@ void initialize(){
 //  bpHigh = FALSE;
 //  tempHigh = FALSE;
 //  pulseLow = FALSE;
+
 }
 
 void measureFunction(void* measureDataStruct){

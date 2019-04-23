@@ -18,9 +18,64 @@
 #define YELLOW  0xFFE0
 #define WHITE   0xFFFF
 
+#define TEM_REQ 23
+#define SYS_REQ 22
+#define DIA_REQ 21
+#define PUL_REQ 20
+#define BAT_REQ 19
+
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 void setup(void) {
     Serial.begin(9600);
+    Serial1.begin(9600);
+
+    tftSetup();
+
+    pinMode(TEM_REQ, OUTPUT);
+    pinMode(SYS_REQ, OUTPUT);
+    pinMode(DIA_REQ, OUTPUT);
+    pinMode(PUL_REQ, OUTPUT);
+    pinMode(BAT_REQ, OUTPUT);
+
+    initialize();
+}
+
+//raw data
+double temperatureRaw;
+double systolicPressRaw;
+double diastolicPressRaw;
+double pulseRateRaw;
+double batteryState;
+
+//computed data
+double tempCorrected;
+double sysCorrected;
+double diasCorrected;
+double prCorrected;
+
+//warning booleans
+boolean tempGoodBool;
+boolean sysGoodBool;
+boolean diaGoodBool;
+boolean prGoodBool;
+boolean batteryGoodBool;
+
+int timer;
+char dataTransfered[5];
+
+void loop(void) {
+    sendMeasure();
+    getRawData();
+    compute();
+    calculateWarnings();
+    displayResults();
+    timer++;
+    if (timer > 200) {
+        timer = 0;
+    }
+}
+
+void tftSetup() {
     tft.reset();
 
     uint16_t identifier = tft.readID();
@@ -57,81 +112,84 @@ void setup(void) {
     }
     tft.begin(identifier);
     tft.fillScreen(BLACK);
-    Serial1.begin(9600);
 }
 
-//raw data
-double temperatureRaw = 0;
-double systolicPressRaw = 0;
-double diastolicPressRaw = 0;
-double pulseRateRaw = 0;
-double batteryState = 0;
+void initialize() {
+    //raw data
+    temperatureRaw = 0;
+    systolicPressRaw = 0;
+    diastolicPressRaw = 0;
+    pulseRateRaw = 0;
+    batteryState = 0;
 
-//computed data
-double tempCorrected = 0;
-double sysCorrected = 0;
-double diasCorrected = 0;
-double prCorrected = 0;
+    //computed data
+    tempCorrected = 0;
+    sysCorrected = 0;
+    diasCorrected = 0;
+    prCorrected = 0;
 
-//warning booleans
-boolean tempGoodBool = true;
-boolean sysGoodBool = true;
-boolean diaGoodBool = true;
-boolean prGoodBool = true;
-boolean batteryGoodBool = true;
+    //warning booleans
+    tempGoodBool = true;
+    sysGoodBool = true;
+    diaGoodBool = true;
+    prGoodBool = true;
+    batteryGoodBool = true;
 
-int timer = 0;
-char dataTransfered[5];
+    timer = 0;
+}
 
-void loop(void) {
+void sendMeasure() {
+    if (timer == 50) {
+        digitalWrite(TEM_REQ, HIGH);
+    } else {
+        digitalWrite(TEM_REQ, LOW);
+    }
+    if (timer == 100) {
+        digitalWrite(SYS_REQ, HIGH);
+    } else {
+        digitalWrite(SYS_REQ, LOW);
+    }
+    if (timer == 150) {
+        digitalWrite(DIA_REQ, HIGH);
+    } else {
+        digitalWrite(DIA_REQ, LOW);
+    }
+    if (timer == 200) {
+        digitalWrite(PUL_REQ, HIGH);
+    } else {
+        digitalWrite(PUL_REQ, LOW);
+    }
+    if (timer == 250) {
+        digitalWrite(BAT_REQ, HIGH);
+    } else {
+        digitalWrite(BAT_REQ, LOW);
+    }
+}
 
-    //Serial1.readBytes(testing, 20);
-    // if (testing[0] == 'T' && testing[4] == 'S' && testing[8] == 'D' && testing[12] == 'P' && testing[16] == 'B') {
-    //     temperatureRaw = ((testing[1] - '0') * 100) + ((testing[2] - '0') * 10) + ((testing[3] - '0') * 1);
-    //     systolicPressRaw = ((testing[5] - '0') * 100) + ((testing[6] - '0') * 10) + ((testing[7] - '0') * 1);
-    //     diastolicPressRaw = ((testing[9] - '0') * 100) + ((testing[10] - '0') * 10) + ((testing[11] - '0') * 1);
-    //     pulseRateRaw = ((testing[13] - '0') * 100) + ((testing[14] - '0') * 10) + ((testing[15] - '0') * 1);
-    //     batteryState  = ((testing[17] - '0') * 100) + ((testing[18] - '0') * 10) + ((testing[19] - '0') * 1);
-    // }
-
+void getRawData() {
     Serial1.readBytes(dataTransfered, 5);
-    if (timer % 100 == 0) {
-        Serial1.println("TRXXX");
-    }
-    if (timer % 200 == 0) {
-        Serial1.println("SRXXX");
-    }
-    if (timer % 300 == 0) {
-        Serial1.println("DRXXX");
-    }
-    if (timer % 400 == 0) {
-        Serial1.println("PRXXX");
-    }
-    if (timer % 500 == 0) {
-        Serial1.println("BRXXX");
-    }
-
     if (dataTransfered[0] == 'T' && dataTransfered[1] == 'V') {
         temperatureRaw = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
-        tempCorrected = 5 + (0.75 * temperatureRaw);
     }
     if (dataTransfered[0] == 'S' && dataTransfered[1] == 'V') {
         systolicPressRaw = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
-        sysCorrected = 9 + (2 * systolicPressRaw);
     }
     if (dataTransfered[0] == 'D' && dataTransfered[1] == 'V') {
         diastolicPressRaw = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
-        diasCorrected = 6 + (1.5 * diastolicPressRaw);
     }
     if (dataTransfered[0] == 'P' && dataTransfered[1] == 'V') {
         pulseRateRaw = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
-        prCorrected = 8 + (3 * pulseRateRaw);
     }
     if (dataTransfered[0] == 'B' && dataTransfered[1] == 'V') {
         batteryState = ((dataTransfered[2] - '0') * 100) + ((dataTransfered[3] - '0') * 10) + ((dataTransfered[4] - '0') * 1);
     }
-    calculateWarnings();
-    displayResults();
+}
+
+void compute() {
+    tempCorrected = 5 + (0.75 * temperatureRaw);
+    sysCorrected = 9 + (2 * systolicPressRaw);
+    diasCorrected = 6 + (1.5 * diastolicPressRaw);
+    prCorrected = 8 + (3 * pulseRateRaw);
 }
 
 void calculateWarnings() {
@@ -196,5 +254,4 @@ void displayResults() {
     }
     tft.print(batteryState);
     tft.println("   ");
-    timer++;
 }

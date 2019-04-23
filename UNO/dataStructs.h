@@ -13,6 +13,7 @@ unsigned int temperatureRaw;
 unsigned int systolicPressRaw;
 unsigned int diastolicPressRaw;
 unsigned int pulseRateRaw;
+unsigned int batteryState;
 
 unsigned char* tempCorrected;
 unsigned char* systolicPressCorrected;

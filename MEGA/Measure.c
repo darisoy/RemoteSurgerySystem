@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-void measureFunction(void* measureDataStruct){
+void measureFunction(void* measureDataStruct) {
   struct controlMeasureData *mData = (struct controlMeasureData*) measureDataStruct;
   mData->pTemperatureRaw = &temperatureRaw;
   mData->pSystolicPressRaw = &systolicPressRaw;

@@ -8,12 +8,12 @@
 #define DIA_REQ 11
 #define PUL_REQ 10
 
-void measureFunction(struct controlMeasureData measureData, int* pTempCount, int* pPulseCount, int* pSysCount, int* pDiaCount){
+void measureFunction(struct controlMeasureData measureData, int* pTempCount, int* pPulseCount, int* pSysCount, int* pDiaCount) {
     measureData.pTemperatureRaw = &temperatureRaw;
     measureData.pSystolicPressRaw = &systolicPressRaw;
     measureData.pDiastolicPressRaw = &diastolicPressRaw;
     measureData.pPulseRateRaw = &pulseRateRaw;
-    
+
     if (digitalRead(TEM_REQ) == HIGH) {
        temperatureRawData(pTempCount);
        Serial.print("VT");
@@ -70,7 +70,7 @@ void measureFunction(struct controlMeasureData measureData, int* pTempCount, int
       delay(100);
      }
  }
- 
+
 int pTempBool = 0;
 void temperatureRawData(int* pCount){
     if (pTempBool == 1){

@@ -1,5 +1,5 @@
 //Peripheral Subsystem
-#include  "dataStructs.h"
+#include "dataStructs.h"
 #include "Measure.h"
 
 //variables for the measurement function
@@ -25,11 +25,11 @@ void loop() {
   int* pTempCount;
   int* pPulseCount;
   int* pSysCount;
-  int* pDiaCount; 
+  int* pDiaCount;
   measureFunction(MeasureData, pTempCount, pPulseCount, pSysCount, pDiaCount);
 }
 
-void initialize(){
+void initialize() {
     //initializing the global variables
     temperatureRaw = 75;
     systolicPressRaw = 80;

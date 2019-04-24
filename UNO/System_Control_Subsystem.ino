@@ -65,28 +65,8 @@ void setup() {
 
 
 void loop() {
-
-    int * pTempCount = &tempCount;
-
-    int * pSysCount = &sysCount;
-
-    int * pDiaCount = &diaCount;
-
-    int * pPulseCount = &pulseCount;
-
-    temperatureRawData(pTempCount);
-
-    systolicPressRawData(pSysCount);
-
-    diastolicPressRawData(pDiaCount);
-
-    pulseRateRawData(pPulseCount);
-
-    //batteryStateData();
-
     //measureFunction((void*) measureDataStruct);
     communications();
-
 }
 
 
@@ -206,34 +186,31 @@ void systolicPressRawData(int* pCount){
 
 
 void diastolicPressRawData(int* pCount){
-//  if (diastolicPressRaw >= 40){
-//
-//    if (*pCount % 2 == 0){
-//
-//      diastolicPressRaw -= 2;
-//
-//    }else {
-//
-//      diastolicPressRaw++;
-//
-//    }
-//
-//  }else {
-//
-//    *pDiastolicFunction = 1;
-//
-//    if (*pSystolicFunction){
-//
-//      diastolicPressRaw = 0;
-//
-//      *pCount = -1;
-//
-//    }
-    
+  if (diastolicPressRaw >= 40){
 
-  //}
+    if (*pCount % 2 == 0){
 
-  //(*pCount)++;
+      diastolicPressRaw -= 2;
+
+    }else {
+
+      diastolicPressRaw++;
+
+    }
+
+  }else {
+
+    *pDiastolicFunction = 1;
+
+    if (*pSystolicFunction){
+
+      diastolicPressRaw = 0;
+
+      *pCount = -1;
+
+    }
+  }
+  (*pCount)++;
 
 }
 
@@ -286,7 +263,12 @@ void pulseRateRawData(int* pCount){
 }
 
  void communications() {
+    int * pTempCount = &tempCount;
+    int * pSysCount = &sysCount;
+    int * pDiaCount = &diaCount;
+    int * pPulseCount = &pulseCount;
      if (digitalRead(TEM_REQ) == HIGH) {
+       temperatureRawData(pTempCount);
        Serial.print("VT");
        if (temperatureRaw < 10) {
          Serial.print("00");
@@ -300,6 +282,7 @@ void pulseRateRawData(int* pCount){
      }
 
      if (digitalRead(SYS_REQ) == HIGH) {
+       systolicPressRawData(pSysCount);
        Serial.print("VS");
        if (systolicPressRaw < 10) {
          Serial.print("00");
@@ -313,6 +296,7 @@ void pulseRateRawData(int* pCount){
      }
 
      if (digitalRead(DIA_REQ) == HIGH) {
+       diastolicPressRawData(pDiaCount);
        Serial.print("VD");
        if (diastolicPressRaw < 10) {
          Serial.print("00");
@@ -326,6 +310,7 @@ void pulseRateRawData(int* pCount){
      }
 
      if (digitalRead(PUL_REQ) == HIGH) {
+       pulseRateRawData(pPulseCount);
        Serial.print("VP");
        if (pulseRateRaw < 10) {
          Serial.print("00");
@@ -337,15 +322,4 @@ void pulseRateRawData(int* pCount){
      while (digitalRead(PUL_REQ) == HIGH) {
       delay(100);
      }
-
-//     if (digitalRead(BAT_REQ) == HIGH) {
-//       Serial.print("BV");
-//       if (batteryState < 10) {
-//          Serial.print("00");
-//       } else if (batteryState < 100) {
-//          Serial.print("0");
-//       }
-//       Serial.print(batteryState);
-//       Serial.println("100");
-//     }
  }

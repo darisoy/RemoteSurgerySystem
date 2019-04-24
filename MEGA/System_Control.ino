@@ -35,7 +35,6 @@ void setup(void) {
     pinMode(SYS_REQ, OUTPUT);
     pinMode(DIA_REQ, OUTPUT);
     pinMode(PUL_REQ, OUTPUT);
-    // pinMode(BAT_REQ, OUTPUT);
 
     initialize();
 }
@@ -70,7 +69,7 @@ void loop(void) {
     calculateWarnings();
     displayResults();
     timer++;
-    if (timer > 8) {
+    if (timer > 15) {
         timer = 0;
     }
 }
@@ -139,31 +138,26 @@ void initialize() {
 }
 
 void sendMeasure() {
-    if (timer == 1) {
+    if (timer == 3) {
         digitalWrite(TEM_REQ, HIGH);
     } else {
         digitalWrite(TEM_REQ, LOW);
     }
-    if (timer == 3) {
+    if (timer == 6) {
         digitalWrite(SYS_REQ, HIGH);
     } else {
         digitalWrite(SYS_REQ, LOW);
     }
-    if (timer == 5) {
+    if (timer == 9) {
         digitalWrite(DIA_REQ, HIGH);
     } else {
         digitalWrite(DIA_REQ, LOW);
     }
-    if (timer == 7) {
+    if (timer == 12) {
         digitalWrite(PUL_REQ, HIGH);
     } else {
         digitalWrite(PUL_REQ, LOW);
     }
-    // if (timer == 250) {
-    //     digitalWrite(BAT_REQ, HIGH);
-    // } else {
-    //     digitalWrite(BAT_REQ, LOW);
-    // }
 }
 
 void getRawData() {
@@ -173,17 +167,22 @@ void getRawData() {
         Serial.print(dataTransfered[1]);
         Serial.print(dataTransfered[2]);
         Serial.println(dataTransfered[3]);
-        if (dataTransfered[0] == 'T') {
-            temperatureRaw = ((dataTransfered[1] - '0') * 100) + ((dataTransfered[2] - '0') * 10) + ((dataTransfered[3] - '0') * 1);
-        }
-        if (dataTransfered[0] == 'S') {
-            systolicPressRaw = ((dataTransfered[1] - '0') * 100) + ((dataTransfered[2] - '0') * 10) + ((dataTransfered[3] - '0') * 1);
-        }
-        if (dataTransfered[0] == 'D') {
-            diastolicPressRaw = ((dataTransfered[1] - '0') * 100) + ((dataTransfered[2] - '0') * 10) + ((dataTransfered[3] - '0') * 1);
-        }
-        if (dataTransfered[0] == 'P') {
-            pulseRateRaw = ((dataTransfered[1] - '0') * 100) + ((dataTransfered[2] - '0') * 10) + ((dataTransfered[3] - '0') * 1);
+        double digit1 = dataTransfered[1] - '0';
+        double digit2 = dataTransfered[2] - '0';
+        double digit3 = dataTransfered[3] - '0';
+        if (digit1 < 10 && digit2 < 10 && digit3 < 10) {
+            if (dataTransfered[0] == 'T') {
+                temperatureRaw = (digit1 * 100) + (digit2 * 10) + (digit3 * 1);
+            }
+            if (dataTransfered[0] == 'S') {
+                systolicPressRaw = (digit1 * 100) + (digit2 * 10) + (digit3 * 1);
+            }
+            if (dataTransfered[0] == 'D') {
+                diastolicPressRaw = (digit1 * 100) + (digit2 * 10) + (digit3 * 1);
+            }
+            if (dataTransfered[0] == 'P') {
+                pulseRateRaw = (digit1 * 100) + (digit2 * 10) + (digit3 * 1);
+            }
         }
     }
 }
@@ -194,7 +193,7 @@ void compute() {
     diasCorrected = 6 + (1.5 * diastolicPressRaw);
     prCorrected = 8 + (3 * pulseRateRaw);
     batteryState--;
-    if (batteryState <= 0) {
+    if (batteryState <= 1) {
         batteryState = 200;
     }
 }
@@ -204,7 +203,7 @@ void calculateWarnings() {
     sysGoodBool = (sysCorrected == 120);
     diaGoodBool = (diasCorrected == 80);
     prGoodBool = (prCorrected > 60.0) && (prCorrected < 100.0);
-    batteryGoodBool = (batteryState >= 20);
+    batteryGoodBool = (batteryState >= 40);
 }
 
 void displayResults() {
@@ -243,7 +242,7 @@ void displayResults() {
     tft.println(" mm Hg ");
 
     tft.setTextColor(WHITE, BLACK);
-    tft.print("Pulse:");
+    tft.print("Puls: ");
     if (prGoodBool) {
         tft.setTextColor(GREEN, BLACK);
     } else {
@@ -253,13 +252,15 @@ void displayResults() {
     tft.println(" BPM ");
 
     tft.setTextColor(WHITE, BLACK);
-    tft.print("Bat:  ");
+    tft.print("Batt: ");
     if (batteryGoodBool) {
         tft.setTextColor(GREEN, BLACK);
     } else {
         tft.setTextColor(RED, BLACK);
     }
-    tft.print(batteryState);
+    int batteryPercentage = batteryState / 2;
+    tft.print(batteryPercentage);
+    tft.println("%      ");
     tft.println("                     ");
     tft.println("                     ");
     tft.println("                     ");

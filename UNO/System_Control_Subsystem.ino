@@ -180,86 +180,47 @@ void systolicPressRawData(int* pCount){
   }
 
   (*pCount)++;
-
 }
-
-
 
 void diastolicPressRawData(int* pCount){
   if (diastolicPressRaw >= 40){
-
     if (*pCount % 2 == 0){
-
       diastolicPressRaw -= 2;
-
     }else {
-
       diastolicPressRaw++;
-
     }
-
   }else {
-
     *pDiastolicFunction = 1;
-
     if (*pSystolicFunction){
-
       diastolicPressRaw = 0;
-
       *pCount = -1;
-
     }
   }
   (*pCount)++;
-
 }
 
-
-
 int pPulseBool = 0;
-
 void pulseRateRawData(int* pCount){
-
   if (pPulseBool == 1){
-
     if (*pCount % 2 == 0){
-
       pulseRateRaw++;
-
     }else {
-
       pulseRateRaw -= 3;
-
     }
-
   }else {
-
     if (*pCount % 2 == 0){
-
       pulseRateRaw--;
-
     }else {
-
       pulseRateRaw +=3;
-
     }
-
   }
-
   if (pulseRateRaw > 40){
-
     pPulseBool = 1;
-
   }
-
   if (pulseRateRaw < 15){
-
     pPulseBool = 0;
-
   }
-
   (*pCount)++;
-
 }
 
  void communications() {

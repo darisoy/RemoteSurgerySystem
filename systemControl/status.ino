@@ -1,5 +1,8 @@
-#include <stdio.h>
-#include "status.h"
+#include "status.h"                                         //import the header of this function
+#include "dataStructs.h"                                    //import the variables
+#include <stdio.h>                                          //import necessary header files
+#include <stdbool.h>                                        //import necessary header files
+#include <stddef.h>                                         //import necessary header files
 
 void statusFunction(void* statusDataStruct){
   struct controlStatus *sData = (struct controlStatus*) statusDataStruct;

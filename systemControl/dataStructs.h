@@ -1,18 +1,15 @@
 //System Control Subsystem Variables
-#ifndef dataStructs
-#define dataStructs
+#ifndef dataStructs                     //check to see if variables are defined elsewhere
+#define dataStructs                     //assigns definiton to dataStructs
+#include <stdbool.h>                    //import necessary files
 
-#include <stdbool.h>
+enum _myBool { FALSE = 0, TRUE = 1 };   //define boolean values
+typedef enum _myBool Bool;              //creates the boolean variable
 
-                                          //creates the boolean variable
-enum _myBool { FALSE = 0, TRUE = 1 };
-typedef enum _myBool Bool;
-
-                                          //initializes all variables needed for the system control
-unsigned int temperatureRaw;
-unsigned int systolicPressRaw;
-unsigned int diastolicPressRaw;
-unsigned int pulseRateRaw;
+unsigned int temperatureRaw;            //initializes temperature variable
+unsigned int systolicPressRaw;          //initializes syst. press. variable
+unsigned int diastolicPressRaw;         //initializes dias. press. variable
+unsigned int pulseRateRaw;              //initializes pulse rate variable
 
 double tempCorrected;
 double systolicPressCorrected;
@@ -32,13 +29,12 @@ bool diaGoodBool;
 bool prGoodBool;
 bool batteryGoodBool;
 
-struct controlMeasureData{
-  unsigned int* pTemperatureRaw;
-  unsigned int* pSystolicPressRaw;
-  unsigned int* pDiastolicPressRaw;
-  unsigned int* pPulseRateRaw;
-}MeasureData;
-
+struct controlMeasureData {             //create the MeasureData struct
+    unsigned int* pTemperatureRaw;      //struct contains temp data
+    unsigned int* pSystolicPressRaw;    //struct contains syst. press. data
+    unsigned int* pDiastolicPressRaw;   //struct contains dia. press. data
+    unsigned int* pPulseRateRaw;        //struct contains pulse rate data
+} MeasureData;                          //struct name
 
 struct controlComputeData{
   unsigned int* pTemperatureRaw;
@@ -75,16 +71,16 @@ struct controlSchedulerData{
 
 }SchedulerData;
 
-
-//initialize pointer to function
-
 //Create task queue data structs
 struct MyTCB{
   void (*functionPtr)(void*);
   void* dataPtr;
 }TCB;
 MyTCB taskQueue[6];
-MyTCB measureT, computeT, statusT, warningT, displayT;
-
+MyTCB measureT,
+      computeT,
+      statusT,
+      warningT,
+      displayT;
 
 #endif

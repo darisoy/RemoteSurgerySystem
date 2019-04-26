@@ -1,8 +1,8 @@
-#include "Measure.h"
-#include "dataStructs.h"
-#include <stdio.h>
-#include <stdbool.h>
-#include <stddef.h>
+#include "Measure.h"                                                                            //import the header of this function
+#include "dataStructs.h"                                                                        //import the variables
+#include <stdio.h>                                                                              //import necessary header files
+#include <stdbool.h>                                                                            //import necessary header files
+#include <stddef.h>                                                                             //import necessary header files
 
 void measureFunction(void* measureDataStruct) {
  struct controlMeasureData *mData = (struct controlMeasureData*) measureDataStruct;

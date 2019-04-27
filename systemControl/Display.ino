@@ -4,7 +4,7 @@
 #include <stdbool.h>                                                                        //import necessary header files
 #include <stddef.h>                                                                         //import necessary header files
 
-void displayFunction(void* displayDataStruct){                                              //function that display the data on the TFT LCD display
+void displayFunction(void* displayDataStruct){                                              //function that display the data on the TFT LCD display, takes display struct as input
   struct controlDisplayData *dData = (struct controlDisplayData*) displayDataStruct;        //deference the display struct
   dData->pTempCorrected           = &tempCorrected;                                         //assign corrected temp's address to corrected temp pointer from display struct
   dData->pSystolicPressCorrected  = &systolicPressCorrected;                                //assign corrected sys's address to corrected sys pointer from display struct

@@ -27,11 +27,11 @@ bool batteryGoodBool;                   //initialized the warning boolean for ba
 int timer;                              //initializes timer that will schedule when data will be requested
 char dataTransfered[5];                 //initializes 5 long character array that will hold read values on serial
 
-int start0                              //initialize start time for task0
-int start1                              //initialize start time for task1
-int start2                              //initialize start time for task2
-int start3                              //initialize start time for task3
-int start4                              //initialize start time for task4
+int start0;                             //initialize start time for task0
+int start1;                             //initialize start time for task1
+int start2;                             //initialize start time for task2
+int start3;                             //initialize start time for task3
+int start4;                             //initialize start time for task4
 
 struct controlMeasureData {             //create the MeasureData struct
     unsigned int* pTemperatureRaw;      //struct contains raw temp data

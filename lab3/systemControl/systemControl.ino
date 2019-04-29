@@ -47,7 +47,7 @@ void setup(void) {                                              //setup portion 
 }
 
 void loop(void) {                                               //code arduino constatly loops through
-    if (millis() - start0 >= 5000) {                            //task can only run once every 5 seconds
+    if (millis() - start0; >= 5000) {                            //task can only run once every 5 seconds
         digitalWrite(REQ, HIGH);
         start0 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
         taskQueue[0].functionPtr(taskQueue[0].dataPtr);         //run the function location on the 0th location of the task queue with the data of that task
@@ -109,7 +109,7 @@ void tftSetup() {
 
     }
     tft.begin(identifier);                                              //initializes the LCD screen
-    tft.setRotation(1);
+    tft.setRotation(4);
     tft.fillScreen(BLACK);                                              //fills the screen with the color black
 }
 

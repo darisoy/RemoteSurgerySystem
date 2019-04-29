@@ -13,10 +13,6 @@ void measureFunction(void* measureDataStruct) {                                 
 
     if (Serial1.read() == 'V') {                                                                //check if the letter 'V' is printed on serial1
         Serial1.readBytes(dataTransfered, 4);                                                   //store the next 4 characters written on serial one to dataTranfered character array
-        Serial.print(dataTransfered[0]);                                                        //print the charater array on serial for troubleshooting purposes
-        Serial.print(dataTransfered[1]);                                                        //print the charater array on serial for troubleshooting purposes
-        Serial.print(dataTransfered[2]);                                                        //print the charater array on serial for troubleshooting purposes
-        Serial.println(dataTransfered[3]);                                                      //print the charater array on serial for troubleshooting purposes
         unsigned int digit1 = dataTransfered[1] - '0';                                          //convert the characters to digits
         unsigned int digit2 = dataTransfered[2] - '0';                                          //convert the characters to digits
         unsigned int digit3 = dataTransfered[3] - '0';                                          //convert the characters to digits

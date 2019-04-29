@@ -44,7 +44,7 @@ void measureFunction(struct controlMeasureData measureData,
         } else if (*measureData.pDiastolicPressRaw < 100) { //if value for the raw dia. pointer is less than 100
             Serial.print("0");                              //print "0" on the serial
         }
-        Serial.println(*measureData.pDiastolicPressRaw);    //print the value for the raw dia. pointer on the serial
+        Serial.print(*measureData.pDiastolicPressRaw);    //print the value for the raw dia. pointer on the serial
 
         pulseRateRawData(pPulseCount);                      //call the pulseRateRawData function to generate pulse data
         Serial.print("P");                                 //print "VP" on the serial

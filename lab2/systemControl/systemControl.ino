@@ -60,26 +60,41 @@ void loop(void) {                                               //code arduino c
     if (millis() - start0 >= 5000) {                            //task can only run once every 5 seconds
         start0 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
         taskQueue[0].functionPtr(taskQueue[0].dataPtr);         //run the function location on the 0th location of the task queue with the data of that task
+        int end0 = millis() - start0;
+        Serial.print("task0: ");
+        Serial.println(end0);
     }
 
     if (millis() - start1 >= 5000) {                            //task can only run once every 5 seconds
         start1 = millis();                                       //record the time at which the task has run to calculate 5 seconds later
         taskQueue[1].functionPtr(taskQueue[1].dataPtr);         //run the function location on the 1st location of the task queue with the data of that task
+        int end1 = millis() - start1;
+        Serial.print("task1: ");
+        Serial.println(end1);
     }
 
     if (millis() - start2 >= 5000) {                            //task can only run once every 5 seconds
         start2 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
         taskQueue[2].functionPtr(taskQueue[2].dataPtr);         //run the function location on the 2nd location of the task queue with the data of that task
+        int end2 = millis() - start2;
+        Serial.print("task2: ");
+        Serial.println(end2);
     }
 
     if (millis() - start3 >= 5000) {                            //task can only run once every 5 seconds
         start3 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
         taskQueue[3].functionPtr(taskQueue[3].dataPtr);         //run the function location on the 3rd location of the task queue with the data of that task
+        int end3 = millis() - start3;
+        Serial.print("task3: ");
+        Serial.println(end3);
     }
 
     if (millis() - start4 >= 5000) {                            //task can only run once every 5 seconds
         start4 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
         taskQueue[4].functionPtr(taskQueue[4].dataPtr);         //run the function location on the 4th location of the task queue with the data of that task
+        int end4 = millis() - start4;
+        Serial.print("task4: ");
+        Serial.println(end4);
     }
 
     timer++;                                                    //incrament the timer by 1 every loop

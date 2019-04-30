@@ -78,6 +78,8 @@ struct controlSchedulerData {           //create the controlSchedulerData struct
 struct MyTCB {                          //create the task control block struct
   void (*functionPtr)(void*);           //struct contains a pointer to a function
   void* dataPtr;                        //struct contains a pointer
+  struct MyTCB* next;
+  struct MyTCB* prev;
 } TCB;                                  //struct name
 
 MyTCB taskQueue[6];                     //initialize a 6 element array with MyTCB stuct

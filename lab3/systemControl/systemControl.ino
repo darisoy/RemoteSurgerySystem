@@ -7,10 +7,10 @@
 #define LCD_CD A2                                               // Command/Data goes to Analog 2
 #define LCD_WR A1                                               // LCD Write goes to Analog 1
 #define LCD_RD A0                                               // LCD Read goes to Analog 0
-#define YP A2  // must be an analog pin, use "An" notation!
-#define XM A3  // must be an analog pin, use "An" notation!
-#define YM 8   // can be a digital pin
-#define XP 9   // can be a digital pin
+#define YP A3  // must be an analog pin, use "An" notation!
+#define XM A2  // must be an analog pin, use "An" notation!
+#define YM 9   // can be a digital pin
+#define XP 8   // can be a digital pin
 
 #define BLACK   0x0000                                          //set the keyword BLACK   to represent the number 0x0000
 #define BLUE    0x001F                                          //set the keyword BLUE    to represent the number 0x001F
@@ -21,11 +21,20 @@
 #define YELLOW  0xFFE0                                          //set the keyword YELLOW  to represent the number 0xFFE0
 #define WHITE   0xFFFF                                          //set the keyword WHITE   to represent the number 0xFFFF
 #define ORANGE  0xFD20
+#define GREY   0xC618
 
 #define REQ 22                                                  //set the keyword TEM_REQ to represent the number 22
 #include "dataStructs.h"                                        //import the variables used in the file
-Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);   //setup the TFT LCD display by calling this method
+
+Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
+Elegoo_GFX_Button menu;
+Elegoo_GFX_Button annunciate;
+Elegoo_GFX_Button an_T;
+Elegoo_GFX_Button an_S;
+Elegoo_GFX_Button an_D;
+Elegoo_GFX_Button an_P;
+
 void setup(void) {                                              //setup portion of the arduino code
     Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
     Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
@@ -114,8 +123,16 @@ void tftSetup() {
 
     }
     tft.begin(identifier);                                              //initializes the LCD screen
-    tft.setRotation(4);
+    tft.setRotation(0);
     tft.fillScreen(BLACK);                                              //fills the screen with the color black
+    menu.initButton(&tft, 115, 240, 80, 40, WHITE, RED, WHITE, "menu", 2); // x, y, w, h, outline, fill, text
+    annunciate.initButton(&tft, 115, 290, 140, 40, WHITE, BLUE, WHITE, "announce", 2);
+    an_T.initButton(&tft, 18, 50, 30, 30, BLACK, GREY, YELLOW, "T", 3);
+    an_S.initButton(&tft, 18, 87, 30, 30, BLACK, GREY, YELLOW, "S", 3);
+    an_D.initButton(&tft, 18, 124, 30, 30, BLACK, GREY, YELLOW, "D", 3);
+    an_P.initButton(&tft, 18, 161, 30, 30, BLACK, GREY, YELLOW, "P", 3);
+    menu.drawButton();
+    annunciate.drawButton();
 }
 
 void initialize() {

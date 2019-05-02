@@ -78,11 +78,11 @@ struct controlTFTKeypadData {
     unsigned int* pAlarmAcknowledge;
 } KeypadData;
 
-struct controlCommunicationsData {
+struct controlCommunicationData {
     double* pTempCorrectedBuf[8];
     double* pBloodPressCorrectedBuf[16];
     double* pPulseRateCorrectedBuf[8];
-} CommunicationsData;
+} CommunicationData;
 
 struct MyTCB {                          //create the task control block struct
   void (*functionPtr)(void*);           //struct contains a pointer to a function

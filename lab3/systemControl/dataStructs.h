@@ -91,13 +91,4 @@ struct MyTCB {                          //create the task control block struct
   struct MyTCB* prev;
 } TCB;                                  //struct name
 
-MyTCB taskQueue[8];                     //initialize a 8 element array with MyTCB stuct
-MyTCB measureT,                         //initialize the measureT object using MyTCB struct
-      computeT,                         //initialize the computeT object using MyTCB struct
-      statusT,                          //initialize the statusT object using MyTCB struct
-      warningT,                         //initialize the warningT object using MyTCB struct
-      displayT,                         //initialize the displayT object using MyTCB struct
-      communicationsT,
-      keypadT;
-
 #endif

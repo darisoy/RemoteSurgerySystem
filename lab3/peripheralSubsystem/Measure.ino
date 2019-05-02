@@ -84,7 +84,7 @@ void temperatureRawData(int* pCount) {                      //simulates temperat
 
 void systolicPressRawData(int* pCount) {                    //simulates systolic press. data, takes an int pointer as input
     if (systolicPressRaw <= 100) {                          //if systolic press is less than or equal to 100
-        if (*pCount % 2 == 0) {                             //if counter is even
+        if ((*pCount) % 2 == 0) {                             //if counter is even
             systolicPressRaw += 3;                          //incremenet systolic press. by 3
         } else {                                            //if counter is odd
             systolicPressRaw--;                             //decrement systolic press. by 1
@@ -92,6 +92,7 @@ void systolicPressRawData(int* pCount) {                    //simulates systolic
     } else {                                                //if systolic press. is greater than 100
         *pSystolicFunction = 1;                             //set the value of the systolic function pointer to be 1
         if (*pDiastolicFunction) {                          //if the value of diastolic function pointer is 1
+            *pSystolicFunction = 0;
             systolicPressRaw = 0;                           //set systolic press to be 0
             (*pCount)--;                                    //decrement the value of the counter pointer by 1
         }
@@ -101,7 +102,7 @@ void systolicPressRawData(int* pCount) {                    //simulates systolic
 
 void diastolicPressRawData(int* pCount) {                   //simulates diastolic press. data, takes an int pointer as input
     if (diastolicPressRaw >= 40) {                          //if diastolic press. is greater than or equal to 40
-        if (*pCount % 2 == 0) {                             //if counter is even
+        if ((*pCount) % 2 == 0) {                             //if counter is even
             diastolicPressRaw -= 2;
         } else {                                            //if counter is odd
             diastolicPressRaw++;
@@ -109,6 +110,7 @@ void diastolicPressRawData(int* pCount) {                   //simulates diastoli
     } else {                                                //if diastolic press. is less than 40
         *pDiastolicFunction = 1;                            //set the value of the diastolic function pointer to be 1
         if (*pSystolicFunction) {                           //if the value of the systolic function pointer is 1
+            *pDiastolicFunction = 0;
             diastolicPressRaw = 0;                          //set diastolic press. to be 0
             (*pCount)--;                                    //decrement the value of the counter pointer by 1
         }

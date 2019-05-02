@@ -22,6 +22,11 @@ bool diaGoodBool;                       //initialized the warning boolean for di
 bool prGoodBool;                        //initialized the warning boolean for pulse
 bool batteryGoodBool;                   //initialized the warning boolean for battery
 
+//Keypad values
+unsigned int measurementSelection;
+unsigned int alarmAcknowledge;
+unsigned int functionSelect;
+
 int timer;                              //initializes timer that will schedule when data will be requested
 char dataTransfered[16];                //initializes 16 long character array that will hold read values on serial
 
@@ -32,10 +37,9 @@ int start3;                             //initialize start time for task3
 int start4;                             //initialize start time for task4
 
 struct controlMeasureData {             //create the MeasureData struct
-    unsigned int* pTemperatureRaw;      //struct contains raw temp data
-    unsigned int* pSystolicPressRaw;    //struct contains raw syst. press. data
-    unsigned int* pDiastolicPressRaw;   //struct contains raw dia. press. data
-    unsigned int* pPulseRateRaw;        //struct contains raw pulse rate data
+    unsigned int* pTemperatureRawBuf[8];      //struct contains raw temp data
+    unsigned int* pBloodPressRawBuf[16];    //struct contains raw syst. press. data
+    unsigned int* pPulseRateRawBuf[8];        //struct contains raw pulse rate data
 } MeasureData;                          //struct name
 
 struct controlComputeData {             //create the controlComputeData struct
@@ -55,10 +59,9 @@ struct controlDisplayData {             //create the controlDisplayData struct
 } DisplayData;                          //struct name
 
 struct controlWarningAlarmData {        //create the controlWarningAlarmData struct
-    double* pTempCorrected;             //struct contains corrected temp data
-    double* pSystolicPressCorrected;    //struct contains corrected syst. press. data
-    double* pDiastolicPressCorrected;   //struct contains corrected dia. press. data
-    double* pPulseRateCorrected;        //struct contains corrected pulse rate data
+    double* pTempCorrectedBuf[8];             //struct contains corrected temp data
+    double* pBloodPressCorrectedBuf[16];    //struct contains corrected syst. press. data
+    double* pPulseRateCorrectedBuf[8];        //struct contains corrected pulse rate data
     unsigned short* pBatteryState;      //struct contians battery data
 } AlarmData;                            //struct name
 
@@ -70,6 +73,17 @@ struct controlSchedulerData {           //create the controlSchedulerData struct
                                         //struct does not contian any variables
 } SchedulerData;                        //struct name
 
+struct controlTFTKeypadData {
+    unsigned int* pMeasurementSelection;
+    unsigned int* pAlarmAcknowledge;
+} KeypadData;
+
+struct controlCommunicationsData {
+    double* pTempCorrectedBuf[8];
+    double* pBloodPressCorrectedBuf[16];
+    double* pPulseRateCorrectedBuf[8];
+} CommunicationsData;
+
 struct MyTCB {                          //create the task control block struct
   void (*functionPtr)(void*);           //struct contains a pointer to a function
   void* dataPtr;                        //struct contains a pointer
@@ -77,11 +91,13 @@ struct MyTCB {                          //create the task control block struct
   struct MyTCB* prev;
 } TCB;                                  //struct name
 
-MyTCB taskQueue[6];                     //initialize a 6 element array with MyTCB stuct
+MyTCB taskQueue[8];                     //initialize a 8 element array with MyTCB stuct
 MyTCB measureT,                         //initialize the measureT object using MyTCB struct
       computeT,                         //initialize the computeT object using MyTCB struct
       statusT,                          //initialize the statusT object using MyTCB struct
       warningT,                         //initialize the warningT object using MyTCB struct
-      displayT;                         //initialize the displayT object using MyTCB struct
+      displayT,                         //initialize the displayT object using MyTCB struct
+      communicationsT,
+      keypadT;
 
 #endif

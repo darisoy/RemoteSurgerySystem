@@ -10,10 +10,14 @@ This project uses the Arduino MEGA and Arduino UNO boards. The UNO is designed t
 - [ ] Fix diastolic value generation (@rrwang97)
 - [ ] figure out TouchScreen and going between two pages (@d1r1karsy)
 - [ ] interrupt for scheduler, using doublylinked list
+- [ ] global timer for scheduler
 - [ ] buffers
 - [ ] ADC for pulse and pulse rate computation
 - [ ] warning/alarms (acknowledgements and UNO LEDs)
 
-# Questions:
-- how is TS supposed to check every 2 seconds when the task is only executed every 5 seconds
-- when the user selects which data to be displayed, is that for menu or for annunciate screen?
+# Questions [SOLVED]:
+- how is TS supposed to check every 2 seconds when the task is only executed every 5 seconds: ignore 5 second rule for this
+- when the user selects which data to be displayed, is that only for menu or for annunciate screen as well? only for menu (design decision)
+- pressure buffer is 16 long. do we need a new buffer structure? 0-7 sys, 8-15 dia
+- amplify the pulse voltage in code
+- LEDs on uno not necessary

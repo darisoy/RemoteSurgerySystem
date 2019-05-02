@@ -91,4 +91,12 @@ struct MyTCB {                          //create the task control block struct
   struct MyTCB* prev;
 } TCB;                                  //struct name
 
+MyTCB measureT,
+    computeT,
+    statusT,
+    keypadT,
+    warningT,
+    communicationT,
+    displayT;
+
 #endif

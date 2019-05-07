@@ -2,7 +2,7 @@
 #include "dataStructs.h"
 #include <stdio.h>
 
-Buffer * BufferFunction(Buffer * buff, char * bufferPtr, int size){
+Buffer * BufferFunction(BufferData * buff, char * bufferPtr, int size){
   buff->list = bufferPtr;
   buff->front = 0;
   buff->back = 0;

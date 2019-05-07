@@ -1,3 +1,3 @@
 #include <stdio.h>
 
-void BufferFunction(Buffer * buff, char * bufferPtr, int size);
+void BufferFunction(BufferData * buff, char * bufferPtr, int size);

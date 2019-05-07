@@ -7,7 +7,8 @@
 void measureFunction(void* measureDataStruct) {                                                 //function that recieves the raw data from UNO, takes measure struct as input
     struct controlMeasureData *mData = (struct controlMeasureData*) measureDataStruct;          //deference the display struct
     mData->pTemperatureRawBuf    = &temperatureRawBuf;                                               //assign raw temp's address to raw temp pointer from compute struct
-    mData->pBloodPressRawbuf   = &bloodPressRawBuf;                                             //assign raw sys's address to raw sys pointer from compute struct
+    mData->pBloodPressRawBuf.frontList   = &systolicRawBuf;                                             //assign raw sys's address to raw sys pointer from compute struct
+    mData->pBloodPressRawBuf.backList   = &diastolicRawBuf;
     mData->pPulseRateRawBuf      = &pulseRateRawBuf;                                                 //assign raw pulse's address to raw pulse pointer from compute struct
 
     if (Serial1.read() == 'V') {                                                                //check if the letter 'V' is printed on serial1
@@ -34,10 +35,9 @@ void measureFunction(void* measureDataStruct) {                                 
             (dataTransfered[8] == 'D')  && (digit9 < 10)  && (digit10 < 10) && (digit11 < 10) &&
             (dataTransfered[12] == 'P') && (digit13 < 10) && (digit14 < 10) && (digit15 < 10)) {
             BufferWrite(*mData->pTemperatureRawBuf, (digit1 * 100) + (digit2 * 10) + (digit3 * 1));        //assign the value of the temperature raw pointer from the measure struct to the temperature data
-            BufferWrite(*mData->pSystolicRawBuf, (digit5 * 100) + (digit6 * 10) + (digit7 * 1));      //assign the value of the systolic raw pointer from the measure struct to the systolic data
-            BufferWrite(*mData->pDiastolicRawBuf, (digit9 * 100) + (digit10 * 10) + (digit11 * 1));     //assign the value of the diastolic raw pointer from the measure struct to the diastolic data
+            BufferWrite(*mData->pBloodPressRawBuf.frontList, (digit5 * 100) + (digit6 * 10) + (digit7 * 1));      //assign the value of the systolic raw pointer from the measure struct to the systolic data
+            BufferWrite(*mData->pBloodPressRawBuf.backList, (digit9 * 100) + (digit10 * 10) + (digit11 * 1));     //assign the value of the diastolic raw pointer from the measure struct to the diastolic data
             BufferWrite(*mData->pPulseRateRawBuf, (digit13 * 100) + (digit14 * 10) + (digit15 * 1));          //assign the value of the pulse raw pointer from the measure struct to the pulse data
-            *mData->pBloodPressRawBuf.list = *mData->pSystolicRawBuf + *mData->pDiastolicRawBuf;
         }
     }
 }

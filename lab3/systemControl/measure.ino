@@ -33,10 +33,11 @@ void measureFunction(void* measureDataStruct) {                                 
             (dataTransfered[4] == 'S')  && (digit5 < 10)  && (digit6 < 10)  && (digit7 < 10)  &&
             (dataTransfered[8] == 'D')  && (digit9 < 10)  && (digit10 < 10) && (digit11 < 10) &&
             (dataTransfered[12] == 'P') && (digit13 < 10) && (digit14 < 10) && (digit15 < 10)) {
-            *mData->pTemperatureRaw = (digit1 * 100) + (digit2 * 10) + (digit3 * 1);        //assign the value of the temperature raw pointer from the measure struct to the temperature data
-            *mData->pSystolicPressRaw = (digit5 * 100) + (digit6 * 10) + (digit7 * 1);      //assign the value of the systolic raw pointer from the measure struct to the systolic data
-            *mData->pDiastolicPressRaw = (digit9 * 100) + (digit10 * 10) + (digit11 * 1);     //assign the value of the diastolic raw pointer from the measure struct to the diastolic data
-            *mData->pPulseRateRaw = (digit13 * 100) + (digit14 * 10) + (digit15 * 1);          //assign the value of the pulse raw pointer from the measure struct to the pulse data
+            BufferWrite(*mData->pTemperatureRawBuf, (digit1 * 100) + (digit2 * 10) + (digit3 * 1));        //assign the value of the temperature raw pointer from the measure struct to the temperature data
+            BufferWrite(*mData->pSystolicRawBuf, (digit5 * 100) + (digit6 * 10) + (digit7 * 1));      //assign the value of the systolic raw pointer from the measure struct to the systolic data
+            BufferWrite(*mData->pDiastolicRawBuf, (digit9 * 100) + (digit10 * 10) + (digit11 * 1));     //assign the value of the diastolic raw pointer from the measure struct to the diastolic data
+            BufferWrite(*mData->pPulseRateRawBuf, (digit13 * 100) + (digit14 * 10) + (digit15 * 1));          //assign the value of the pulse raw pointer from the measure struct to the pulse data
+            *mData->pBloodPressRawBuf.list = *mData->pSystolicRawBuf + *mData->pDiastolicRawBuf;
         }
     }
 }

@@ -4,6 +4,8 @@
 #include <stdbool.h>                                                                            //import necessary header files
 #include <stddef.h>                                                                             //import necessary header files
 
+#define REQ 22
+
 void measureFunction(void* measureDataStruct) {                                                 //function that recieves the raw data from UNO, takes measure struct as input
     struct controlMeasureData *mData = (struct controlMeasureData*) measureDataStruct;          //deference the display struct
     mData->pTemperatureRawBuf    = &temperatureRawBuffer;                                               //assign raw temp's address to raw temp pointer from compute struct
@@ -11,6 +13,7 @@ void measureFunction(void* measureDataStruct) {                                 
     mData->pBloodPressRawBuf.backList   = &diastolicRawBuffer;
     mData->pPulseRateRawBuf      = &pulseRateRawBuffer;                                                 //assign raw pulse's address to raw pulse pointer from compute struct
 
+    digitalWrite(REQ, HIGH);
     if (Serial1.read() == 'V') {                                                                //check if the letter 'V' is printed on serial1
         Serial1.readBytes(dataTransfered, 16);                                                   //store the next 4 characters written on serial one to dataTranfered character array
         Serial.print(dataTransfered[0]);                                                        //print the charater array on serial for troubleshooting purposes
@@ -40,4 +43,5 @@ void measureFunction(void* measureDataStruct) {                                 
             BufferWrite(*mData->pPulseRateRawBuf, (digit13 * 100) + (digit14 * 10) + (digit15 * 1));          //assign the value of the pulse raw pointer from the measure struct to the pulse data
         }
     }
+    digitalWrite(REQ, LOW);
 }

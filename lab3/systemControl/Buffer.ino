@@ -2,14 +2,14 @@
 #include "dataStructs.h"
 #include <stdio.h>
 
-void BufferFunction(BufferData * buff, char * bufferPtr, int size){
+void BufferFunction(BufferData * buff, double * bufferPtr, int size){
   buff->list = bufferPtr;
   buff->front = 0;
   buff->back = 0;
   buff->size = size;
 }
 
-void BufferWrite(Buffer * buff, (void*) data){
+void BufferWrite(Buffer * buff, double data){
   if (buff->front == buff->back && buff->size != 0){
     buff->back += 1;
     if (buff->back >= buff->size){

@@ -40,7 +40,19 @@ void setup(void) {                                              //setup portion 
     Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
     pinMode(REQ, OUTPUT);                                       //setup pin 22 to be an output
     tftSetup();                                                 //call the method that detects the TFT and it's version
-    initialize();                                               //call the method that initalizes the variables
+    
+    tempGoodBool = true;            //initialize warning boolean for temp to be true
+    sysGoodBool = true;             //initialize warning boolean for systolic to be true
+    diaGoodBool = true;             //initialize warning boolean for diastolic to be true
+    prGoodBool = true;              //initialize warning boolean for pulse to be true
+    batteryGoodBool = true;         //initialize warning boolean for battery to be true
+
+    timer = 0;                      //initilizes the timer value to be 0
+    start0 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
+    start1 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
+    start2 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
+    start3 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
+    start4 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run                                              //call the method that initalizes the variables
 
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
@@ -71,6 +83,20 @@ void setup(void) {                                              //setup portion 
     displayT.dataPtr = (void*) &DisplayData;                    //set the dataPtr of displayT to be the address of the DisplayData pointer
     displayT.next = null;
     displayT.prev = communicationT;
+    
+    //Initialize all buffer variables
+    BufferFunction(&temperatureRawBuffer, temperatureRawBuf, 8);
+    BufferFunction(&systolicRawBuffer, systolicRawBuf, 8);
+    BufferFunction(&diastolicRawBuffer, diastolicRawBuf, 8);
+    BufferFunction(&bloodPressRawBuffer, bloodPressRawBuf, 16);
+    BufferFunction(&tempCorrectedBuffer, tempCorrectedBuf, 8);
+    BufferFunction(&bloodPressCorrectedBuffer, bloodPressCorrectedBuf, 16);
+    BufferFunction(&pulseRateCorrectedBuffer, pulseRateCorrectedBuf, 8);
+    
+    BufferWrite(&temperatureRawBuffer, 75.0);
+    BufferWrite(&systolicRawBuffer, 80.0);
+    BufferWrite(&diastolicRawBuffer, 80.0);
+    BufferWrite(&pulseRateRawBuffer, 0.0);
 }
 
 void loop(void) {                                               //code arduino constatly loops through
@@ -148,28 +174,3 @@ void tftSetup() {
     annunciate.drawButton();
 }
 
-void initialize() {
-    temperatureRaw = 0;             //initializes the raw temp value to be 0
-    systolicPressRaw = 0;           //initializes the raw systolic value to be 0
-    diastolicPressRaw = 0;          //initializes the raw diastolic value to be 0
-    pulseRateRaw = 0;               //initializes the raw pulse rate value to be 0
-    batteryState = 200;             //initialized the battery value to be 200
-
-    tempCorrected = 0;              //initalizes the corrected temp value to be 0
-    systolicPressCorrected = 0;     //initalizes the corrected systolic value to be 0
-    diastolicPressCorrected = 0;    //initalizes the corrected diastolic value to be 0
-    pulseRateCorrected = 0;         //initalizes the corrected pulse rate value to be 0
-
-    tempGoodBool = true;            //initialize warning boolean for temp to be true
-    sysGoodBool = true;             //initialize warning boolean for systolic to be true
-    diaGoodBool = true;             //initialize warning boolean for diastolic to be true
-    prGoodBool = true;              //initialize warning boolean for pulse to be true
-    batteryGoodBool = true;         //initialize warning boolean for battery to be true
-
-    timer = 0;                      //initilizes the timer value to be 0
-    start0 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
-    start1 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
-    start2 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
-    start3 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
-    start4 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
-}

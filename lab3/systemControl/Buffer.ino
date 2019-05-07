@@ -23,11 +23,11 @@ void BufferWrite(Buffer * buff, (void*) data){
   }
 }
 
-void * BufferRead(Buffer * buff){
+double BufferRead(Buffer * buff){
   if (buff->size <= 0){
     throw new Exception();
   }
-  (void*) output = buff->list[buff->back];
+  double output = buff->list[buff->back];
   if (buff->back >= buff->size){
   buff->back = 0;
   } else{

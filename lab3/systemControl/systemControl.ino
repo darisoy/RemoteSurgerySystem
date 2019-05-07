@@ -37,6 +37,12 @@ Elegoo_GFX_Button an_S;
 Elegoo_GFX_Button an_D;
 Elegoo_GFX_Button an_P;
 
+TimedAction task0 = TimedAction(5000, taskQueue[0].functionPtr(taskQueue[0].dataPtr));
+TimedAction task1 = TimedAction(5000, taskQueue[1].functionPtr(taskQueue[1].dataPtr));
+TimedAction task2 = TimedAction(5000, taskQueue[2].functionPtr(taskQueue[2].dataPtr));
+TimedAction task3 = TimedAction(5000, taskQueue[3].functionPtr(taskQueue[3].dataPtr));
+TimedAction task4 = TimedAction(5000, taskQueue[4].functionPtr(taskQueue[4].dataPtr));
+
 void setup(void) {                                              //setup portion of the arduino code
     Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
     Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
@@ -109,32 +115,13 @@ void setup(void) {                                              //setup portion 
 }
 
 void loop(void) {                                               //code arduino constatly loops through
-    if (millis() - start0 >= 5000) {                            //task can only run once every 5 seconds
-        digitalWrite(REQ, HIGH);
-        start0 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
-        taskQueue[0].functionPtr(taskQueue[0].dataPtr);         //run the function location on the 0th location of the task queue with the data of that task
-    }
-    digitalWrite(REQ, LOW);
+                                                                //task can only run once every 5 seconds
+    task0.check();
 
-    if (millis() - start1 >= 5000) {                            //task can only run once every 5 seconds
-        start1 = millis();                                       //record the time at which the task has run to calculate 5 seconds later
-        taskQueue[1].functionPtr(taskQueue[1].dataPtr);         //run the function location on the 1st location of the task queue with the data of that task
-    }
-
-    if (millis() - start2 >= 5000) {                            //task can only run once every 5 seconds
-        start2 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
-        taskQueue[2].functionPtr(taskQueue[2].dataPtr);         //run the function location on the 2nd location of the task queue with the data of that task
-    }
-
-    if (millis() - start3 >= 5000) {                            //task can only run once every 5 seconds
-        start3 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
-        taskQueue[3].functionPtr(taskQueue[3].dataPtr);         //run the function location on the 3rd location of the task queue with the data of that task
-    }
-
-    if (millis() - start4 >= 5000) {                            //task can only run once every 5 seconds
-        start4 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
-        taskQueue[4].functionPtr(taskQueue[4].dataPtr);         //run the function location on the 4th location of the task queue with the data of that task
-    }
+    task1.check();
+    task2.check();
+    task3.check();
+    task4.check();
 }
 
 void tftSetup() {

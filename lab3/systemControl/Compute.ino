@@ -6,17 +6,16 @@
 
 void computeFunction(void* computeDataStruct){                                       //function that computes data, takes compute struct as input
   struct controlComputeData *cData = (struct controlComputeData*) computeDataStruct; //deference the compute struct
-  cData->pTemperatureRaw            = &temperatureRaw;                               //assign raw temp's address to raw temp pointer from compute struct
-  cData->pSystolicPressRaw          = &systolicPressRaw;                             //assign raw sys's address to raw sys pointer from compute struct
-  cData->pDiastolicPressRaw         = &diastolicPressRaw;                            //assign raw dia's address to raw dia pointer from compute struct
-  cData->pPulseRateRaw              = &pulseRateRaw;                                 //assign raw pulse's address to raw pulse pointer from compute struct
-  cData->pTempCorrected             = &tempCorrected;                                //assign corrected temp's address to corrected temp pointer from compute struct
-  cData->pSystolicPressCorrected    = &systolicPressCorrected;                       //assign corrected sys's address to corrected sys pointer from compute struct
-  cData->pDiastolicPressCorrected   = &diastolicPressCorrected;                      //assign corrected dia's address to corrected dia pointer from compute struct
-  cData->pPulseRateCorrected        = &pulseRateCorrected;                           //assign corrected pulse's address to corrected pulse pointer from compute struct
+  cData->pTemperatureRawBuf         = &temperatureRawBuf;                               //assign raw temp's address to raw temp pointer from compute struct
+  cData->pBloodPressRawBuf.frontList          = &systolicRawBuf;
+  cData->pBloodPressRawBuf.backList           = &diastolicRawBuf;
+  cData->pPulseRateRawBuf              = &pulseRateRawbuf;                                 //assign raw pulse's address to raw pulse pointer from compute struct
+  cData->pTempCorrectedBuf             = &tempCorrectedBuf;                                //assign corrected temp's address to corrected temp pointer from compute struct
+  cData->pBloodPressCorrectedBuf    = &bloodPressCorrectedBuf;
+  cData->pPulseRateCorrectedBuf        = &pulseRateCorrectedBuf;                           //assign corrected pulse's address to corrected pulse pointer from compute struct
 
-  *cData->pTempCorrected           = 5 + (0.75 * (*cData->pTemperatureRaw));         //convert raw temp and point pTempCorrected pointer to it
-  *cData->pSystolicPressCorrected  = 9 + (2    * (*cData->pSystolicPressRaw));       //convert raw sys and point pSystolicPressCorrected pointer to it
-  *cData->pDiastolicPressCorrected = 6 + (1.5  * (*cData->pDiastolicPressRaw));      //convert raw dia and point pDiastolicPressCorrected pointer to it
-  *cData->pPulseRateCorrected      = 8 + (3    * (*cData->pPulseRateRaw));           //convert raw pulse and point pPulseRateCorrected pointer to it
+  BufferWrite(cData->pTempCorrectedBuf, 5 + (0.75 * (BufferRead(cData->pTemperatureRaw))));         //convert raw temp and point pTempCorrected pointer to it
+  BufferWrite(cData->p9 + (2    * (BufferRead(cData->pSystolicPressRaw)));       //convert raw sys and point pSystolicPressCorrected pointer to it
+  *cData->pDiastolicPressCorrected = 6 + (1.5  * (BufferRead(cData->pDiastolicPressRaw)));      //convert raw dia and point pDiastolicPressCorrected pointer to it
+  BufferWrite(cData->pPulseRateCorrectedBuf, 8 + (3    * (BufferRead(cData->pPulseRateRaw))));           //convert raw pulse and point pPulseRateCorrected pointer to it
 }

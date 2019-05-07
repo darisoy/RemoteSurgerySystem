@@ -24,62 +24,6 @@ void displayFunction(void* displayDataStruct){                                  
     dData->pPulseRateCorrected      = &pulseRateCorrected;                                    //assign corrected pulse's address to corrected pulse pointer from display struct
     dData->pBatteryState            = &batteryState;                                          //assign battery state's address to battery state pointer from display struct
 
-    digitalWrite(13, HIGH);
-    TSPoint p = ts.getPoint();
-    digitalWrite(13, LOW);
-    pinMode(XM, OUTPUT);
-    pinMode(YP, OUTPUT);
-
-    // scale from 0->1023 to tft.width
-    p.x = map(p.x, TS_MINX, TS_MAXX, 0, tft.width());
-    p.y = (tft.height()-map(p.y, TS_MINY, TS_MAXY, 0, tft.height()));
-    Serial.println("x and y updated");
-
-    //check every 2 seconds to see if anything is pressed
-    if (menu.contains(p.x, p.y)) {
-        menu.press(true);  // tell the button it is pressed
-    } else {
-        menu.press(false);  // tell the button it is NOT pressed
-    }
-
-    if (annunciate.contains(p.x, p.y)) {
-        annunciate.press(true);  // tell the button it is pressed
-    } else {
-        annunciate.press(false);  // tell the button it is NOT pressed
-    }
-
-    if (an_T.contains(p.x, p.y)) {
-        an_T.press(true);  // tell the button it is pressed
-        Serial.println("T is pressed!");
-    } else {
-        an_T.press(false);  // tell the button it is NOT pressed
-    }
-
-    if (an_S.contains(p.x, p.y)) {
-        an_S.press(true);  // tell the button it is pressed
-        Serial.println("S is pressed!");
-    } else {
-        an_S.press(false);  // tell the button it is NOT pressed
-    }
-
-    if (an_D.contains(p.x, p.y)) {
-        an_D.press(true);  // tell the button it is pressed
-        Serial.println("D is pressed!");
-    } else {
-        an_D.press(false);  // tell the button it is NOT pressed
-    }
-
-    if (an_P.contains(p.x, p.y)) {
-        an_P.press(true);  // tell the button it is pressed
-        Serial.println("P is pressed!");
-    } else {
-        an_P.press(false);  // tell the button it is NOT pressed
-    }
-
-    if (annunciate.justReleased()) {
-        // Serial.print("Released: "); Serial.println(b);
-        annunciate.drawButton();  // draw normal
-    }
     if (annunciate.justPressed()) {
         annunciate.drawButton(true);  // draw invert!
         tft.fillScreen(BLACK);
@@ -252,4 +196,63 @@ void displayFunction(void* displayDataStruct){                                  
         tft.print(" BPM ");
     }
 
+}
+
+void keypad() {
+    digitalWrite(13, HIGH);
+    TSPoint p = ts.getPoint();
+    digitalWrite(13, LOW);
+    pinMode(XM, OUTPUT);
+    pinMode(YP, OUTPUT);
+
+    // scale from 0->1023 to tft.width
+    p.x = map(p.x, TS_MINX, TS_MAXX, 0, tft.width());
+    p.y = (tft.height()-map(p.y, TS_MINY, TS_MAXY, 0, tft.height()));
+    Serial.println("x and y updated");
+
+    //check every 2 seconds to see if anything is pressed
+    if (menu.contains(p.x, p.y)) {
+        menu.press(true);  // tell the button it is pressed
+    } else {
+        menu.press(false);  // tell the button it is NOT pressed
+    }
+
+    if (annunciate.contains(p.x, p.y)) {
+        annunciate.press(true);  // tell the button it is pressed
+    } else {
+        annunciate.press(false);  // tell the button it is NOT pressed
+    }
+
+    if (an_T.contains(p.x, p.y)) {
+        an_T.press(true);  // tell the button it is pressed
+        Serial.println("T is pressed!");
+    } else {
+        an_T.press(false);  // tell the button it is NOT pressed
+    }
+
+    if (an_S.contains(p.x, p.y)) {
+        an_S.press(true);  // tell the button it is pressed
+        Serial.println("S is pressed!");
+    } else {
+        an_S.press(false);  // tell the button it is NOT pressed
+    }
+
+    if (an_D.contains(p.x, p.y)) {
+        an_D.press(true);  // tell the button it is pressed
+        Serial.println("D is pressed!");
+    } else {
+        an_D.press(false);  // tell the button it is NOT pressed
+    }
+
+    if (an_P.contains(p.x, p.y)) {
+        an_P.press(true);  // tell the button it is pressed
+        Serial.println("P is pressed!");
+    } else {
+        an_P.press(false);  // tell the button it is NOT pressed
+    }
+
+    if (annunciate.justReleased()) {
+        // Serial.print("Released: "); Serial.println(b);
+        annunciate.drawButton();  // draw normal
+    }
 }

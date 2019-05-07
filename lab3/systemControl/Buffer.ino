@@ -2,12 +2,11 @@
 #include "dataStructs.h"
 #include <stdio.h>
 
-Buffer * BufferFunction(BufferData * buff, char * bufferPtr, int size){
+void BufferFunction(BufferData * buff, char * bufferPtr, int size){
   buff->list = bufferPtr;
   buff->front = 0;
   buff->back = 0;
   buff->size = size;
-  return buff;
 }
 
 void BufferWrite(Buffer * buff, (void*) data){

@@ -7,11 +7,11 @@ enum _myBool { FALSE = 0, TRUE = 1 };   //define boolean values
 typedef enum _myBool Bool;              //creates the boolean variable
 
 unsigned int temperatureRawBuf[8];            //initializes the raw temperature variable
-unsigned int bloodPressRawBuf[16];          //initializes the raw syst. press. variable    
+unsigned int bloodPressRawBuf[16];          //initializes the raw syst. press. variable
 unsigned int pulseRateRaw[8];              //initializes the raw pulse rate variable
 
 double tempCorrectedBuf[8];                   //initalizes the corrected temperature variable
-double bloodPressCorrectedBuf[16];          //initalizes the corrected syst. press. variable 
+double bloodPressCorrectedBuf[16];          //initalizes the corrected syst. press. variable
 double pulseRateCorrectedBuf[8];              //initalizes the corrected pulse rate variable
 
 unsigned short batteryState;            //initializes the battery state variable

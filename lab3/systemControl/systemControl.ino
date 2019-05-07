@@ -1,6 +1,7 @@
 #include <Elegoo_GFX.h>                                         // Core graphics library
 #include <Elegoo_TFTLCD.h>                                      // Hardware-specific library
 #include <TouchScreen.h>
+#include <TimedAction.h>
 
 #define LCD_RESET A4                                            // Can alternately just connect to Arduino's reset pin
 #define LCD_CS A3                                               // Chip Select goes to Analog 3
@@ -28,6 +29,7 @@
 
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
+
 Elegoo_GFX_Button menu;
 Elegoo_GFX_Button annunciate;
 Elegoo_GFX_Button an_T;
@@ -35,72 +37,11 @@ Elegoo_GFX_Button an_S;
 Elegoo_GFX_Button an_D;
 Elegoo_GFX_Button an_P;
 
-void setup(void) {                                              //setup portion of the arduino code
-    Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
-    Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
-    pinMode(REQ, OUTPUT);                                       //setup pin 22 to be an output
-    tftSetup();                                                 //call the method that detects the TFT and it's version
-    initialize();                                               //call the method that initalizes the variables
-
-    measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the measureFunction
-    measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
-    measureT.next = computeT;
-    measureT.prev = null;
-    computeT.functionPtr = computeFunction;                     //set the functionPtr of computeT to be the computeFunction
-    computeT.dataPtr = (void*) &ComputeData;                    //set the dataPtr of computeT to be the address of the ComputeData pointer
-    computeT.next = statusT;
-    computeT.prev = measureT;
-    statusT.functionPtr = statusFunction;                       //set the functionPtr of statusT to be the statusFunction
-    statusT.dataPtr = (void*) &StatusData;                      //set the dataPtr of statusT to be the address of the StatusData pointer
-    statusT.next = keypadT;
-    //need to code the keypad function
-    keypadT.functionPtr = keypadFunction;
-    keypadT.dataPtr = (void*) &kaypadData;
-    keypad.next = warningT;
-    keypad.prev = statusT;
-    warningT.functionPtr = alarmFunction;                       //set the functionPtr of warningT to be the alarmFunction
-    warningT.dataPtr = (void*) &AlarmData;                      //set the dataPtr of warningT to be the address of the AlarmData pointer
-    warningT.next = communicationT;
-    warningT.prev = keypadT;
-    //need to code the communication function
-    communicationT.functionPtr = communicationFunction;
-    commmunicationT.dataPtr = communicationData;
-    communicationT.next = displayT;
-    communicationT.prev = warningT;    
-    displayT.functionPtr = displayFunction;                     //set the functionPtr of displayT to be the displayFunction
-    displayT.dataPtr = (void*) &DisplayData;                    //set the dataPtr of displayT to be the address of the DisplayData pointer
-    displayT.next = null;
-    displayT.prev = communicationT;
-}
-
-void loop(void) {                                               //code arduino constatly loops through
-    if (millis() - start0 >= 5000) {                            //task can only run once every 5 seconds
-        digitalWrite(REQ, HIGH);
-        start0 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
-        taskQueue[0].functionPtr(taskQueue[0].dataPtr);         //run the function location on the 0th location of the task queue with the data of that task
-    }
-    digitalWrite(REQ, LOW);
-
-    if (millis() - start1 >= 5000) {                            //task can only run once every 5 seconds
-        start1 = millis();                                       //record the time at which the task has run to calculate 5 seconds later
-        taskQueue[1].functionPtr(taskQueue[1].dataPtr);         //run the function location on the 1st location of the task queue with the data of that task
-    }
-
-    if (millis() - start2 >= 5000) {                            //task can only run once every 5 seconds
-        start2 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
-        taskQueue[2].functionPtr(taskQueue[2].dataPtr);         //run the function location on the 2nd location of the task queue with the data of that task
-    }
-
-    if (millis() - start3 >= 5000) {                            //task can only run once every 5 seconds
-        start3 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
-        taskQueue[3].functionPtr(taskQueue[3].dataPtr);         //run the function location on the 3rd location of the task queue with the data of that task
-    }
-
-    if (millis() - start4 >= 5000) {                            //task can only run once every 5 seconds
-        start4 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
-        taskQueue[4].functionPtr(taskQueue[4].dataPtr);         //run the function location on the 4th location of the task queue with the data of that task
-    }
-}
+TimedAction task0 = TimedAction(5000, taskQueue[0].functionPtr(taskQueue[0].dataPtr);
+TimedAction task1 = TimedAction(5000, taskQueue[1].functionPtr(taskQueue[1].dataPtr);
+TimedAction task2 = TimedAction(5000, taskQueue[2].functionPtr(taskQueue[2].dataPtr);
+TimedAction task3 = TimedAction(5000, taskQueue[3].functionPtr(taskQueue[3].dataPtr);
+TimedAction task4 = TimedAction(5000, taskQueue[4].functionPtr(taskQueue[4].dataPtr);
 
 void tftSetup() {
     tft.reset();                                                        //resets the TFT LCD display
@@ -172,4 +113,76 @@ void initialize() {
     start2 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
     start3 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
     start4 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
+}
+
+void setup(void) {                                              //setup portion of the arduino code
+    Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
+    Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
+    pinMode(REQ, OUTPUT);                                       //setup pin 22 to be an output
+    tftSetup();                                                 //call the method that detects the TFT and it's version
+    initialize();                                               //call the method that initalizes the variables
+
+    measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the measureFunction
+    measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
+    measureT.next = computeT;
+    measureT.prev = null;
+    computeT.functionPtr = computeFunction;                     //set the functionPtr of computeT to be the computeFunction
+    computeT.dataPtr = (void*) &ComputeData;                    //set the dataPtr of computeT to be the address of the ComputeData pointer
+    computeT.next = statusT;
+    computeT.prev = measureT;
+    statusT.functionPtr = statusFunction;                       //set the functionPtr of statusT to be the statusFunction
+    statusT.dataPtr = (void*) &StatusData;                      //set the dataPtr of statusT to be the address of the StatusData pointer
+    statusT.next = keypadT;
+    //need to code the keypad function
+    keypadT.functionPtr = keypadFunction;
+    keypadT.dataPtr = (void*) &kaypadData;
+    keypad.next = warningT;
+    keypad.prev = statusT;
+    warningT.functionPtr = alarmFunction;                       //set the functionPtr of warningT to be the alarmFunction
+    warningT.dataPtr = (void*) &AlarmData;                      //set the dataPtr of warningT to be the address of the AlarmData pointer
+    warningT.next = communicationT;
+    warningT.prev = keypadT;
+    //need to code the communication function
+    communicationT.functionPtr = communicationFunction;
+    commmunicationT.dataPtr = communicationData;
+    communicationT.next = displayT;
+    communicationT.prev = warningT;
+    displayT.functionPtr = displayFunction;                     //set the functionPtr of displayT to be the displayFunction
+    displayT.dataPtr = (void*) &DisplayData;                    //set the dataPtr of displayT to be the address of the DisplayData pointer
+    displayT.next = null;
+    displayT.prev = communicationT;
+}
+
+void loop(void) {                                               //code arduino constatly loops through
+    //if (millis() - start0 >= 5000) {                            //task can only run once every 5 seconds
+        digitalWrite(REQ, HIGH);
+        //start0 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
+        //taskQueue[0].functionPtr(taskQueue[0].dataPtr);         //run the function location on the 0th location of the task queue with the data of that task
+        task0.check();
+    //}
+    digitalWrite(REQ, LOW);
+
+    //if (millis() - start1 >= 5000) {                            //task can only run once every 5 seconds
+        //start1 = millis();                                       //record the time at which the task has run to calculate 5 seconds later
+        //taskQueue[1].functionPtr(taskQueue[1].dataPtr);         //run the function location on the 1st location of the task queue with the data of that task
+    //}
+    task1.check();
+
+    //if (millis() - start2 >= 5000) {                            //task can only run once every 5 seconds
+        //start2 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
+        //taskQueue[2].functionPtr(taskQueue[2].dataPtr);         //run the function location on the 2nd location of the task queue with the data of that task
+    //}
+    task2.check();
+
+    //if (millis() - start3 >= 5000) {                            //task can only run once every 5 seconds
+        //start3 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
+        //taskQueue[3].functionPtr(taskQueue[3].dataPtr);         //run the function location on the 3rd location of the task queue with the data of that task
+    //}
+    task3.check();
+
+    //if (millis() - start4 >= 5000) {                            //task can only run once every 5 seconds
+        //start4 = millis();                                      //record the time at which the task has run to calculate 5 seconds later
+        //taskQueue[4].functionPtr(taskQueue[4].dataPtr);         //run the function location on the 4th location of the task queue with the data of that task
+    //}
+    task4.check();
 }

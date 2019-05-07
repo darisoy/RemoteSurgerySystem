@@ -8,11 +8,11 @@ This project uses the Arduino MEGA and Arduino UNO boards. The UNO is designed t
 
 # TODO list:
 - [x] Fix diastolic value generation
-- [ ] Fix 5 seconds per task
+- [x] Fix 5 seconds per task
 - [ ] TouchScreen and going between screen (separate task)
 - [ ] interrupt for scheduler, using doublylinked list
 - [ ] global timer for scheduler
-- [ ] buffers
+- [x] buffers
 - [ ] ADC for pulse and pulse rate computation
 - [ ] warning/alarms (acknowledgements and UNO LEDs)
 

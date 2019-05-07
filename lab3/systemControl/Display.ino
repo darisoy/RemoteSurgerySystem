@@ -4,13 +4,6 @@
 #include <stdbool.h>                                                                        //import necessary header files
 #include <stddef.h>                                                                         //import necessary header files
 
-#define TS_MINX 120
-#define TS_MAXX 900
-#define TS_MINY 70
-#define TS_MAXY 920
-#define MINPRESSURE 10
-#define MAXPRESSURE 1000
-
 boolean annunciation;
 boolean bool_T = false;
 boolean bool_S = false;
@@ -37,6 +30,11 @@ void displayFunction(void* displayDataStruct){                                  
     if (menu.justReleased()) {
         // Serial.print("Released: "); Serial.println(b);
         menu.drawButton();  // draw normal
+    }
+
+    if (annunciate.justReleased()) {
+        // Serial.print("Released: "); Serial.println(b);
+        annunciate.drawButton();  // draw normal
     }
 
     if (menu.justPressed()) {

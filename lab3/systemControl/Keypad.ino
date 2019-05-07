@@ -4,11 +4,18 @@
 #include <stdbool.h>                                                                        //import necessary header files
 #include <stddef.h>                                                                         //import necessary header files
 
+#define TS_MINX 120
+#define TS_MAXX 900
+#define TS_MINY 70
+#define TS_MAXY 920
+#define MINPRESSURE 10
+#define MAXPRESSURE 1000
+
 void keypadFunction(void* keypadDataStruct) {
     struct keypadDisplayData *dData = (struct keypadDisplayData*) keypadDataStruct;        //deference the display struct
     dData->pMeasurementSelection = &pMeasurementSelection;                                         //assign corrected temp's address to corrected temp pointer from display struct
     dData->pAlarmAcknowledge     = &pAlarmAcknowledge;
-    
+
     digitalWrite(13, HIGH);
     TSPoint p = ts.getPoint();
     digitalWrite(13, LOW);
@@ -59,10 +66,5 @@ void keypadFunction(void* keypadDataStruct) {
         Serial.println("P is pressed!");
     } else {
         an_P.press(false);  // tell the button it is NOT pressed
-    }
-
-    if (annunciate.justReleased()) {
-        // Serial.print("Released: "); Serial.println(b);
-        annunciate.drawButton();  // draw normal
     }
 }

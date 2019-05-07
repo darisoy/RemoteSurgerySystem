@@ -11,11 +11,12 @@ void computeFunction(void* computeDataStruct){                                  
   cData->pBloodPressRawBuf.backList           = &diastolicRawBuf;
   cData->pPulseRateRawBuf              = &pulseRateRawbuf;                                 //assign raw pulse's address to raw pulse pointer from compute struct
   cData->pTempCorrectedBuf             = &tempCorrectedBuf;                                //assign corrected temp's address to corrected temp pointer from compute struct
-  cData->pBloodPressCorrectedBuf    = &bloodPressCorrectedBuf;
+  cData->pBloodPressCorrectedBuf.frontList    = &sysCorrectedBuf;
+  cData->pBloodPressCorrectedBuf.endList      = &diaCorrectedBuf;
   cData->pPulseRateCorrectedBuf        = &pulseRateCorrectedBuf;                           //assign corrected pulse's address to corrected pulse pointer from compute struct
 
   BufferWrite(cData->pTempCorrectedBuf, 5 + (0.75 * (BufferRead(cData->pTemperatureRaw))));         //convert raw temp and point pTempCorrected pointer to it
-  BufferWrite(cData->p9 + (2    * (BufferRead(cData->pSystolicPressRaw)));       //convert raw sys and point pSystolicPressCorrected pointer to it
-  *cData->pDiastolicPressCorrected = 6 + (1.5  * (BufferRead(cData->pDiastolicPressRaw)));      //convert raw dia and point pDiastolicPressCorrected pointer to it
+  BufferWrite(cData->pBlodPressCorrectedBuf.frontList, 9 + (2    * (BufferRead(cData->pBloodPressRawBuf.frontList)));       //convert raw sys and point pSystolicPressCorrected pointer to it
+  BufferWrite(cData->pBloodPressCorrectedBuf.endList, 6 + (1.5  * (BufferRead(cData->pBloodPressRawBuf.endList)));      //convert raw dia and point pDiastolicPressCorrected pointer to it
   BufferWrite(cData->pPulseRateCorrectedBuf, 8 + (3    * (BufferRead(cData->pPulseRateRaw))));           //convert raw pulse and point pPulseRateCorrected pointer to it
 }

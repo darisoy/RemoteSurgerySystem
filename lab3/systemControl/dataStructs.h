@@ -58,6 +58,8 @@ BufferData pulseRateCorrectedBuffer;              //initalizes the corrected pul
 
 struct controlMeasureData {             //create the MeasureData struct
     BufferData* pTemperatureRawBuf;      //struct contains raw temp data
+    BufferData* pSystolicRawBuf;
+    BufferData* pDiastolicRawBuf;
     BufferData* pBloodPressRawBuf;    //struct contains raw syst. press. data
     BufferData* pPulseRateRawBuf;        //struct contains raw pulse rate data
 } MeasureData;                          //struct name

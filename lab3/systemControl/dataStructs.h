@@ -49,11 +49,11 @@ struct BufferData {
 BufferData temperatureRawBuffer;            //initializes the raw temperature variable
 BufferData systolicRawBuffer;
 BufferData diastolicRawBuffer;
-BufferData bloodPressRawBuffer;          //initializes the raw syst. press. variable
+double bloodPressRawBuffer[16];          //initializes the raw syst. press. variable
 BufferData pulseRateRawBuffer;              //initializes the raw pulse rate variable
 
 BufferData tempCorrectedBuffer;                   //initalizes the corrected temperature variable
-BufferData bloodPressCorrectedBuffer;              //initalizes the corrected syst. press. variable
+double bloodPressCorrectedBuffer[16];              //initalizes the corrected syst. press. variable
 BufferData pulseRateCorrectedBuffer;              //initalizes the corrected pulse rate variable
 
 struct controlMeasureData {             //create the MeasureData struct

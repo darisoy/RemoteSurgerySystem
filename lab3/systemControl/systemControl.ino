@@ -95,12 +95,11 @@ void setup(void) {                                              //setup portion 
 
     //Initialize all buffer variables
     BufferFunction(&temperatureRawBuffer, temperatureRawBuf, 8);
-    BufferFunction(&bloodPressRawBuffer, bloodPressRawBuf, 16);
-    BufferFunction(&systolicRawBuffer, bloodPressRawBuf[0,7], 8);
-    BufferFunction(&diastolicRawBuffer, bloodPressRawBuf[8,15], 8);
+    BufferFunction(&systolicRawBuffer, systolicRawBuf, 8);
+    BufferFunction(&diastolicRawBuffer, diastolicRawBuf, 8);
     BufferFunction(&tempCorrectedBuffer, tempCorrectedBuf, 8);
-    BufferFunction(&systolicCorrectedBuffer, bloodPressCorrectedBuf[0,7], 8);
-    BufferFunction(&diastolicCorrectedBuffer, bloodPressCorrectedBuf[8,15], 8);
+    BufferFunction(&systolicCorrectedBuffer, sysCorrectedBuf, 8);
+    BufferFunction(&diastolicCorrectedBuffer, diaCorrectedBuf, 8);
     BufferFunction(&pulseRateCorrectedBuffer, pulseRateCorrectedBuf, 8);
 
     BufferWrite(&temperatureRawBuffer, 75.0);

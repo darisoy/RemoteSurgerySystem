@@ -2,6 +2,6 @@
 
 void BufferFunction(BufferData * buff, double * bufferPtr, int size);
 
-void BufferWrite(Buffer * buff, double data);
+void BufferWrite(BufferData * buff, double data);
 
-double BufferRead(Buffer * buff);
+double BufferRead(BufferData * buff);

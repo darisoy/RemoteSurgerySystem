@@ -6,26 +6,16 @@
 enum _myBool { FALSE = 0, TRUE = 1 };   //define boolean values
 typedef enum _myBool Bool;              //creates the boolean variable
 
-BufferData temperatureRawBuffer;            //initializes the raw temperature variable
-BufferData systolicRawbuffer;
-BufferData diastolicRawBuffer;
-BufferData bloodPressRawBuffer;          //initializes the raw syst. press. variable
-BufferData pulseRateRawBuffer;              //initializes the raw pulse rate variable
-
-BufferData tempCorrectedBuffer;                   //initalizes the corrected temperature variable
-BufferData bloodPressCorrectedBuffer;              //initalizes the corrected syst. press. variable
-BufferData pulseRateCorrectedBuffer;              //initalizes the corrected pulse rate variable
-
 //Character arrays for the buffers
-unsigned int temperatureRawBuf[8];
-unsigned int systolicRawBuf[8];
-unsigned int diastolicRawBuf[8];
-unsigned int bloodPressRawBuf[16];
-unsigned int pulseRateRawBuf[8];
+double temperatureRawBuf[8];
+double systolicRawBuf[8];
+double diastolicRawBuf[8];
+double bloodPressRawBuf[16];
+double pulseRateRawBuf[8];
 
-unsigned double tempCorrectedBuf[8];
-unsigned double bloodPressCorrectedBuf[16];
-unsigned double pulseRateCorrectedBuf[8];
+double tempCorrectedBuf[8];
+double bloodPressCorrectedBuf[16];
+double pulseRateCorrectedBuf[8];
 
 unsigned short batteryState;            //initializes the battery state variable
 
@@ -48,6 +38,23 @@ int start1;                             //initialize start time for task1
 int start2;                             //initialize start time for task2
 int start3;                             //initialize start time for task3
 int start4;                             //initialize start time for task4
+
+struct BufferData {
+    double * list;
+    int front;
+    int back;
+    int size;
+} Buffer;
+
+BufferData temperatureRawBuffer;            //initializes the raw temperature variable
+BufferData systolicRawBuffer;
+BufferData diastolicRawBuffer;
+BufferData bloodPressRawBuffer;          //initializes the raw syst. press. variable
+BufferData pulseRateRawBuffer;              //initializes the raw pulse rate variable
+
+BufferData tempCorrectedBuffer;                   //initalizes the corrected temperature variable
+BufferData bloodPressCorrectedBuffer;              //initalizes the corrected syst. press. variable
+BufferData pulseRateCorrectedBuffer;              //initalizes the corrected pulse rate variable
 
 struct controlMeasureData {             //create the MeasureData struct
     BufferData* pTemperatureRawBuf;      //struct contains raw temp data
@@ -111,13 +118,4 @@ MyTCB measureT,
     warningT,
     communicationT,
     displayT;
-
-struct BufferData {
-    double * list;
-    int front;
-    int back;
-    int size;
-} Buffer;
-
-
 #endif

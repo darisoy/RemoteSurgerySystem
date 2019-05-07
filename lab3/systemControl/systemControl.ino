@@ -58,33 +58,40 @@ void setup(void) {                                              //setup portion 
 
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
-    measureT.next = computeT;
-    measureT.prev = null;
+    measureT.next = &computeT;
+    measureT.prev = NULL;
+
     computeT.functionPtr = computeFunction;                     //set the functionPtr of computeT to be the computeFunction
     computeT.dataPtr = (void*) &ComputeData;                    //set the dataPtr of computeT to be the address of the ComputeData pointer
-    computeT.next = statusT;
-    computeT.prev = measureT;
+    computeT.next = &statusT;
+    computeT.prev = &measureT;
+
     statusT.functionPtr = statusFunction;                       //set the functionPtr of statusT to be the statusFunction
     statusT.dataPtr = (void*) &StatusData;                      //set the dataPtr of statusT to be the address of the StatusData pointer
-    statusT.next = keypadT;
+    statusT.next = &keypadT;
+    statusT.prev = &computeT;
+
     //need to code the keypad function
     keypadT.functionPtr = keypadFunction;
-    keypadT.dataPtr = (void*) &kaypadData;
-    keypad.next = warningT;
-    keypad.prev = statusT;
+    keypadT.dataPtr = (void*) &keypadData;
+    keypad.next = &warningT;
+    keypad.prev = &statusT;
+
     warningT.functionPtr = alarmFunction;                       //set the functionPtr of warningT to be the alarmFunction
     warningT.dataPtr = (void*) &AlarmData;                      //set the dataPtr of warningT to be the address of the AlarmData pointer
-    warningT.next = communicationT;
-    warningT.prev = keypadT;
+    warningT.next = &communicationT;
+    warningT.prev = &keypadT;
+
     //need to code the communication function
     communicationT.functionPtr = communicationFunction;
-    commmunicationT.dataPtr = communicationData;
-    communicationT.next = displayT;
-    communicationT.prev = warningT;
+    commmunicationT.dataPtr = (void*) &communicationData;
+    communicationT.next = &displayT;
+    communicationT.prev = &warningT;
+
     displayT.functionPtr = displayFunction;                     //set the functionPtr of displayT to be the displayFunction
     displayT.dataPtr = (void*) &DisplayData;                    //set the dataPtr of displayT to be the address of the DisplayData pointer
-    displayT.next = null;
-    displayT.prev = communicationT;
+    displayT.next = NULL;
+    displayT.prev = &communicationT;
 
     //Initialize all buffer variables
     BufferFunction(&temperatureRawBuffer, temperatureRawBuf, 8);

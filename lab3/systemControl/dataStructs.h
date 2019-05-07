@@ -14,7 +14,8 @@ double bloodPressRawBuf[16];
 double pulseRateRawBuf[8];
 
 double tempCorrectedBuf[8];
-double bloodPressCorrectedBuf[16];
+double sysCorrectedBuf[8];
+double diaCorrectedBuf[8];
 double pulseRateCorrectedBuf[8];
 
 unsigned short batteryState;            //initializes the battery state variable
@@ -46,43 +47,46 @@ struct BufferData {
     int size;
 } Buffer;
 
+struct DoubleBufferData {
+    double * frontList;
+    double * backList;
+} DoubleBuffer;
+
 BufferData temperatureRawBuffer;            //initializes the raw temperature variable
 BufferData systolicRawBuffer;
 BufferData diastolicRawBuffer;
-double bloodPressRawBuffer[16];          //initializes the raw syst. press. variable
+DoubleBufferData bloodPressRawBuffer;          //initializes the raw syst. press. variable
 BufferData pulseRateRawBuffer;              //initializes the raw pulse rate variable
 
 BufferData tempCorrectedBuffer;                   //initalizes the corrected temperature variable
-double bloodPressCorrectedBuffer[16];              //initalizes the corrected syst. press. variable
+DoubleBufferData bloodPressCorrectedBuffer;              //initalizes the corrected syst. press. variable
 BufferData pulseRateCorrectedBuffer;              //initalizes the corrected pulse rate variable
 
 struct controlMeasureData {             //create the MeasureData struct
     BufferData* pTemperatureRawBuf;      //struct contains raw temp data
-    BufferData* pSystolicRawBuf;
-    BufferData* pDiastolicRawBuf;
-    BufferData* pBloodPressRawBuf;    //struct contains raw syst. press. data
+    DoubleBufferData* pBloodPressRawBuf;    //struct contains raw syst. press. data
     BufferData* pPulseRateRawBuf;        //struct contains raw pulse rate data
 } MeasureData;                          //struct name
 
 struct controlComputeData {             //create the controlComputeData struct
     BufferData* pTemperatureRawBuf;      //struct contains raw temp data
-    BufferData* pBloodPressRawBuf;    //struct contains raw syst. press. data
+    DoubleBufferData* pBloodPressRawBuf;    //struct contains raw syst. press. data
     BufferData* pPulseRateRawBuf;        //struct contains raw pulse rate data
     BufferData* pTempCorrectedBuf;             //struct contains corrected temp data
-    BufferData* pBloodPressCorrectedBuf;    //struct contains corrected syst. press. data
+    DoubleBufferData* pBloodPressCorrectedBuf;    //struct contains corrected syst. press. data
     BufferData* pPulseRateCorrectedBuf;        //struct contains corrected pulse rate data
 } ComputeData;                          //struct name
 
 struct controlDisplayData {             //create the controlDisplayData struct
     BufferData* pTempCorrectedBuf;             //struct contains corrected temp data
-    BufferData* pBloodPressCorrectedBuf;    //struct contains corrected syst. press. data
+    DoubleBufferData* pBloodPressCorrectedBuf;    //struct contains corrected syst. press. data
     BufferData* pPulseRateCorrectedBuf;        //struct contains corrected pulse rate data
     unsigned short* pBatteryState;      //struct contians battery data
 } DisplayData;                          //struct name
 
 struct controlWarningAlarmData {        //create the controlWarningAlarmData struct
     BufferData* pTempCorrectedBuf;             //struct contains corrected temp data
-    BufferData* pBloodPressCorrectedBuf;    //struct contains corrected syst. press. data
+    DoubleBufferData* pBloodPressCorrectedBuf;    //struct contains corrected syst. press. data
     BufferData* pPulseRateCorrectedBuf;        //struct contains corrected pulse rate data
     unsigned short* pBatteryState;      //struct contians battery data
 } AlarmData;                            //struct name
@@ -102,7 +106,7 @@ struct controlTFTKeypadData {
 
 struct controlCommunicationData {
     BufferData* pTempCorrectedBuf;
-    BufferData* pBloodPressCorrectedBuf;
+    DoubleBufferData* pBloodPressCorrectedBuf;
     BufferData* pPulseRateCorrectedBuf;
 } CommunicationData;
 

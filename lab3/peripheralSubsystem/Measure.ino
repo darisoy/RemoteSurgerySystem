@@ -119,24 +119,8 @@ void diastolicPressRawData(int* pCount) {                   //simulates diastoli
 }
 
 void pulseRateRawData(int* pCount) {                        //simulates diastolic press. data, takes an int pointer as input
-    if (pulseBool == 1) {                                   //if pulse boolean value is 1
-        if (*pCount % 2 == 0) {                             //if counter is even
-            pulseRateRaw++;                                 //incremenet pulse by 1
-        } else {                                            //if counter is odd
-            pulseRateRaw -= 3;                              //decrement pulse by 3
-        }
-    } else {                                                //if pulse boolean value is 0
-        if (*pCount % 2 == 0) {                             //if counter is even
-            pulseRateRaw--;                                 //decrement pulse by 1
-        } else {                                            //if counter is odd
-            pulseRateRaw +=3;                               //incremenet pulse by 3
-        }
-    }
-    if (pulseRateRaw > 40) {                                //if pulse rate is greater than 50
-        pulseBool = 1;                                      //set boolean value for pulse to be 1
-    }
-    if (pulseRateRaw < 15) {                                //if pulse rate is less than 50
-        pulseBool = 0;                                      //set boolean value for pulse to be 0
-    }
-    (*pCount)++;                                            //incremenet the value of the counter pointer by 1
+   if (FreqCount.available()) {                        //if the code if working
+   int pulseRateRaw = (int) FreqCount.read();  
+
+   }
 }

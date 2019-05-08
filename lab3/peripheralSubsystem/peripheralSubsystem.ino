@@ -1,11 +1,13 @@
 //Peripheral Subsystem
 #include "dataStructs.h"            //connect variables from dataStructs file
 #include "Measure.h"                // connect the function to the header file
+#include <FreqMeasure.h>
 
 void setup() {                      //setup portion of the arduino code
     initialize();                   //call the initialize function
     Serial.begin(9600);             //initialize the serial with 9600 baud rate
     pinMode(13, INPUT);             //setup pin 13 to be an input
+    FreqMeasure.begin(1000);
 }
 
 void loop() {                       //code arduino constatly loops through

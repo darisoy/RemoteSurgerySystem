@@ -65,7 +65,6 @@ void calltask6() {
   displayT.functionPtr(displayT.dataPtr);
 }
 
-
 TimedAction task0 = TimedAction(5000, calltask0);
 TimedAction task1 = TimedAction(5000, calltask1);
 TimedAction task2 = TimedAction(5000, calltask2);
@@ -145,13 +144,14 @@ void setup(void) {                                              //setup portion 
 }
 
 void loop(void) {                                               //code arduino constatly loops through
-                                                          //task can only run once every 5 seconds
+                                                                //task can only run once every 5 seconds
     task0.check();
-
     task1.check();
     task2.check();
     task3.check();
     task4.check();
+    task5.check();
+    task6.check();
 }
 
 void tftSetup() {

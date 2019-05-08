@@ -117,9 +117,15 @@ struct MyTCB {                          //create the task control block struct
   struct MyTCB* prev;
 } TCB;                             //struct name
 
-struct MyTCB* front = NULL;
-struct MyTCB* back = NULL;
-void insert(void *functionPtr, void* dataPtr) {
+struct MyTCBList {
+    struct MyTCB* front;
+    struct MyTCB* back;
+    int size
+} TCBList;
+
+MyTCBList taskQueue;
+
+void insert(void *functionPtr, void* dataPtr, int loc) {
    struct MyTCB* newnode = (struct MyTCB*) malloc(sizeof(struct MyTCB));
    newnode->functionPtr = &functionPtr
    newnode->dataPtr  = &dataPtr;
@@ -133,5 +139,5 @@ void delete() {
 
 }
 
-//MyTCB measureT, computeT, statusT, keypadT, warningT, communicationT, displayT;
+MyTCB measureT, computeT, statusT, keypadT, warningT, communicationT, displayT;
 #endif

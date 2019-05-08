@@ -119,8 +119,9 @@ void diastolicPressRawData(int* pCount) {                   //simulates diastoli
 }
 
 void pulseRateRawData(int* pCount) {                        //simulates diastolic press. data, takes an int pointer as input
-   if (FreqCount.available()) {                        //if the code if working
-   int pulseRateRaw = (int) FreqCount.read();  
-
-   }
+    if (FreqMeasure.available()) {                        //if the code if working
+        pulseRateRaw = (int) FreqMeasure.read();
+    } else {
+       pulseRateRaw = 999;
+    }
 }

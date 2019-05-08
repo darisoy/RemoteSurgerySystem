@@ -124,5 +124,4 @@ void pulseRateRawData(int* pCount) {                        //simulates diastoli
     } else {
        pulseRateRaw = 999;
     }
-    Serial.println(pulseRateRaw);
 }

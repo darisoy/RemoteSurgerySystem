@@ -9,12 +9,12 @@ This project uses the Arduino MEGA and Arduino UNO boards. The UNO is designed t
 # TODO list:
 - [x] Fix diastolic value generation
 - [x] Fix 5 seconds per task
-- [ ] TouchScreen and going between screen (separate task)
+- [ ] TouchScreen and going between screen - Doruk
 - [ ] interrupt for scheduler, using doublylinked list
-- [ ] global timer for scheduler
+- [x] global/hardware timer for scheduler
 - [x] buffers
-- [ ] ADC for pulse and pulse rate computation
-- [ ] warning/alarms (acknowledgements and UNO LEDs)
+- [ ] ADC for pulse and pulse rate computation - Kristi
+- [ ] warning/alarms (acknowledgements and UNO LEDs) - Doruk
 
 # Questions [SOLVED]:
 - how is TS supposed to check every 2 seconds when the task is only executed every 5 seconds: ignore 5 second rule for this

@@ -72,7 +72,7 @@ TimedAction task2 = TimedAction(5000, calltask2);
 TimedAction task3 = TimedAction(5000, calltask3);
 TimedAction task4 = TimedAction(5000, calltask4);
 TimedAction task5 = TimedAction(5000, calltask5);
-TimedAction task6 = TimedAction(5000, calltask6); 
+TimedAction task6 = TimedAction(5000, calltask6);
 
 
 void setup(void) {                                              //setup portion of the arduino code
@@ -125,10 +125,10 @@ void setup(void) {                                              //setup portion 
     displayT.dataPtr = (void*) &DisplayData;                    //set the dataPtr of displayT to be the address of the DisplayData pointer
     displayT.next = NULL;
     displayT.prev = &communicationT;
-    
+
     //Store the list structure in a struct
     //schedulerFunction(&taskQueue, &measureT, &displayT, 7);
-    
+
     //Initialize all buffer variables
     BufferFunction(&temperatureRawBuffer, temperatureRawBuf, 8);
     BufferFunction(&systolicRawBuffer, systolicRawBuf, 8);

@@ -119,8 +119,8 @@ struct MyTCB {                          //create the task control block struct
 
 struct MyTCBList {
     struct MyTCB* front;
-    struct MyTCB* placeholder;
     struct MyTCB* back;
+    int size
 } TCBList;
 
 MyTCBList taskQueue;

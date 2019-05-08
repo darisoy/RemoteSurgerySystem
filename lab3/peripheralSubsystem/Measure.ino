@@ -8,6 +8,7 @@
 // #define DIA_REQ 11                                          //set the keyword DIA_REQ to represent the number 11
 // #define PUL_REQ 10                                          //set the keyword PUL_REQ to represent the number 10
 
+boolean pinHigh = false;
 void measureFunction(struct controlMeasureData measureData,
                      int* pTempCount,
                      int* pPulseCount,
@@ -18,7 +19,13 @@ void measureFunction(struct controlMeasureData measureData,
     measureData.pDiastolicPressRaw = &diastolicPressRaw;    //assign raw dia's address to dia pointer from stuct
     measureData.pPulseRateRaw      = &pulseRateRaw;         //assign raw pulse's address to pulse pointer from stuct
 
-    if (digitalRead(REQ) == HIGH) {                     //if pin 13 is high, execute
+    if (!pinHigh && digitalRead(REQ) == HIGH) {
+        pinHigh = true;
+    } else if (pinHigh | digitalRead(REQ) == LOW) {
+        pinHigh = false;
+    }
+
+    if (pinHigh) {                     //if pin 13 is high, execute
         temperatureRawData(pTempCount);                     //call the temperatureRawData function to generate temp data
         Serial.print("VT");                                 //print "VT" on the serial
         if (*measureData.pTemperatureRaw < 10) {            //if value for the raw temp. pointer is less than 10
@@ -54,9 +61,6 @@ void measureFunction(struct controlMeasureData measureData,
             Serial.print("0");                              //print "0" on the serial
         }
         Serial.println(*measureData.pPulseRateRaw);         //print the value for the raw pulse. pointer on the serial
-    }
-    while (digitalRead(REQ) == HIGH) {                  //delays function until the pin is low
-        delay(100);                                         //this allows only one data to be sent to MEGA
     }
 }
 

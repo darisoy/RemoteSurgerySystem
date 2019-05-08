@@ -118,10 +118,16 @@ void diastolicPressRawData(int* pCount) {                   //simulates diastoli
     (*pCount)++;                                            //incremenet the value of the counter pointer by 1
 }
 
+double sum = 0;
+int count = 0;
 void pulseRateRawData(int* pCount) {                        //simulates diastolic press. data, takes an int pointer as input
-    if (FreqMeasure.available()) {                        //if the code if working
-        pulseRateRaw = (int) FreqMeasure.read();
-    } else {
-       pulseRateRaw = 999;
-    }
+  sum = sum + FreqMeasure.read();
+  count = count + 1;
+  if (count > 30) {
+    pulseRateRaw = (int) FreqMeasure.countToFrequency(sum / count);
+    sum = 0;
+    count = 0;
+  } else {
+    pulseRateRaw = 999;
+  }
 }

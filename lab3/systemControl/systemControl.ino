@@ -56,11 +56,6 @@ void setup(void) {                                              //setup portion 
     batteryGoodBool = true;         //initialize warning boolean for battery to be true
 
     timer = 0;                      //initilizes the timer value to be 0
-    start0 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
-    start1 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
-    start2 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
-    start3 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run
-    start4 = -6000;                 //initialize start time to be -6000 so tasks executes on the first loop run                                              //call the method that initalizes the variables
 
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer

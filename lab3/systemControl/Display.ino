@@ -27,11 +27,6 @@ void displayFunction(void* displayDataStruct){                                  
         Serial.println("annunciation is pressed");
     }
 
-    if (menu.justReleased()) {
-        // Serial.print("Released: "); Serial.println(b);
-        menu.drawButton();  // draw normal
-    }
-
     if (annunciate.justReleased()) {
         // Serial.print("Released: "); Serial.println(b);
         annunciate.drawButton();  // draw normal
@@ -43,6 +38,11 @@ void displayFunction(void* displayDataStruct){                                  
         annunciate.drawButton();
         menu.drawButton();
         annunciation = false;
+    }
+
+    if (menu.justReleased()) {
+        // Serial.print("Released: "); Serial.println(b);
+        menu.drawButton();  // draw normal
     }
 
     if (annunciation) {

@@ -117,7 +117,6 @@ struct MyTCB {                          //create the task control block struct
   struct MyTCB* prev;
 } TCB;                             //struct name
 
-
 struct MyTCB* front = NULL;
 struct MyTCB* back = NULL;
 void insert(void *functionPtr, void* dataPtr) {

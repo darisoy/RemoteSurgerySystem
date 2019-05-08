@@ -98,7 +98,10 @@ void setup(void) {                                              //setup portion 
     displayT.dataPtr = (void*) &DisplayData;                    //set the dataPtr of displayT to be the address of the DisplayData pointer
     displayT.next = NULL;
     displayT.prev = &communicationT;
-
+    
+    //Store the list structure in a struct
+    schedulerFunction(&taskQueue, &measureT, &displayT, 7);
+    
     //Initialize all buffer variables
     BufferFunction(&temperatureRawBuffer, temperatureRawBuf, 8);
     BufferFunction(&systolicRawBuffer, systolicRawBuf, 8);

@@ -11,10 +11,10 @@
 #define MINPRESSURE 10
 #define MAXPRESSURE 1000
 
-void keypadFunction(void* keypadDataStruct) {
-    struct keypadDisplayData *dData = (struct keypadDisplayData*) keypadDataStruct;        //deference the display struct
-    dData->pMeasurementSelection = &pMeasurementSelection;                                         //assign corrected temp's address to corrected temp pointer from display struct
-    dData->pAlarmAcknowledge     = &pAlarmAcknowledge;
+void keypadFunction(void* keypadDataStruct){
+//    struct keypadDisplayData *kData = (struct keypadDisplayData*) keypadDataStruct;        //deference the display struct
+//    kData->pMeasurementSelection = &pMeasurementSelection;                                         //assign corrected temp's address to corrected temp pointer from display struct
+//    kData->pAlarmAcknowledge     = &pAlarmAcknowledge;
 
     digitalWrite(13, HIGH);
     TSPoint p = ts.getPoint();

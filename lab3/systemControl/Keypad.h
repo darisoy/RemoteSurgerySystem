@@ -1,3 +1,3 @@
 #include <stdio.h>                                  //import the stdio.h file
 
-void keypadFunction(void* keypadDataStruct)
+void keypadFunction(void* keypadDataStruct);

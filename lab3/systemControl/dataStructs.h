@@ -48,8 +48,8 @@ struct BufferData {
 } Buffer;
 
 struct DoubleBufferData {
-    double * frontList;
-    double * backList;
+    BufferData * frontList;
+    BufferData * backList;
 } DoubleBuffer;
 
 BufferData temperatureRawBuffer;            //initializes the raw temperature variable
@@ -59,6 +59,8 @@ DoubleBufferData bloodPressRawBuffer;          //initializes the raw syst. press
 BufferData pulseRateRawBuffer;              //initializes the raw pulse rate variable
 
 BufferData tempCorrectedBuffer;                   //initalizes the corrected temperature variable
+BufferData systolicCorrectedBuffer;
+BufferData diastolicCorrectedBuffer;
 DoubleBufferData bloodPressCorrectedBuffer;              //initalizes the corrected syst. press. variable
 BufferData pulseRateCorrectedBuffer;              //initalizes the corrected pulse rate variable
 
@@ -120,24 +122,24 @@ struct MyTCB {                          //create the task control block struct
 struct MyTCBList {
     struct MyTCB* front;
     struct MyTCB* back;
-    int size
+    int size;
 } TCBList;
 
 MyTCBList taskQueue;
 
-void insert(void *functionPtr, void* dataPtr, int loc) {
-   struct MyTCB* newnode = (struct MyTCB*) malloc(sizeof(struct MyTCB));
-   newnode->functionPtr = &functionPtr
-   newnode->dataPtr  = &dataPtr;
-   newnode->prev = NULL;
-   newnode->next = front;
-   if(front !=  NULL)
-      front->prev = newnode ;
-   front = newnode;
-}
-void delete() {
-
-}
+//void insert(void *functionPtr, void* dataPtr, int loc) {
+//   struct MyTCB* newnode = (struct MyTCB*) malloc(sizeof(struct MyTCB));
+//   newnode->functionPtr = &functionPtr;
+//   newnode->dataPtr  = &dataPtr;
+//   newnode->prev = NULL;
+//   newnode->next = front;
+//   if(front !=  NULL)
+//      front->prev = newnode ;
+//   front = newnode;
+//}
+//void delete() {
+//
+//}
 
 MyTCB measureT, computeT, statusT, keypadT, warningT, communicationT, displayT;
 #endif

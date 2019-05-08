@@ -1,4 +1,4 @@
-void schedulerFunction(MyTCBList * TCBListPtr, MyTCB * frontTCB);
+void schedulerFunction(MyTCBList * TCBListPtr, MyTCB * front, MyTCB * back);
 
 void schedulerInsert(MyTCBList * TCBListPtr, MyTCB * ITCB, int location);
 

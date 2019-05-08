@@ -37,11 +37,43 @@ Elegoo_GFX_Button an_S;
 Elegoo_GFX_Button an_D;
 Elegoo_GFX_Button an_P;
 
-TimedAction task0 = TimedAction(5000, taskQueue[0].functionPtr(taskQueue[0].dataPtr));
-TimedAction task1 = TimedAction(5000, taskQueue[1].functionPtr(taskQueue[1].dataPtr));
-TimedAction task2 = TimedAction(5000, taskQueue[2].functionPtr(taskQueue[2].dataPtr));
-TimedAction task3 = TimedAction(5000, taskQueue[3].functionPtr(taskQueue[3].dataPtr));
-TimedAction task4 = TimedAction(5000, taskQueue[4].functionPtr(taskQueue[4].dataPtr));
+void calltask0() {
+  measureT.functionPtr(measureT.dataPtr);
+}
+
+void calltask1() {
+  computeT.functionPtr(computeT.dataPtr);
+}
+
+void calltask2() {
+  statusT.functionPtr(&statusT.dataPtr);
+}
+
+void calltask3() {
+  keypadT.functionPtr(keypadT.dataPtr);
+}
+
+void calltask4() {
+  warningT.functionPtr(warningT.dataPtr);
+}
+
+void calltask5() {
+  communicationT.functionPtr(communicationT.dataPtr);
+}
+
+void calltask6() {
+  displayT.functionPtr(displayT.dataPtr);
+}
+
+
+TimedAction task0 = TimedAction(5000, calltask0);
+TimedAction task1 = TimedAction(5000, calltask1);
+TimedAction task2 = TimedAction(5000, calltask2);
+TimedAction task3 = TimedAction(5000, calltask3);
+TimedAction task4 = TimedAction(5000, calltask4);
+TimedAction task5 = TimedAction(5000, calltask5);
+TimedAction task6 = TimedAction(5000, calltask6); 
+
 
 void setup(void) {                                              //setup portion of the arduino code
     Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
@@ -74,9 +106,9 @@ void setup(void) {                                              //setup portion 
 
     //need to code the keypad function
     keypadT.functionPtr = keypadFunction;
-    keypadT.dataPtr = (void*) &keypadData;
-    keypad.next = &warningT;
-    keypad.prev = &statusT;
+    keypadT.dataPtr = (void*) &KeypadData;
+    keypadT.next = &warningT;
+    keypadT.prev = &statusT;
 
     warningT.functionPtr = alarmFunction;                       //set the functionPtr of warningT to be the alarmFunction
     warningT.dataPtr = (void*) &AlarmData;                      //set the dataPtr of warningT to be the address of the AlarmData pointer
@@ -84,10 +116,10 @@ void setup(void) {                                              //setup portion 
     warningT.prev = &keypadT;
 
     //need to code the communication function
-    communicationT.functionPtr = communicationFunction;
-    commmunicationT.dataPtr = (void*) &communicationData;
-    communicationT.next = &displayT;
-    communicationT.prev = &warningT;
+//    communicationT.functionPtr = communicationFunction;
+//    communicationT.dataPtr = (void*) &CommunicationData;
+//    communicationT.next = &displayT;
+//    communicationT.prev = &warningT;
 
     displayT.functionPtr = displayFunction;                     //set the functionPtr of displayT to be the displayFunction
     displayT.dataPtr = (void*) &DisplayData;                    //set the dataPtr of displayT to be the address of the DisplayData pointer
@@ -95,7 +127,7 @@ void setup(void) {                                              //setup portion 
     displayT.prev = &communicationT;
     
     //Store the list structure in a struct
-    schedulerFunction(&taskQueue, &measureT, &displayT, 7);
+    //schedulerFunction(&taskQueue, &measureT, &displayT, 7);
     
     //Initialize all buffer variables
     BufferFunction(&temperatureRawBuffer, temperatureRawBuf, 8);
@@ -113,7 +145,7 @@ void setup(void) {                                              //setup portion 
 }
 
 void loop(void) {                                               //code arduino constatly loops through
-                                                                //task can only run once every 5 seconds
+                                                          //task can only run once every 5 seconds
     task0.check();
 
     task1.check();

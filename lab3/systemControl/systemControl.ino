@@ -46,7 +46,7 @@ void calltask1() {
 }
 
 void calltask2() {
-  statusT.functionPtr(&statusT.dataPtr);
+  statusT.functionPtr(statusT.dataPtr);
 }
 
 void calltask3() {
@@ -64,6 +64,7 @@ void calltask5() {
 void calltask6() {
   displayT.functionPtr(displayT.dataPtr);
 }
+
 
 TimedAction task0 = TimedAction(5000, calltask0);
 TimedAction task1 = TimedAction(5000, calltask1);
@@ -144,7 +145,7 @@ void setup(void) {                                              //setup portion 
 }
 
 void loop(void) {                                               //code arduino constatly loops through
-                                                                //task can only run once every 5 seconds
+                                                            //task can only run once every 5 seconds
     task0.check();
     task1.check();
     task2.check();

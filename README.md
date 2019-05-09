@@ -13,7 +13,7 @@ This project uses the Arduino MEGA and Arduino UNO boards. The UNO is designed t
 - [ ] interrupt for scheduler, using doublylinked list
 - [x] global/hardware timer for scheduler
 - [x] buffers
-- [ ] ADC for pulse and pulse rate computation - Kristi
+- [x] ADC for pulse and pulse rate computation
 - [ ] warning/alarms (acknowledgements and UNO LEDs) - Doruk
 
 # Questions [SOLVED]:

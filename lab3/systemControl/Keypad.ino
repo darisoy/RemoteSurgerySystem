@@ -25,7 +25,6 @@ void keypadFunction(void* keypadDataStruct){
     // scale from 0->1023 to tft.width
     p.x = map(p.x, TS_MINX, TS_MAXX, 0, tft.width());
     p.y = (tft.height()-map(p.y, TS_MINY, TS_MAXY, 0, tft.height()));
-    Serial.println("x and y updated");
 
     //check every 2 seconds to see if anything is pressed
     if (menu.contains(p.x, p.y)) {
@@ -106,7 +105,7 @@ void keypadFunction(void* keypadDataStruct){
         ack_P.drawButton(true);
         prMeasure = 0;
     }
-    
+
     if (annunciation && batteryGoodBool == 2 && ack_B.contains(p.x, p.y)) {
         ack_B.drawButton(true);
         batMeasure = 0;

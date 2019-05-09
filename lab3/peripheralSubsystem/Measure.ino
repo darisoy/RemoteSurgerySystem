@@ -8,7 +8,7 @@
 // #define DIA_REQ 11                                          //set the keyword DIA_REQ to represent the number 11
 // #define PUL_REQ 10                                          //set the keyword PUL_REQ to represent the number 10
 
-boolean pinHigh = false;
+
 void measureFunction(struct controlMeasureData measureData,
                      int* pTempCount,
                      int* pPulseCount,
@@ -19,9 +19,11 @@ void measureFunction(struct controlMeasureData measureData,
     measureData.pDiastolicPressRaw = &diastolicPressRaw;    //assign raw dia's address to dia pointer from stuct
     measureData.pPulseRateRaw      = &pulseRateRaw;         //assign raw pulse's address to pulse pointer from stuct
 
-    if (!pinHigh && digitalRead(REQ) == HIGH) {
+    Serial.print("pinHigh: ");
+    Serial.println(pinHigh);
+    if (!pinHigh && (digitalRead(REQ) == HIGH)) {
         pinHigh = true;
-    } else if (pinHigh | digitalRead(REQ) == LOW) {
+    } else {
         pinHigh = false;
     }
 
@@ -125,13 +127,13 @@ void diastolicPressRawData(int* pCount) {                   //simulates diastoli
 double sum = 0;
 int count = 0;
 void pulseRateRawData(int* pCount) {                        //simulates diastolic press. data, takes an int pointer as input
-  sum = sum + FreqMeasure.read();
-  count = count + 1;
-  if (count > 30) {
-    pulseRateRaw = (int) FreqMeasure.countToFrequency(sum / count);
-    sum = 0;
-    count = 0;
-  } else {
-    pulseRateRaw = 999;
+  if (FreqMeasure.available()) {
+    sum = sum + FreqMeasure.read();
+    count = count + 1;
+    if (count > 30) {
+      pulseRateRaw = (int) FreqMeasure.countToFrequency(sum / count);
+      sum = 0;
+      count = 0;
+    }
   }
 }

@@ -25,7 +25,7 @@ int prGoodBool;                        //initialized the warning boolean for pul
 int batteryGoodBool;                   //initialized the warning boolean for battery
 
 int timer;                              //initializes timer that will schedule when data will be requested
-char dataTransfered[5];                 //initializes 5 long character array that will hold read values on serial
+char dataTransfered[16];                 //initializes 5 long character array that will hold read values on serial
 
 int tempMeasure;
 int sysMeasure;

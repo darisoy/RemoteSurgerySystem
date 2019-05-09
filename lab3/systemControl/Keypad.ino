@@ -67,4 +67,48 @@ void keypadFunction(void* keypadDataStruct){
     } else {
         an_P.press(false);  // tell the button it is NOT pressed
     }
+
+    if (exp1.contains(p.x, p.y)) {
+        exp1.press(true);  // tell the button it is pressed
+    } else {
+        exp1.press(false);  // tell the button it is NOT pressed
+    }
+
+    if (exp2.contains(p.x, p.y)) {
+        exp2.press(true);  // tell the button it is pressed
+    } else {
+        exp2.press(false);  // tell the button it is NOT pressed
+    }
+
+    if (ack_T.contains(p.x, p.y)) {
+        ack_T.press(true);  // tell the button it is pressed
+    } else {
+        ack_T.press(false);  // tell the button it is NOT pressed
+    }
+
+
+    if (annunciation && tempGoodBool == 2 && ack_T.contains(p.x, p.y)) {
+        ack_T.drawButton(true);
+        tempMeasure = 0;
+    }
+
+    if (annunciation && sysGoodBool == 2 && ack_S.contains(p.x, p.y)) {
+        ack_S.drawButton(true);
+        sysMeasure = 0;
+    }
+
+    if (annunciation && diaGoodBool == 2 && ack_D.contains(p.x, p.y)) {
+        ack_D.drawButton(true);
+        diaMeasure = 0;
+    }
+
+    if (annunciation && prGoodBool == 2 && ack_P.contains(p.x, p.y)) {
+        ack_P.drawButton(true);
+        prMeasure = 0;
+    }
+    
+    if (annunciation && batteryGoodBool == 2 && ack_B.contains(p.x, p.y)) {
+        ack_B.drawButton(true);
+        batMeasure = 0;
+    }
 }

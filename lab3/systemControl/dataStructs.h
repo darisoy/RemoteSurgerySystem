@@ -6,90 +6,64 @@
 enum _myBool { FALSE = 0, TRUE = 1 };   //define boolean values
 typedef enum _myBool Bool;              //creates the boolean variable
 
-//Character arrays for the buffers
-double temperatureRawBuf[8];
-double systolicRawBuf[8];
-double diastolicRawBuf[8];
-double bloodPressRawBuf[16];
-double pulseRateRawBuf[8];
+unsigned int temperatureRaw;            //initializes the raw temperature variable
+unsigned int systolicPressRaw;          //initializes the raw syst. press. variable
+unsigned int diastolicPressRaw;         //initializes the raw dias. press. variable
+unsigned int pulseRateRaw;              //initializes the raw pulse rate variable
 
-double tempCorrectedBuf[8];
-double sysCorrectedBuf[8];
-double diaCorrectedBuf[8];
-double pulseRateCorrectedBuf[8];
+double tempCorrected;                   //initalizes the corrected temperature variable
+double systolicPressCorrected;          //initalizes the corrected syst. press. variable
+double diastolicPressCorrected;         //initalizes the corrected dias. press. variable
+double pulseRateCorrected;              //initalizes the corrected pulse rate variable
 
 unsigned short batteryState;            //initializes the battery state variable
 
-bool tempGoodBool;                      //initialized the warning boolean for temperature
-bool sysGoodBool;                       //initialized the warning boolean for systolic
-bool diaGoodBool;                       //initialized the warning boolean for diastolic
-bool prGoodBool;                        //initialized the warning boolean for pulse
-bool batteryGoodBool;                   //initialized the warning boolean for battery
-
-//Keypad values
-unsigned int measurementSelection;
-unsigned int alarmAcknowledge;
-unsigned int functionSelect;
+int tempGoodBool;                      //initialized the warning boolean for temperature
+int sysGoodBool;                       //initialized the warning boolean for systolic
+int diaGoodBool;                       //initialized the warning boolean for diastolic
+int prGoodBool;                        //initialized the warning boolean for pulse
+int batteryGoodBool;                   //initialized the warning boolean for battery
 
 int timer;                              //initializes timer that will schedule when data will be requested
-char dataTransfered[16];                //initializes 16 long character array that will hold read values on serial
+char dataTransfered[5];                 //initializes 5 long character array that will hold read values on serial
 
-int start0;                             //initialize start time for task0
-int start1;                             //initialize start time for task1
-int start2;                             //initialize start time for task2
-int start3;                             //initialize start time for task3
-int start4;                             //initialize start time for task4
-
-struct BufferData {
-    double * list;
-    int front;
-    int back;
-    int size;
-} Buffer;
-
-struct DoubleBufferData {
-    BufferData * frontList;
-    BufferData * backList;
-} DoubleBuffer;
-
-BufferData temperatureRawBuffer;            //initializes the raw temperature variable
-BufferData systolicRawBuffer;
-BufferData diastolicRawBuffer;
-DoubleBufferData bloodPressRawBuffer;          //initializes the raw syst. press. variable
-BufferData pulseRateRawBuffer;              //initializes the raw pulse rate variable
-
-BufferData tempCorrectedBuffer;                   //initalizes the corrected temperature variable
-BufferData systolicCorrectedBuffer;
-BufferData diastolicCorrectedBuffer;
-DoubleBufferData bloodPressCorrectedBuffer;              //initalizes the corrected syst. press. variable
-BufferData pulseRateCorrectedBuffer;              //initalizes the corrected pulse rate variable
+int tempMeasure;
+int sysMeasure;
+int diaMeasure;
+int prMeasure;
+int batMeasure;
 
 struct controlMeasureData {             //create the MeasureData struct
-    BufferData* pTemperatureRawBuf;      //struct contains raw temp data
-    DoubleBufferData* pBloodPressRawBuf;    //struct contains raw syst. press. data
-    BufferData* pPulseRateRawBuf;        //struct contains raw pulse rate data
+    unsigned int* pTemperatureRaw;      //struct contains raw temp data
+    unsigned int* pSystolicPressRaw;    //struct contains raw syst. press. data
+    unsigned int* pDiastolicPressRaw;   //struct contains raw dia. press. data
+    unsigned int* pPulseRateRaw;        //struct contains raw pulse rate data
 } MeasureData;                          //struct name
 
 struct controlComputeData {             //create the controlComputeData struct
-    BufferData* pTemperatureRawBuf;      //struct contains raw temp data
-    DoubleBufferData* pBloodPressRawBuf;    //struct contains raw syst. press. data
-    BufferData* pPulseRateRawBuf;        //struct contains raw pulse rate data
-    BufferData* pTempCorrectedBuf;             //struct contains corrected temp data
-    DoubleBufferData* pBloodPressCorrectedBuf;    //struct contains corrected syst. press. data
-    BufferData* pPulseRateCorrectedBuf;        //struct contains corrected pulse rate data
+    unsigned int* pTemperatureRaw;      //struct contains raw temp data
+    unsigned int* pSystolicPressRaw;    //struct contains raw syst. press. data
+    unsigned int* pDiastolicPressRaw;   //struct contains raw dia. press. data
+    unsigned int* pPulseRateRaw;        //struct contains raw pulse rate data
+    double* pTempCorrected;             //struct contains corrected temp data
+    double* pSystolicPressCorrected;    //struct contains corrected syst. press. data
+    double* pDiastolicPressCorrected;   //struct contains corrected dia. press. data
+    double* pPulseRateCorrected;        //struct contains corrected pulse rate data
 } ComputeData;                          //struct name
 
 struct controlDisplayData {             //create the controlDisplayData struct
-    BufferData* pTempCorrectedBuf;             //struct contains corrected temp data
-    DoubleBufferData* pBloodPressCorrectedBuf;    //struct contains corrected syst. press. data
-    BufferData* pPulseRateCorrectedBuf;        //struct contains corrected pulse rate data
+    double* pTempCorrected;             //struct contains corrected temp data
+    double* pSystolicPressCorrected;    //struct contains corrected syst. press. data
+    double* pDiastolicPressCorrected;   //struct contains corrected dia. press. data
+    double* pPulseRateCorrected;        //struct contains corrected pulse rate data
     unsigned short* pBatteryState;      //struct contians battery data
 } DisplayData;                          //struct name
 
 struct controlWarningAlarmData {        //create the controlWarningAlarmData struct
-    BufferData* pTempCorrectedBuf;             //struct contains corrected temp data
-    DoubleBufferData* pBloodPressCorrectedBuf;    //struct contains corrected syst. press. data
-    BufferData* pPulseRateCorrectedBuf;        //struct contains corrected pulse rate data
+    double* pTempCorrected;             //struct contains corrected temp data
+    double* pSystolicPressCorrected;    //struct contains corrected syst. press. data
+    double* pDiastolicPressCorrected;   //struct contains corrected dia. press. data
+    double* pPulseRateCorrected;        //struct contains corrected pulse rate data
     unsigned short* pBatteryState;      //struct contians battery data
 } AlarmData;                            //struct name
 
@@ -101,45 +75,21 @@ struct controlSchedulerData {           //create the controlSchedulerData struct
                                         //struct does not contian any variables
 } SchedulerData;                        //struct name
 
-struct controlTFTKeypadData {
-    unsigned int* pMeasurementSelection;
-    unsigned int* pAlarmAcknowledge;
-} KeypadData;
+struct controlKeypadData {             //create the MeasureData struct
 
-struct controlCommunicationData {
-    BufferData* pTempCorrectedBuf;
-    DoubleBufferData* pBloodPressCorrectedBuf;
-    BufferData* pPulseRateCorrectedBuf;
-} CommunicationData;
+} KeypadData;
 
 struct MyTCB {                          //create the task control block struct
   void (*functionPtr)(void*);           //struct contains a pointer to a function
   void* dataPtr;                        //struct contains a pointer
-  struct MyTCB* next;
-  struct MyTCB* prev;
-} TCB;                             //struct name
+} TCB;                                  //struct name
 
-struct MyTCBList {
-    struct MyTCB* front;
-    struct MyTCB* back;
-    int size;
-} TCBList;
+MyTCB taskQueue[6];                     //initialize a 6 element array with MyTCB stuct
+MyTCB measureT,                         //initialize the measureT object using MyTCB struct
+      computeT,                         //initialize the computeT object using MyTCB struct
+      statusT,                          //initialize the statusT object using MyTCB struct
+      warningT,                         //initialize the warningT object using MyTCB struct
+      displayT,                         //initialize the displayT object using MyTCB struct
+      keypadT;
 
-MyTCBList taskQueue;
-
-//void insert(void *functionPtr, void* dataPtr, int loc) {
-//   struct MyTCB* newnode = (struct MyTCB*) malloc(sizeof(struct MyTCB));
-//   newnode->functionPtr = &functionPtr;
-//   newnode->dataPtr  = &dataPtr;
-//   newnode->prev = NULL;
-//   newnode->next = front;
-//   if(front !=  NULL)
-//      front->prev = newnode ;
-//   front = newnode;
-//}
-//void delete() {
-//
-//}
-
-MyTCB measureT, computeT, statusT, keypadT, warningT, communicationT, displayT;
 #endif

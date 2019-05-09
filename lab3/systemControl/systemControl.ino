@@ -2,6 +2,7 @@
 #include <Elegoo_TFTLCD.h>                                      // Hardware-specific library
 #include <TouchScreen.h>
 #include <TimedAction.h>
+#include <CircularBuffer.h>
 
 #define LCD_RESET A4                                            // Can alternately just connect to Arduino's reset pin
 #define LCD_CS A3                                               // Chip Select goes to Analog 3
@@ -24,9 +25,9 @@
 #define ORANGE  0xFD20
 #define GREY   0xC618
 
-#define REQ 22                                                  //set the keyword TEM_REQ to represent the number 22
-#include "dataStructs.h"                                        //import the variables used in the file
-
+#define REQ 22
+#include "dataStructs.h"
+                                     //import the variables used in the file
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 
@@ -36,123 +37,67 @@ Elegoo_GFX_Button an_T;
 Elegoo_GFX_Button an_S;
 Elegoo_GFX_Button an_D;
 Elegoo_GFX_Button an_P;
-
-void calltask0() {
-  measureT.functionPtr(measureT.dataPtr);
-}
-
-void calltask1() {
-  computeT.functionPtr(computeT.dataPtr);
-}
-
-void calltask2() {
-  statusT.functionPtr(statusT.dataPtr);
-}
-
-void calltask3() {
-  keypadT.functionPtr(keypadT.dataPtr);
-}
-
-void calltask4() {
-  warningT.functionPtr(warningT.dataPtr);
-}
-
-void calltask5() {
-  communicationT.functionPtr(communicationT.dataPtr);
-}
-
-void calltask6() {
-  displayT.functionPtr(displayT.dataPtr);
-}
-
-
-TimedAction task0 = TimedAction(5000, calltask0);
-TimedAction task1 = TimedAction(5000, calltask1);
-TimedAction task2 = TimedAction(5000, calltask2);
-TimedAction task3 = TimedAction(5000, calltask3);
-TimedAction task4 = TimedAction(5000, calltask4);
-TimedAction task5 = TimedAction(5000, calltask5);
-TimedAction task6 = TimedAction(5000, calltask6);
-
+Elegoo_GFX_Button exp1;
+Elegoo_GFX_Button exp2;
+Elegoo_GFX_Button ack_T;
+Elegoo_GFX_Button ack_S;
+Elegoo_GFX_Button ack_D;
+Elegoo_GFX_Button ack_P;
+Elegoo_GFX_Button ack_B;
 
 void setup(void) {                                              //setup portion of the arduino code
     Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
     Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
-    pinMode(REQ, OUTPUT);                                       //setup pin 22 to be an output
     tftSetup();                                                 //call the method that detects the TFT and it's version
-
-    tempGoodBool = true;            //initialize warning boolean for temp to be true
-    sysGoodBool = true;             //initialize warning boolean for systolic to be true
-    diaGoodBool = true;             //initialize warning boolean for diastolic to be true
-    prGoodBool = true;              //initialize warning boolean for pulse to be true
-    batteryGoodBool = true;         //initialize warning boolean for battery to be true
-
-    timer = 0;                      //initilizes the timer value to be 0
-
+    pinMode(REQ, OUTPUT);                                   //setup pin 22 to be an output
+    initialize();                                               //call the method that initalizes the variables
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
-    measureT.next = &computeT;
-    measureT.prev = NULL;
-
     computeT.functionPtr = computeFunction;                     //set the functionPtr of computeT to be the computeFunction
     computeT.dataPtr = (void*) &ComputeData;                    //set the dataPtr of computeT to be the address of the ComputeData pointer
-    computeT.next = &statusT;
-    computeT.prev = &measureT;
-
     statusT.functionPtr = statusFunction;                       //set the functionPtr of statusT to be the statusFunction
     statusT.dataPtr = (void*) &StatusData;                      //set the dataPtr of statusT to be the address of the StatusData pointer
-    statusT.next = &keypadT;
-    statusT.prev = &computeT;
-
-    //need to code the keypad function
-    keypadT.functionPtr = keypadFunction;
-    keypadT.dataPtr = (void*) &KeypadData;
-    keypadT.next = &warningT;
-    keypadT.prev = &statusT;
-
     warningT.functionPtr = alarmFunction;                       //set the functionPtr of warningT to be the alarmFunction
     warningT.dataPtr = (void*) &AlarmData;                      //set the dataPtr of warningT to be the address of the AlarmData pointer
-    warningT.next = &communicationT;
-    warningT.prev = &keypadT;
-
-    //need to code the communication function
-//    communicationT.functionPtr = communicationFunction;
-//    communicationT.dataPtr = (void*) &CommunicationData;
-//    communicationT.next = &displayT;
-//    communicationT.prev = &warningT;
-
     displayT.functionPtr = displayFunction;                     //set the functionPtr of displayT to be the displayFunction
     displayT.dataPtr = (void*) &DisplayData;                    //set the dataPtr of displayT to be the address of the DisplayData pointer
-    displayT.next = NULL;
-    displayT.prev = &communicationT;
-
-    //Store the list structure in a struct
-    //schedulerFunction(&taskQueue, &measureT, &displayT, 7);
-
-    //Initialize all buffer variables
-    BufferFunction(&temperatureRawBuffer, temperatureRawBuf, 8);
-    BufferFunction(&systolicRawBuffer, systolicRawBuf, 8);
-    BufferFunction(&diastolicRawBuffer, diastolicRawBuf, 8);
-    BufferFunction(&tempCorrectedBuffer, tempCorrectedBuf, 8);
-    BufferFunction(&systolicCorrectedBuffer, sysCorrectedBuf, 8);
-    BufferFunction(&diastolicCorrectedBuffer, diaCorrectedBuf, 8);
-    BufferFunction(&pulseRateCorrectedBuffer, pulseRateCorrectedBuf, 8);
-
-    BufferWrite(&temperatureRawBuffer, 75.0);
-    BufferWrite(&systolicRawBuffer, 80.0);
-    BufferWrite(&diastolicRawBuffer, 80.0);
-    BufferWrite(&pulseRateRawBuffer, 0.0);
+    keypadT.functionPtr = keypadFunction;
+    keypadT.dataPtr = (void*) &KeypadData;
 }
 
+void calltask0() {
+  measureT.functionPtr(measureT.dataPtr);
+}
+void calltask1() {
+  computeT.functionPtr(computeT.dataPtr);
+}
+void calltask2() {
+  statusT.functionPtr(statusT.dataPtr);
+}
+void calltask3() {
+  keypadT.functionPtr(keypadT.dataPtr);
+}
+void calltask4() {
+  warningT.functionPtr(warningT.dataPtr);
+}
+void calltask5() {
+  displayT.functionPtr(displayT.dataPtr);
+}
+
+TimedAction task0 = TimedAction(5000, calltask0);
+TimedAction task1 = TimedAction(5000, calltask1);
+TimedAction task2 = TimedAction(5000, calltask2);
+TimedAction task3 = TimedAction(10, calltask3);
+TimedAction task4 = TimedAction(5000, calltask4);
+TimedAction task5 = TimedAction(100, calltask5);
+
 void loop(void) {                                               //code arduino constatly loops through
-                                                            //task can only run once every 5 seconds
     task0.check();
     task1.check();
     task2.check();
     task3.check();
     task4.check();
     task5.check();
-    task6.check();
 }
 
 void tftSetup() {
@@ -191,12 +136,46 @@ void tftSetup() {
     tft.begin(identifier);                                              //initializes the LCD screen
     tft.setRotation(0);
     tft.fillScreen(BLACK);                                              //fills the screen with the color black
-    menu.initButton(&tft, 115, 240, 80, 40, WHITE, RED, WHITE, "menu", 2); // x, y, w, h, outline, fill, text
-    annunciate.initButton(&tft, 115, 290, 140, 40, WHITE, BLUE, WHITE, "announce", 2);
+    menu.initButton(&tft, 50, 240, 80, 40, WHITE, BLUE, WHITE, "menu", 2); // x, y, w, h, outline, fill, text
+    annunciate.initButton(&tft, 60, 290, 100, 40, WHITE, BLUE, WHITE, "announ", 2);
+    exp1.initButton(&tft, 180, 240, 80, 40, WHITE, BLUE, WHITE, "exp1", 2);
+    exp2.initButton(&tft, 180, 290, 80, 40, WHITE, BLUE, WHITE, "exp2", 2);
     an_T.initButton(&tft, 18, 50, 30, 30, BLACK, GREY, YELLOW, "T", 3);
     an_S.initButton(&tft, 18, 87, 30, 30, BLACK, GREY, YELLOW, "S", 3);
     an_D.initButton(&tft, 18, 124, 30, 30, BLACK, GREY, YELLOW, "D", 3);
     an_P.initButton(&tft, 18, 161, 30, 30, BLACK, GREY, YELLOW, "P", 3);
+    ack_T.initButton(&tft, 220, 30, 20, 20, BLACK, RED, BLACK, "", 3);
+    ack_S.initButton(&tft, 220, 57, 20, 20, BLACK, RED, BLACK, "", 3);
+    ack_D.initButton(&tft, 220, 84, 20, 20, BLACK, RED, BLACK, "", 3);
+    ack_P.initButton(&tft, 220, 111, 20, 20, BLACK, RED, BLACK, "", 3);
+    ack_B.initButton(&tft, 220, 138, 20, 20, BLACK, RED, BLACK, "", 3);
     menu.drawButton();
     annunciate.drawButton();
+    exp1.drawButton();
+    exp2.drawButton();
+}
+
+void initialize() {
+    temperatureRaw = 0;             //initializes the raw temp value to be 0
+    systolicPressRaw = 0;           //initializes the raw systolic value to be 0
+    diastolicPressRaw = 0;          //initializes the raw diastolic value to be 0
+    pulseRateRaw = 0;               //initializes the raw pulse rate value to be 0
+    batteryState = 200;             //initialized the battery value to be 200
+
+    tempCorrected = 0;              //initalizes the corrected temp value to be 0
+    systolicPressCorrected = 0;     //initalizes the corrected systolic value to be 0
+    diastolicPressCorrected = 0;    //initalizes the corrected diastolic value to be 0
+    pulseRateCorrected = 0;         //initalizes the corrected pulse rate value to be 0
+
+    tempGoodBool = true;            //initialize warning boolean for temp to be true
+    sysGoodBool = true;             //initialize warning boolean for systolic to be true
+    diaGoodBool = true;             //initialize warning boolean for diastolic to be true
+    prGoodBool = true;              //initialize warning boolean for pulse to be true
+    batteryGoodBool = true;         //initialize warning boolean for battery to be true
+
+    tempMeasure = 0;
+    sysMeasure = 0;
+    diaMeasure = 0;
+    prMeasure = 0;
+    batMeasure = 0;
 }

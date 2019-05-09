@@ -21,7 +21,7 @@ void measureFunction(struct controlMeasureData measureData,
 
     if (!pinHigh && digitalRead(REQ) == HIGH) {
         pinHigh = true;
-    } else if (pinHigh | digitalRead(REQ) == LOW) {
+    } else if {
         pinHigh = false;
     }
 

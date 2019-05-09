@@ -3,7 +3,7 @@
 #include <stdio.h>                                          //import necessary header files
 #include <stdbool.h>                                        //import necessary header files
 #include <stddef.h>                                         //import necessary header files
-#define REQ 13                                          //set the keyword TEM_REQ to represent the number 13
+#define REQ 14                                              //set the keyword TEM_REQ to represent the number 13
 
 void measureFunction(struct controlMeasureData measureData,
                      int* pTempCount,
@@ -125,8 +125,10 @@ void pulseRateRawData(int* pCount) {                        //simulates diastoli
         count = count + 1;
         if (count > 30) {
             pulseRateRaw = (int) FreqMeasure.countToFrequency(sum / count);
+
             sum = 0;
             count = 0;
         }
     }
+
 }

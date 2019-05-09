@@ -6,10 +6,8 @@
 void setup() {                      //setup portion of the arduino code
     initialize();                   //call the initialize function
     Serial.begin(9600);             //initialize the serial with 9600 baud rate
-    pinMode(13, INPUT);             //setup pin 13 to be an input
-    pinMode(12, INPUT);             //setup pin 12 to be an input
-    pinMode(11, INPUT);             //setup pin 11 to be an input
-    pinMode(10, INPUT);             //setup pin 10 to be an input
+    pinMode(14, INPUT);             //setup pin 13 to be an input
+
     FreqMeasure.begin();
 }
 

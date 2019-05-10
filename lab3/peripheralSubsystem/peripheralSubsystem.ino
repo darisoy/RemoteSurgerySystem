@@ -9,6 +9,12 @@ void setup() {                      //setup portion of the arduino code
     pinMode(14, INPUT);             //setup pin 13 to be an input
 
     FreqMeasure.begin();
+
+    *pSysCount=0;                         //initialize the pointer to the systolic counter
+    *pDiaCount=0;                         //initialize the pointer to the diastolic counter
+    *pDiastolicFunction=0;                //initialize the pointer to the diastolic function
+    *pSystolicFunction=0;                 //initialize the pointer to the systolic function
+
 }
 
 void loop() {                       //code arduino constatly loops through

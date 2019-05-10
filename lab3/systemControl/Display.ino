@@ -26,7 +26,6 @@ void displayFunction(void* displayDataStruct){                                  
         exp1.drawButton();
         exp2.drawButton();
         annunciation = true;
-        Serial.println("annunciation is pressed");
     }
     if (annunciate.justReleased()) {
         annunciate.drawButton();  // draw normal

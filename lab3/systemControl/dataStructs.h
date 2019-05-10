@@ -21,8 +21,6 @@ unsigned int alarmAcknowledge;
 
 unsigned short batteryState;            //initializes the battery state variable
 
-unsigned int measurementSelection;
-unsigned int alarmAcknowledge;
 
 int tempGoodBool;                      //initialized the warning boolean for temperature
 int sysGoodBool;                       //initialized the warning boolean for systolic

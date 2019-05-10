@@ -16,6 +16,9 @@ double systolicPressCorrected;          //initalizes the corrected syst. press. 
 double diastolicPressCorrected;         //initalizes the corrected dias. press. variable
 double pulseRateCorrected;              //initalizes the corrected pulse rate variable
 
+unsigned int measurementSelection;
+unsigned int alarmAcknowledge;
+
 unsigned short batteryState;            //initializes the battery state variable
 
 int tempGoodBool;                      //initialized the warning boolean for temperature
@@ -32,6 +35,8 @@ int sysMeasure;
 int diaMeasure;
 int prMeasure;
 int batMeasure;
+
+
 
 struct controlMeasureData {             //create the MeasureData struct
     unsigned int* pTemperatureRaw;      //struct contains raw temp data
@@ -76,12 +81,16 @@ struct controlSchedulerData {           //create the controlSchedulerData struct
 } SchedulerData;                        //struct name
 
 struct controlKeypadData {             //create the MeasureData struct
-
+  unsigned int pMeasurementSelection;
+  unsigned int pAlarmAcknowledge;
 } KeypadData;
 
 struct MyTCB {                          //create the task control block struct
   void (*functionPtr)(void*);           //struct contains a pointer to a function
   void* dataPtr;                        //struct contains a pointer
+  TimedAction* timedActionPtr;
+  MyTCB* next;
+  MyTCB* prev;
 } TCB;                                  //struct name
 
 MyTCB taskQueue[6];                     //initialize a 6 element array with MyTCB stuct
@@ -91,5 +100,40 @@ MyTCB measureT,                         //initialize the measureT object using M
       warningT,                         //initialize the warningT object using MyTCB struct
       displayT,                         //initialize the displayT object using MyTCB struct
       keypadT;
+
+struct LinkedList{
+  MyTCB* front;
+  MyTCB* back;
+  MyTCB* placeholder;
+  int size;
+}List;
+
+LinkedList scheduler;
+
+void calltask0() {
+  measureT.functionPtr(measureT.dataPtr);
+}
+void calltask1() {
+  computeT.functionPtr(computeT.dataPtr);
+}
+void calltask2() {
+  statusT.functionPtr(statusT.dataPtr);
+}
+void calltask3() {
+  keypadT.functionPtr(keypadT.dataPtr);
+}
+void calltask4() {
+  warningT.functionPtr(warningT.dataPtr);
+}
+void calltask5() {
+  displayT.functionPtr(displayT.dataPtr);
+}
+
+TimedAction task0 = TimedAction(5000, calltask0);
+TimedAction task1 = TimedAction(5000, calltask1);
+TimedAction task2 = TimedAction(5000, calltask2);
+TimedAction task3 = TimedAction(10, calltask3);
+TimedAction task4 = TimedAction(5000, calltask4);
+TimedAction task5 = TimedAction(100, calltask5);
 
 #endif

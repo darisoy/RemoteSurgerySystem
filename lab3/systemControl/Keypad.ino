@@ -13,8 +13,6 @@
 
 void keypadFunction(void* keypadDataStruct){
 //    struct keypadDisplayData *kData = (struct keypadDisplayData*) keypadDataStruct;        //deference the display struct
-//    kData->pMeasurementSelection = &pMeasurementSelection;                                         //assign corrected temp's address to corrected temp pointer from display struct
-//    kData->pAlarmAcknowledge     = &pAlarmAcknowledge;
 
     digitalWrite(13, HIGH);
     TSPoint p = ts.getPoint();

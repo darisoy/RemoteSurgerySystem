@@ -12,11 +12,6 @@ boolean bool_P = false;
 
 void displayFunction(void* displayDataStruct){                                              //function that display the data on the TFT LCD display, takes display struct as input
     struct controlDisplayData *dData = (struct controlDisplayData*) displayDataStruct;        //deference the display struct
-    dData->pTempCorrected           = &tempCorrected;                                         //assign corrected temp's address to corrected temp pointer from display struct
-    dData->pSystolicPressCorrected  = &systolicPressCorrected;                                //assign corrected sys's address to corrected sys pointer from display struct
-    dData->pDiastolicPressCorrected = &diastolicPressCorrected;                               //assign corrected dia's address to corrected dia pointer from display struct
-    dData->pPulseRateCorrected      = &pulseRateCorrected;                                    //assign corrected pulse's address to corrected pulse pointer from display struct
-    dData->pBatteryState            = &batteryState;                                          //assign battery state's address to battery state pointer from display struct
 
     if (annunciate.justPressed()) {
         annunciate.drawButton(true);  // draw invert!

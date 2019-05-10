@@ -16,6 +16,9 @@ double systolicPressCorrected;          //initalizes the corrected syst. press. 
 double diastolicPressCorrected;         //initalizes the corrected dias. press. variable
 double pulseRateCorrected;              //initalizes the corrected pulse rate variable
 
+unsigned int measurementSelection;
+unsigned int alarmAcknowledge;
+
 unsigned short batteryState;            //initializes the battery state variable
 
 unsigned int measurementSelection;

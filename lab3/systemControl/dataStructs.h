@@ -80,8 +80,8 @@ struct controlSchedulerData {           //create the controlSchedulerData struct
 } SchedulerData;                        //struct name
 
 struct controlKeypadData {             //create the MeasureData struct
-  unsigned int* pMeasurementSelection;
-  unsigned int* pAlarmAcknowledge;
+  unsigned int pMeasurementSelection;
+  unsigned int pAlarmAcknowledge;
 } KeypadData;
 
 struct MyTCB {                          //create the task control block struct

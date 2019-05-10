@@ -21,7 +21,7 @@ void measureFunction(struct controlMeasureData measureData,
         pinHigh = false;
     }
 
-    if (pinHigh) {                     //if pin 13 is high, execute
+    if (pinHigh) {                                          //if pin 14 is high, execute
         temperatureRawData(pTempCount);                     //call the temperatureRawData function to generate temp data
         Serial.print("VT");                                 //print "VT" on the serial
         if (*measureData.pTemperatureRaw < 10) {            //if value for the raw temp. pointer is less than 10

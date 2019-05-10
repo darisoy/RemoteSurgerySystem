@@ -62,43 +62,49 @@ void setup(void) {                                              //setup portion 
     initialize();                                               //call the method that initalizes the variables
     measureT.functionPtr = measureFunction;
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
+    measureT.timedActionPtr = &task0;
     measureT.next = &computeT;
     measureT.prev = &keypadT;                                                //assign raw pulse's address to raw pulse pointer from compute struct
 
     computeT.functionPtr = computeFunction;                     //set the functionPtr of computeT to be the computeFunction
     computeT.dataPtr = (void*) &ComputeData;                    //set the dataPtr of computeT to be the address of the ComputeData pointer
+    computeT.timedActionPtr = &task1;
     computeT.next = &statusT;
     computeT.prev = &measureT;
 
     statusT.functionPtr = statusFunction;                       //set the functionPtr of statusT to be the statusFunction
     statusT.dataPtr = (void*) &StatusData;                      //set the dataPtr of statusT to be the address of the StatusData pointer
+    statusT.timedActionPtr = &task2;
     statusT.next = &warningT;
     statusT.prev = &computeT;
 
 
     warningT.functionPtr = alarmFunction;                       //set the functionPtr of warningT to be the alarmFunction
     warningT.dataPtr = (void*) &AlarmData;                      //set the dataPtr of warningT to be the address of the AlarmData pointer
+    warningT.timedActionPtr = &task3;
     warningT.next = &displayT;
     warningT.prev = &statusT;
 
     displayT.functionPtr = displayFunction;                     //set the functionPtr of displayT to be the displayFunction
     displayT.dataPtr = (void*) &DisplayData;                    //set the dataPtr of displayT to be the address of the DisplayData pointer
+    displayT.timedActionPtr = &task4;
     displayT.next = &keypadT;
     displayT.prev = &warningT;
 
     keypadT.functionPtr = keypadFunction;
     keypadT.dataPtr = (void*) &KeypadData;
+    keypadT.timedActionPtr = &task5;
     keypadT.next = &measureT;
     keypadT.prev = &displayT;
+
+    scheduler.front = &measureT;
+    scheduler.back = &keypadT;
+    scheduler.placeholder = scheduler.front;
+    scheduler.size = 7;
 }
 
-void loop(void) {                                               //code arduino constatly loops through
-    task0.check();
-    task1.check();
-    task2.check();
-    task3.check();
-    task4.check();
-    task5.check();
+void loop(void) {                                               //code arduino constantly loops through
+    schedulerFunctionRun(&scheduler);
 }
 
 void tftSetup() {

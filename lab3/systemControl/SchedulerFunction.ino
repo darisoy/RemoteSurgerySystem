@@ -10,6 +10,7 @@ void schedulerFunctionAdd(MyTCB* TCBPtr, void* list){
   TCBPtr->prev = newList->placeholder;
   newList->placeholder->next = TCBPtr;
   newList->placeholder->next->prev = TCBPtr;
+  newList->size++;
 }
 
 void schedulerFunctionDelete(MyTCB* TCBPtr, void* list){

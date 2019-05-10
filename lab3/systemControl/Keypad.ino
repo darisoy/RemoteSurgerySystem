@@ -12,9 +12,7 @@
 #define MAXPRESSURE 1000
 
 void keypadFunction(void* keypadDataStruct){
-//    struct keypadDisplayData *kData = (struct keypadDisplayData*) keypadDataStruct;        //deference the display struct
-//    kData->pMeasurementSelection = &pMeasurementSelection;                                         //assign corrected temp's address to corrected temp pointer from display struct
-//    kData->pAlarmAcknowledge     = &pAlarmAcknowledge;
+    struct controlDisplayData *kData = (struct controlDisplayData*) keypadDataStruct;
 
     digitalWrite(13, HIGH);
     TSPoint p = ts.getPoint();
@@ -41,28 +39,24 @@ void keypadFunction(void* keypadDataStruct){
 
     if (an_T.contains(p.x, p.y)) {
         an_T.press(true);  // tell the button it is pressed
-        Serial.println("T is pressed!");
     } else {
         an_T.press(false);  // tell the button it is NOT pressed
     }
 
     if (an_S.contains(p.x, p.y)) {
         an_S.press(true);  // tell the button it is pressed
-        Serial.println("S is pressed!");
     } else {
         an_S.press(false);  // tell the button it is NOT pressed
     }
 
     if (an_D.contains(p.x, p.y)) {
         an_D.press(true);  // tell the button it is pressed
-        Serial.println("D is pressed!");
     } else {
         an_D.press(false);  // tell the button it is NOT pressed
     }
 
     if (an_P.contains(p.x, p.y)) {
         an_P.press(true);  // tell the button it is pressed
-        Serial.println("P is pressed!");
     } else {
         an_P.press(false);  // tell the button it is NOT pressed
     }
@@ -84,7 +78,6 @@ void keypadFunction(void* keypadDataStruct){
     } else {
         ack_T.press(false);  // tell the button it is NOT pressed
     }
-
 
     if (annunciation && tempGoodBool == 2 && ack_T.contains(p.x, p.y)) {
         ack_T.drawButton(true);

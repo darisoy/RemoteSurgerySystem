@@ -6,10 +6,6 @@
 
 void measureFunction(void* measureDataStruct) {                                                 //function that recieves the raw data from UNO, takes measure struct as input
     struct controlMeasureData *mData = (struct controlMeasureData*) measureDataStruct;          //deference the display struct
-    mData->pTemperatureRaw     = &temperatureRaw;                                               //assign raw temp's address to raw temp pointer from compute struct
-    mData->pSystolicPressRaw   = &systolicPressRaw;                                             //assign raw sys's address to raw sys pointer from compute struct
-    mData->pDiastolicPressRaw  = &diastolicPressRaw;                                            //assign raw dia's address to raw dia pointer from compute struct
-    mData->pPulseRateRaw       = &pulseRateRaw;                                                 //assign raw pulse's address to raw pulse pointer from compute struct
 
     digitalWrite(REQ, HIGH);
     if (Serial1.read() == 'V') {                                                                //check if the letter 'V' is printed on serial1
@@ -35,10 +31,10 @@ void measureFunction(void* measureDataStruct) {                                 
             (dataTransfered[4] == 'S')  && (digit5 < 10)  && (digit6 < 10)  && (digit7 < 10)  &&
             (dataTransfered[8] == 'D')  && (digit9 < 10)  && (digit10 < 10) && (digit11 < 10) &&
             (dataTransfered[12] == 'P') && (digit13 < 10) && (digit14 < 10) && (digit15 < 10)) {
-            *mData->pTemperatureRaw = (digit1 * 100) + (digit2 * 10) + (digit3 * 1);        //assign the value of the temperature raw pointer from the measure struct to the temperature data
-            *mData->pSystolicPressRaw = (digit5 * 100) + (digit6 * 10) + (digit7 * 1);      //assign the value of the systolic raw pointer from the measure struct to the systolic data
-            *mData->pDiastolicPressRaw = (digit9 * 100) + (digit10 * 10) + (digit11 * 1);     //assign the value of the diastolic raw pointer from the measure struct to the diastolic data
-            *mData->pPulseRateRaw = (digit13 * 100) + (digit14 * 10) + (digit15 * 1);          //assign the value of the pulse raw pointer from the measure struct to the pulse data
+            tempRawData.push((digit1 * 100) + (digit2 * 10) + (digit3 * 1));        //assign the value of the temperature raw pointer from the measure struct to the temperature data
+            sysRawData.push((digit5 * 100) + (digit6 * 10) + (digit7 * 1));      //assign the value of the systolic raw pointer from the measure struct to the systolic data
+            diaRawData.push((digit9 * 100) + (digit10 * 10) + (digit11 * 1));     //assign the value of the diastolic raw pointer from the measure struct to the diastolic data
+            pulseRawData.push((digit13 * 100) + (digit14 * 10) + (digit15 * 1));          //assign the value of the pulse raw pointer from the measure struct to the pulse data
         }
     }
     digitalWrite(REQ, LOW);

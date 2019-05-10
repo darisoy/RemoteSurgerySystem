@@ -45,51 +45,77 @@ Elegoo_GFX_Button ack_D;
 Elegoo_GFX_Button ack_P;
 Elegoo_GFX_Button ack_B;
 
+CircularBuffer<double,8> tempRawData;
+CircularBuffer<double,8> sysRawData;
+CircularBuffer<double,8> diaRawData;
+CircularBuffer<double,8> pulseRawData;
+
+CircularBuffer<double,8> tempComputedData;
+CircularBuffer<double,8> sysComputedData;
+CircularBuffer<double,8> diaComputedData;
+CircularBuffer<double,8> pulseComputedData;
+
 void setup(void) {                                              //setup portion of the arduino code
     Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
     Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
     tftSetup();                                                 //call the method that detects the TFT and it's version
     pinMode(REQ, OUTPUT);                                   //setup pin 22 to be an output
     initialize();                                               //call the method that initalizes the variables
-    measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
+    //measureT.next = &computeT;
+    //measureT.prev = &keypadT;
+    MeasureData.pTemperatureRaw     = &temperatureRaw;                                               //assign raw temp's address to raw temp pointer from compute struct
+    MeasureData.pSystolicPressRaw   = &systolicPressRaw;                                             //assign raw sys's address to raw sys pointer from compute struct
+    MeasureData.pDiastolicPressRaw  = &diastolicPressRaw;                                            //assign raw dia's address to raw dia pointer from compute struct
+    MeasureData.pPulseRateRaw       = &pulseRateRaw;                                                 //assign raw pulse's address to raw pulse pointer from compute struct
+
     computeT.functionPtr = computeFunction;                     //set the functionPtr of computeT to be the computeFunction
     computeT.dataPtr = (void*) &ComputeData;                    //set the dataPtr of computeT to be the address of the ComputeData pointer
+    //computeT.next = &statusT;
+    //computeT.prev = &measureT;
+    ComputeData.pTemperatureRaw            = &temperatureRaw;                               //assign raw temp's address to raw temp pointer from compute struct
+    ComputeData.pSystolicPressRaw          = &systolicPressRaw;                             //assign raw sys's address to raw sys pointer from compute struct
+    ComputeData.pDiastolicPressRaw         = &diastolicPressRaw;                            //assign raw dia's address to raw dia pointer from compute struct
+    ComputeData.pPulseRateRaw              = &pulseRateRaw;                                 //assign raw pulse's address to raw pulse pointer from compute struct
+    ComputeData.pTempCorrected             = &tempCorrected;                                //assign corrected temp's address to corrected temp pointer from compute struct
+    ComputeData.pSystolicPressCorrected    = &systolicPressCorrected;                       //assign corrected sys's address to corrected sys pointer from compute struct
+    ComputeData.pDiastolicPressCorrected   = &diastolicPressCorrected;                      //assign corrected dia's address to corrected dia pointer from compute struct
+    ComputeData.pPulseRateCorrected        = &pulseRateCorrected;                           //assign corrected pulse's address to corrected pulse pointer from compute struct
+
     statusT.functionPtr = statusFunction;                       //set the functionPtr of statusT to be the statusFunction
     statusT.dataPtr = (void*) &StatusData;                      //set the dataPtr of statusT to be the address of the StatusData pointer
+    //statusT.next = &warningT;
+    //statusT.prev = &computeT;
+    StatusData.pBatteryState = &batteryState;                                       //assign battery's address to battery pointer from status struct
+
+
     warningT.functionPtr = alarmFunction;                       //set the functionPtr of warningT to be the alarmFunction
     warningT.dataPtr = (void*) &AlarmData;                      //set the dataPtr of warningT to be the address of the AlarmData pointer
+    //warningT.next = &displayT;
+    //warningT.prev = &statusT;
+    AlarmData.pTempCorrected           = &tempCorrected;                                                  //assign corrected temp's address to corrected temp pointer from warning struct
+    AlarmData.pSystolicPressCorrected  = &systolicPressCorrected;                                         //assign corrected sys's address to corrected sys pointer from warning struct
+    AlarmData.pDiastolicPressCorrected = &diastolicPressCorrected;                                        //assign corrected fia's address to corrected dia pointer from warning struct
+    AlarmData.pPulseRateCorrected      = &pulseRateCorrected;                                             //assign corrected pulse's address to corrected pulse pointer from warning struct
+    AlarmData.pBatteryState            = &batteryState;                                                   //assign battery state's address to battery state pointer from warning struct
+
     displayT.functionPtr = displayFunction;                     //set the functionPtr of displayT to be the displayFunction
     displayT.dataPtr = (void*) &DisplayData;                    //set the dataPtr of displayT to be the address of the DisplayData pointer
+    //displayT.next = &keypadT;
+    //displayT.prev = &warningT;
+    DisplayData.pTempCorrected           = &tempCorrected;                                         //assign corrected temp's address to corrected temp pointer from display struct
+    DisplayData.pSystolicPressCorrected  = &systolicPressCorrected;                                //assign corrected sys's address to corrected sys pointer from display struct
+    DisplayData.pDiastolicPressCorrected = &diastolicPressCorrected;                               //assign corrected dia's address to corrected dia pointer from display struct
+    DisplayData.pPulseRateCorrected      = &pulseRateCorrected;                                    //assign corrected pulse's address to corrected pulse pointer from display struct
+    DisplayData.pBatteryState            = &batteryState;                                          //assign battery state's address to battery state pointer from display struct
+
     keypadT.functionPtr = keypadFunction;
     keypadT.dataPtr = (void*) &KeypadData;
+    //keypadT.next = &measureT;
+    //keypadT.prev = &displayT;
+    KeypadData.pMeasurementSelection = &measurementSelection;                                         //assign corrected temp's address to corrected temp pointer from display struct
+    KeypadData.pAlarmAcknowledge     = &alarmAcknowledge;
 }
-
-void calltask0() {
-  measureT.functionPtr(measureT.dataPtr);
-}
-void calltask1() {
-  computeT.functionPtr(computeT.dataPtr);
-}
-void calltask2() {
-  statusT.functionPtr(statusT.dataPtr);
-}
-void calltask3() {
-  keypadT.functionPtr(keypadT.dataPtr);
-}
-void calltask4() {
-  warningT.functionPtr(warningT.dataPtr);
-}
-void calltask5() {
-  displayT.functionPtr(displayT.dataPtr);
-}
-
-TimedAction task0 = TimedAction(5000, calltask0);
-TimedAction task1 = TimedAction(5000, calltask1);
-TimedAction task2 = TimedAction(5000, calltask2);
-TimedAction task3 = TimedAction(10, calltask3);
-TimedAction task4 = TimedAction(5000, calltask4);
-TimedAction task5 = TimedAction(100, calltask5);
 
 void loop(void) {                                               //code arduino constatly loops through
     task0.check();

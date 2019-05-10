@@ -4,9 +4,14 @@
 #include <stdbool.h>                                                                            //import necessary header files
 #include <stddef.h>                                                                             //import necessary header files
 
+#define REQ 22
+
 void measureFunction(void* measureDataStruct) {                                                 //function that recieves the raw data from UNO, takes measure struct as input
     struct controlMeasureData *mData = (struct controlMeasureData*) measureDataStruct;          //deference the display struct
-
+    mData->pTemperatureRaw     = &temperatureRaw;                                               //assign raw temp's address to raw temp pointer from compute struct
+    mData->pSystolicPressRaw   = &systolicPressRaw;                                             //assign raw sys's address to raw sys pointer from compute struct
+    mData->pDiastolicPressRaw  = &diastolicPressRaw;                                            //assign raw dia's address to raw dia pointer from compute struct
+    mData->pPulseRateRaw       = &pulseRateRaw;                                                 //assign raw pulse's address to raw pulse pointer from compute struct    Serial.println("task0 is running");
     digitalWrite(REQ, HIGH);
     if (Serial1.read() == 'V') {                                                                //check if the letter 'V' is printed on serial1
         Serial1.readBytes(dataTransfered, 16);                                                   //store the next 4 characters written on serial one to dataTranfered character array

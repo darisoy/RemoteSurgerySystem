@@ -6,9 +6,16 @@
 
 void alarmFunction(void* warningStruct){                                                             //function that checks if alarms should be going off, takes in the warning struct
     struct controlWarningAlarmData *wData = (struct controlWarningAlarmData*) warningStruct;           //deference the warning struct
-
+    wData->pTempCorrected           = &tempCorrected;                                                  //assign corrected temp's address to corrected temp pointer from warning struct
+    wData->pSystolicPressCorrected  = &systolicPressCorrected;                                         //assign corrected sys's address to corrected sys pointer from warning struct
+    wData->pDiastolicPressCorrected = &diastolicPressCorrected;                                        //assign corrected fia's address to corrected dia pointer from warning struct
+    wData->pPulseRateCorrected      = &pulseRateCorrected;                                             //assign corrected pulse's address to corrected pulse pointer from warning struct
+    wData->pBatteryState            = &batteryState;                                                   //assign battery state's address to battery state pointer from warning struct
     if ((tempComputedData.first() <= 37.8) && (tempComputedData.first() >= 36.1)) {            //if value of the corrected temp pointer is less than 37.8 and greater than 36.1, make the boolean true, otherwise false
         tempGoodBool = 0;
+        if (annunciation) {
+            ack_T.drawButton(true);
+        }
     } else {
         tempGoodBool = 1;
         tempMeasure++;
@@ -40,6 +47,9 @@ void alarmFunction(void* warningStruct){                                        
 
     if ((diaComputedData.first() <= 80) && (diaComputedData.first()>= 70)) {                                        //if value of the corrected dia pointer is 80, make the boolean true, otherwise false
         diaGoodBool = 0;
+        if (annunciation) {
+            ack_D.drawButton(true);
+        }
     } else {
         diaGoodBool = 1;
         diaMeasure++;
@@ -53,6 +63,9 @@ void alarmFunction(void* warningStruct){                                        
 
     if ((pulseComputedData.first() > 60.0) && (pulseComputedData.first()< 100.0)) {   //if value of the corrected pulse rate pointer is greater than 60 and less than 100, make the boolean true, otherwise false
         prGoodBool = 0;
+        if (annunciation) {
+            ack_P.drawButton(true);
+        }
     } else {
         prGoodBool = 1;
         prMeasure++;
@@ -66,6 +79,9 @@ void alarmFunction(void* warningStruct){                                        
 
     if (*wData->pBatteryState >= 40) {                                                   //if value of the battery state pointer is greater than 40, make the boolean true, otherwise false
         batteryGoodBool = 0;
+        if (annunciation) {
+            ack_B.drawButton(true);
+        }
     } else {
         batteryGoodBool = 1;
         batMeasure++;

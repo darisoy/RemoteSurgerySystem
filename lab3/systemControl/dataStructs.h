@@ -37,8 +37,6 @@ int diaMeasure;
 int prMeasure;
 int batMeasure;
 
-
-
 struct controlMeasureData {             //create the MeasureData struct
     unsigned int* pTemperatureRaw;      //struct contains raw temp data
     unsigned int* pSystolicPressRaw;    //struct contains raw syst. press. data

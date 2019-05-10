@@ -12,7 +12,9 @@
 #define MAXPRESSURE 1000
 
 void keypadFunction(void* keypadDataStruct){
-    struct controlDisplayData *kData = (struct controlDisplayData*) keypadDataStruct;
+    struct controlKeypadData *kData = (struct controlKeypadData*) keypadDataStruct;
+    kData->pMeasurementSelection = &measurementSelection;
+    kData->pAlarmAcknowledge     = &alarmAcknowledge;
 
     digitalWrite(13, HIGH);
     TSPoint p = ts.getPoint();

@@ -37,6 +37,30 @@ int diaMeasure;
 int prMeasure;
 int batMeasure;
 
+Elegoo_GFX_Button menu;
+Elegoo_GFX_Button annunciate;
+Elegoo_GFX_Button an_T;
+Elegoo_GFX_Button an_S;
+Elegoo_GFX_Button an_D;
+Elegoo_GFX_Button an_P;
+Elegoo_GFX_Button exp1;
+Elegoo_GFX_Button exp2;
+Elegoo_GFX_Button ack_T;
+Elegoo_GFX_Button ack_S;
+Elegoo_GFX_Button ack_D;
+Elegoo_GFX_Button ack_P;
+Elegoo_GFX_Button ack_B;
+
+CircularBuffer<double,8> tempRawData;
+CircularBuffer<double,8> sysRawData;
+CircularBuffer<double,8> diaRawData;
+CircularBuffer<double,8> pulseRawData;
+
+CircularBuffer<double,8> tempComputedData;
+CircularBuffer<double,8> sysComputedData;
+CircularBuffer<double,8> diaComputedData;
+CircularBuffer<double,8> pulseComputedData;
+
 struct controlMeasureData {             //create the MeasureData struct
     unsigned int* pTemperatureRaw;      //struct contains raw temp data
     unsigned int* pSystolicPressRaw;    //struct contains raw syst. press. data
@@ -128,11 +152,17 @@ void calltask5() {
   displayT.functionPtr(displayT.dataPtr);
 }
 
+void communication(void) {
+    digitalWrite(REQ, HIGH);
+    digitalWrite(REQ, LOW);
+}
+
 TimedAction task0 = TimedAction(5000, calltask0);
 TimedAction task1 = TimedAction(5000, calltask1);
 TimedAction task2 = TimedAction(5000, calltask2);
-TimedAction task3 = TimedAction(10, calltask3);
+TimedAction task3 = TimedAction(100, calltask3);
 TimedAction task4 = TimedAction(5000, calltask4);
 TimedAction task5 = TimedAction(100, calltask5);
+TimedAction task6 = TimedAction(2500, 5000, communication);
 
 #endif

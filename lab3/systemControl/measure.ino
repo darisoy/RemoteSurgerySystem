@@ -12,13 +12,25 @@ void measureFunction(void* measureDataStruct) {                                 
     mData->pSystolicPressRaw   = &systolicPressRaw;                                             //assign raw sys's address to raw sys pointer from compute struct
     mData->pDiastolicPressRaw  = &diastolicPressRaw;                                            //assign raw dia's address to raw dia pointer from compute struct
     mData->pPulseRateRaw       = &pulseRateRaw;                                                 //assign raw pulse's address to raw pulse pointer from compute struct    Serial.println("task0 is running");
-    digitalWrite(REQ, HIGH);
     if (Serial1.read() == 'V') {                                                                //check if the letter 'V' is printed on serial1
         Serial1.readBytes(dataTransfered, 16);                                                   //store the next 4 characters written on serial one to dataTranfered character array
         Serial.print(dataTransfered[0]);                                                        //print the charater array on serial for troubleshooting purposes
         Serial.print(dataTransfered[1]);                                                        //print the charater array on serial for troubleshooting purposes
         Serial.print(dataTransfered[2]);                                                        //print the charater array on serial for troubleshooting purposes
-        Serial.println(dataTransfered[3]);                                                      //print the charater array on serial for troubleshooting purposes
+        Serial.print(dataTransfered[3]);                                                        //print the charater array on serial for troubleshooting purposes
+        Serial.print(dataTransfered[4]);                                                      //print the charater array on serial for troubleshooting purposes
+        Serial.print(dataTransfered[5]);                                                        //print the charater array on serial for troubleshooting purposes
+        Serial.print(dataTransfered[6]);                                                        //print the charater array on serial for troubleshooting purposes
+        Serial.print(dataTransfered[7]);                                                        //print the charater array on serial for troubleshooting purposes
+        Serial.print(dataTransfered[8]);                                                      //print the charater array on serial for troubleshooting purposes
+        Serial.print(dataTransfered[9]);                                                        //print the charater array on serial for troubleshooting purposes
+        Serial.print(dataTransfered[10]);                                                        //print the charater array on serial for troubleshooting purposes
+        Serial.print(dataTransfered[11]);                                                        //print the charater array on serial for troubleshooting purposes
+        Serial.print(dataTransfered[12]);                                                      //print the charater array on serial for troubleshooting purposes
+        Serial.print(dataTransfered[13]);                                                        //print the charater array on serial for troubleshooting purposes
+        Serial.print(dataTransfered[14]);                                                        //print the charater array on serial for troubleshooting purposes
+        Serial.println(dataTransfered[15]);                                                        //print the charater array on serial for troubleshooting purposes
+
         unsigned int digit1 = dataTransfered[1] - '0';                                          //convert the characters to digits
         unsigned int digit2 = dataTransfered[2] - '0';
         unsigned int digit3 = dataTransfered[3] - '0';
@@ -42,5 +54,4 @@ void measureFunction(void* measureDataStruct) {                                 
             pulseRawData.push((digit13 * 100) + (digit14 * 10) + (digit15 * 1));          //assign the value of the pulse raw pointer from the measure struct to the pulse data
         }
     }
-    digitalWrite(REQ, LOW);
 }

@@ -30,30 +30,6 @@
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 
-Elegoo_GFX_Button menu;
-Elegoo_GFX_Button annunciate;
-Elegoo_GFX_Button an_T;
-Elegoo_GFX_Button an_S;
-Elegoo_GFX_Button an_D;
-Elegoo_GFX_Button an_P;
-Elegoo_GFX_Button exp1;
-Elegoo_GFX_Button exp2;
-Elegoo_GFX_Button ack_T;
-Elegoo_GFX_Button ack_S;
-Elegoo_GFX_Button ack_D;
-Elegoo_GFX_Button ack_P;
-Elegoo_GFX_Button ack_B;
-
-CircularBuffer<double,8> tempRawData;
-CircularBuffer<double,8> sysRawData;
-CircularBuffer<double,8> diaRawData;
-CircularBuffer<double,8> pulseRawData;
-
-CircularBuffer<double,8> tempComputedData;
-CircularBuffer<double,8> sysComputedData;
-CircularBuffer<double,8> diaComputedData;
-CircularBuffer<double,8> pulseComputedData;
-
 void setup(void) {                                              //setup portion of the arduino code
     Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
     Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
@@ -99,9 +75,10 @@ void loop(void) {                                               //code arduino c
     task3.check();
     task4.check();
     task5.check();
+    task6.check();
 }
 
-void tftSetup() {
+void tftSetup(void) {
     tft.reset();                                                        //resets the TFT LCD display
     uint16_t identifier = tft.readID();                                 //gets the id of the driver
     if(identifier == 0x9325) {                                          //checks if driver id is 0x9325
@@ -156,7 +133,7 @@ void tftSetup() {
     exp2.drawButton();
 }
 
-void initialize() {
+void initialize(void) {
     temperatureRaw = 0;             //initializes the raw temp value to be 0
     systolicPressRaw = 0;           //initializes the raw systolic value to be 0
     diastolicPressRaw = 0;          //initializes the raw diastolic value to be 0
@@ -180,15 +157,15 @@ void initialize() {
     prMeasure = 0;
     batMeasure = 0;
 
-    for (int counter = 0; counter < 8; counter++) {
-        tempRawData.push(counter * 4 + 12);
-        sysRawData.push(counter * 4 + 12);
-        diaRawData.push(counter * 4 + 12);
-        pulseRawData.push(counter * 4 + 12);
-
-        tempComputedData.push(counter * 4 + 12);
-        sysComputedData.push(counter * 4 + 12);
-        diaComputedData.push(counter * 4 + 12);
-        pulseComputedData.push(counter * 4 + 12);
-    }
+    // for (int counter = 0; counter < 8; counter++) {
+    //     tempRawData.push(counter * 4 + 12);
+    //     sysRawData.push(counter * 4 + 12);
+    //     diaRawData.push(counter * 4 + 12);
+    //     pulseRawData.push(counter * 4 + 12);
+    //
+    //     tempComputedData.push(counter * 4 + 12);
+    //     sysComputedData.push(counter * 4 + 12);
+    //     diaComputedData.push(counter * 4 + 12);
+    //     pulseComputedData.push(counter * 4 + 12);
+    // }
 }

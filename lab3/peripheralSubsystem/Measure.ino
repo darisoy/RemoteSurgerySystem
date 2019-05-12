@@ -59,7 +59,6 @@ void measureFunction(struct controlMeasureData measureData,
         Serial.println(*measureData.pPulseRateRaw);         //print the value for the raw pulse. pointer on the serial
     }
     pulseRateRawData(pPulseCount);
-    pinHigh = false;
 }
 
 void temperatureRawData(int* pCount) {                      //simulates temperature data, takes an int pointer as input

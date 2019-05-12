@@ -72,6 +72,8 @@ void setup(void) {                                              //setup portion 
     keypadT.next = &measureT;
     keypadT.prev = &displayT;
 
+    
+
     scheduler.front = &measureT;
     scheduler.back = &keypadT;
     scheduler.placeholder = scheduler.front;

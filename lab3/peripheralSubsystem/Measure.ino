@@ -15,15 +15,21 @@ void measureFunction(struct controlMeasureData measureData,
     measureData.pDiastolicPressRaw = &diastolicPressRaw;    //assign raw dia's address to dia pointer from stuct
     measureData.pPulseRateRaw      = &pulseRateRaw;         //assign raw pulse's address to pulse pointer from stuct
 
-    if (!pinHigh && (digitalRead(REQ) == HIGH)) {
-        pinHigh = true;
+    if (!pinHighPS && (digitalRead(REQ) == HIGH)) {
+        pinHighNS = true;
+
+    } else if (pinHighPS && (digitalRead(REQ) == HIGH)) {
+        pinHighNS = true;
     } else {
-        pinHigh = false;
+      pinHighNS = false;
     }
 
-    if (pinHigh) {                                          //if pin 14 is high, execute
+
+
+
+    if (!pinHighPS && pinHighNS) {                                          //if pin 14 is high, execute
         temperatureRawData(pTempCount);                     //call the temperatureRawData function to generate temp data
-        Serial.print("T");                                 //print "VT" on the serial
+        Serial.print("VT");                                 //print "VT" on the serial
         if (*measureData.pTemperatureRaw < 10) {            //if value for the raw temp. pointer is less than 10
             Serial.print("00");                             //print "00" on the serial
         } else if (*measureData.pTemperatureRaw < 100) {    //if value for the raw temp. pointer is less than 100
@@ -58,8 +64,17 @@ void measureFunction(struct controlMeasureData measureData,
         }
         Serial.println(*measureData.pPulseRateRaw);         //print the value for the raw pulse. pointer on the serial
     }
+    pinHighPS = pinHighNS;
     pulseRateRawData(pPulseCount);
-    pinHigh = false;
+    // Test the serial output
+    // Serial.print("pinHighPS:  ");
+    // Serial.println(pinHighPS);
+    // Serial.print("pinHighNS:  ");
+    // Serial.println(pinHighNS);
+    // Serial.print("digitalRead:  ");
+    // Serial.println(digitalRead(REQ));
+    // Serial.print("logic test:  ");
+    // Serial.println(!pinHighPS && pinHighNS);
 }
 
 void temperatureRawData(int* pCount) {                      //simulates temperature data, takes an int pointer as input

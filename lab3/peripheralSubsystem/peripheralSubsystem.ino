@@ -10,8 +10,10 @@ void setup() {                      //setup portion of the arduino code
 
     FreqMeasure.begin();
 
-    *pSysCount=0;                         //initialize the pointer to the systolic counter
-    *pDiaCount=0;                         //initialize the pointer to the diastolic counter
+    sysCount=0;                         //initialize the pointer to the systolic counter
+    diaCount=0;
+    tempCount = 0;
+    pulseCount = 0;                     //initialize the pointer to the diastolic counter
     *pDiastolicFunction=0;                //initialize the pointer to the diastolic function
     *pSystolicFunction=0;                 //initialize the pointer to the systolic function
 
@@ -19,10 +21,10 @@ void setup() {                      //setup portion of the arduino code
 
 void loop() {                       //code arduino constatly loops through
     measureFunction(MeasureData,    //pass in struct
-                    pTempCount,     //pass in the pointer that points to temp count
-                    pPulseCount,    //pass in the pointer that points to pulse count
-                    pSysCount,      //pass in the pointer that points to systolic count
-                    pDiaCount);     //pass in the pointer that points to diastolic count
+                    &tempCount,     //pass in the pointer that points to temp count
+                    &pulseCount,    //pass in the pointer that points to pulse count
+                    &sysCount,      //pass in the pointer that points to systolic count
+                    &diaCount);     //pass in the pointer that points to diastolic count
 }
 
 void initialize() {                 //initializing the global variables

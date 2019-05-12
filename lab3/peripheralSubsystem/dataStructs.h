@@ -15,10 +15,10 @@ boolean pinHigh;
 
 int tempBool = 0;                       //initialize temperature boolean to be 0
 int pulseBool = 0;                      //initialize pulse boolean to be 0
-int* pTempCount;                        //initialize the pointer to the temp counter
-int* pPulseCount;                       //initialize the pointer to the pulse counter
-int* pSysCount;                         //initialize the pointer to the systolic counter
-int* pDiaCount;                         //initialize the pointer to the diastolic counter
+int tempCount;                        //initialize the pointer to the temp counter
+int pulseCount;                       //initialize the pointer to the pulse counter
+int sysCount;                         //initialize the pointer to the systolic counter
+int diaCount;                         //initialize the pointer to the diastolic counter
 int* pDiastolicFunction;                //initialize the pointer to the diastolic function
 int* pSystolicFunction;                 //initialize the pointer to the systolic function
 

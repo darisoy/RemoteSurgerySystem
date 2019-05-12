@@ -32,5 +32,8 @@ void initialize() {                 //initializing the global variables
     systolicPressRaw  = 80;         //set initial systolic pressure to be 80
     diastolicPressRaw = 80;         //set initial diastolic pressure to be 80
     pulseRateRaw      = 50;         //set initial pulse rate to be 50
-    pinHigh = false;
+
+    pinHighPS = false;
+    pinHighNS = false;
+
 }

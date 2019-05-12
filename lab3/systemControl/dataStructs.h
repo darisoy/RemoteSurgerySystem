@@ -152,17 +152,11 @@ void calltask5() {
   displayT.functionPtr(displayT.dataPtr);
 }
 
-void communication(void) {
-    digitalWrite(REQ, HIGH);
-    digitalWrite(REQ, LOW);
-}
-
 TimedAction task0 = TimedAction(5000, calltask0);
 TimedAction task1 = TimedAction(5000, calltask1);
 TimedAction task2 = TimedAction(5000, calltask2);
 TimedAction task3 = TimedAction(100, calltask3);
 TimedAction task4 = TimedAction(5000, calltask4);
 TimedAction task5 = TimedAction(100, calltask5);
-TimedAction task6 = TimedAction(2500, 5000, communication);
 
 #endif

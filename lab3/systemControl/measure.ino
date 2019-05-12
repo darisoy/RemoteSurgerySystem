@@ -11,8 +11,10 @@ void measureFunction(void* measureDataStruct) {                                 
     mData->pTemperatureRaw     = &temperatureRaw;                                               //assign raw temp's address to raw temp pointer from compute struct
     mData->pSystolicPressRaw   = &systolicPressRaw;                                             //assign raw sys's address to raw sys pointer from compute struct
     mData->pDiastolicPressRaw  = &diastolicPressRaw;                                            //assign raw dia's address to raw dia pointer from compute struct
-    mData->pPulseRateRaw       = &pulseRateRaw;                                                 //assign raw pulse's address to raw pulse pointer from compute struct    Serial.println("task0 is running");
-    if (Serial1.read() == 'V') {                                                                //check if the letter 'V' is printed on serial1
+    mData->pPulseRateRaw       = &pulseRateRaw;
+    digitalWrite(REQ, HIGH);
+    digitalWrite(REQ, LOW);
+    if (Serial1.available() >= 16) {
         Serial1.readBytes(dataTransfered, 16);                                                   //store the next 4 characters written on serial one to dataTranfered character array
         Serial.print(dataTransfered[0]);                                                        //print the charater array on serial for troubleshooting purposes
         Serial.print(dataTransfered[1]);                                                        //print the charater array on serial for troubleshooting purposes
@@ -53,5 +55,6 @@ void measureFunction(void* measureDataStruct) {                                 
             diaRawData.push((digit9 * 100) + (digit10 * 10) + (digit11 * 1));     //assign the value of the diastolic raw pointer from the measure struct to the diastolic data
             pulseRawData.push((digit13 * 100) + (digit14 * 10) + (digit15 * 1));          //assign the value of the pulse raw pointer from the measure struct to the pulse data
         }
+
     }
 }

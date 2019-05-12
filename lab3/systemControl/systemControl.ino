@@ -75,7 +75,6 @@ void loop(void) {                                               //code arduino c
     task3.check();
     task4.check();
     task5.check();
-    task6.check();
 }
 
 void tftSetup(void) {

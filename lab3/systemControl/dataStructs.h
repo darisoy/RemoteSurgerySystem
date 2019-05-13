@@ -122,7 +122,8 @@ MyTCB measureT,                         //initialize the measureT object using M
       statusT,                          //initialize the statusT object using MyTCB struct
       warningT,                         //initialize the warningT object using MyTCB struct
       displayT,                         //initialize the displayT object using MyTCB struct
-      keypadT;
+      keypadT,
+      communicationT;
 
 struct LinkedList{
   MyTCB* front;
@@ -151,10 +152,8 @@ void calltask4() {
 void calltask5() {
   displayT.functionPtr(displayT.dataPtr);
 }
-
-void comm() {
-    digitalWrite(22, HIGH);
-    digitalWrite(22, LOW);
+void calltask6(){
+  communicationT.functionPtr(communicationT.dataPtr);
 }
 
 TimedAction task0 = TimedAction(5000, calltask0);
@@ -163,6 +162,7 @@ TimedAction task2 = TimedAction(5000, calltask2);
 TimedAction task3 = TimedAction(100, calltask3);
 TimedAction task4 = TimedAction(5000, calltask4);
 TimedAction task5 = TimedAction(100, calltask5);
-TimedAction task6 = TimedAction(10000, comm);
+TimedAction task6 = TimedAction(10000, calltask6);
+
 
 #endif

@@ -122,7 +122,8 @@ MyTCB measureT,                         //initialize the measureT object using M
       statusT,                          //initialize the statusT object using MyTCB struct
       warningT,                         //initialize the warningT object using MyTCB struct
       displayT,                         //initialize the displayT object using MyTCB struct
-      keypadT;
+      keypadT,
+      CommunicationT;
 
 struct LinkedList{
   MyTCB* front;

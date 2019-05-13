@@ -72,7 +72,8 @@ void setup(void) {                                              //setup portion 
     keypadT.next = &measureT;
     keypadT.prev = &displayT;
 
-    
+    communicationT.functionPtr = communicationFunction;
+    communicationT.dataPtr
 
     scheduler.front = &measureT;
     scheduler.back = &keypadT;

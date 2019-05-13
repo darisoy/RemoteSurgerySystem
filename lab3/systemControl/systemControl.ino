@@ -72,7 +72,7 @@ void setup(void) {                                              //setup portion 
     keypadT.next = &measureT;
     keypadT.prev = &displayT;
 
-    
+
 
     scheduler.front = &measureT;
     scheduler.back = &keypadT;
@@ -169,15 +169,5 @@ void initialize(void) {
     prMeasure = 0;
     batMeasure = 0;
 
-    // for (int counter = 0; counter < 8; counter++) {
-    //     tempRawData.push(counter * 4 + 12);
-    //     sysRawData.push(counter * 4 + 12);
-    //     diaRawData.push(counter * 4 + 12);
-    //     pulseRawData.push(counter * 4 + 12);
-    //
-    //     tempComputedData.push(counter * 4 + 12);
-    //     sysComputedData.push(counter * 4 + 12);
-    //     diaComputedData.push(counter * 4 + 12);
-    //     pulseComputedData.push(counter * 4 + 12);
-    // }
+    pushed = false;
 }

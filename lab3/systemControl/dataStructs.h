@@ -165,6 +165,4 @@ TimedAction task4 = TimedAction(5000, calltask4);
 TimedAction task5 = TimedAction(100, calltask5);
 TimedAction task6 = TimedAction(10000, comm);
 
-
-
 #endif

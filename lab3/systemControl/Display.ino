@@ -74,7 +74,7 @@ void displayFunction(void* displayDataStruct){                                  
         } else {
             tft.setTextColor(RED, BLACK);                                                         //set font color to be red with black background
         }
-        tft.print(tempComputedData.last());                                                      //print the value of the corrected temp pointer that is in the display struct on the display
+        tft.print(tempComputedData[0]);                                                      //print the value of the corrected temp pointer that is in the display struct on the display
         tft.println(" C   ");                                                                     //print "C" on display
 
         tft.setTextColor(WHITE, BLACK);
@@ -87,7 +87,7 @@ void displayFunction(void* displayDataStruct){                                  
         } else {                                                                                  //if sys is out of range
             tft.setTextColor(RED, BLACK);                                                         //set font color to be red with black background
         }
-        tft.print(sysComputedData.last());                                               //print the value of the corrected syst pointer that is in the display struct on the display
+        tft.print(sysComputedData[0]);                                               //print the value of the corrected syst pointer that is in the display struct on the display
         tft.println(" mmHg ");                                                                   //print "mm Hg" on display
 
         tft.setTextColor(WHITE, BLACK);
@@ -100,7 +100,7 @@ void displayFunction(void* displayDataStruct){                                  
         } else {                                                                                  //if dia is out of range
             tft.setTextColor(RED, BLACK);                                                         //set font color to be red with black background
         }
-        tft.print(diaComputedData.last());                                              //print the value of the corrected dia pointer that is in the display struct on the display
+        tft.print(diaComputedData[0]);                                              //print the value of the corrected dia pointer that is in the display struct on the display
         tft.println(" mmHg ");                                                                   //print "mm Hg" on display
 
         tft.setTextColor(WHITE, BLACK);
@@ -113,7 +113,7 @@ void displayFunction(void* displayDataStruct){                                  
         } else {                                                                                  //if pulse is out of range
             tft.setTextColor(RED, BLACK);                                                         //set font color to be red with black background
         }
-        tft.print(pulseComputedData.last());                                                   //print the value of the corrected pulse pointer that is in the display struct on the display
+        tft.print(pulseComputedData[0]);                                                   //print the value of the corrected pulse pointer that is in the display struct on the display
         tft.println(" BPM ");                                                                     //print "BPM" on display
 
         tft.setTextColor(WHITE, BLACK);
@@ -149,7 +149,7 @@ void displayFunction(void* displayDataStruct){                                  
             tft.setTextColor(BLACK, BLACK);
         }
         tft.setCursor(35, 38);
-        tft.print(tempComputedData.last());
+        tft.print(tempComputedData[0]);
         tft.print("  ");
         tft.setTextSize(2);
         tft.setCursor(165, 45);
@@ -172,7 +172,7 @@ void displayFunction(void* displayDataStruct){                                  
             tft.setTextColor(BLACK, BLACK);
         }
         tft.setCursor(35, 75);
-        tft.print(sysComputedData.last());                                               //print the value of the corrected syst pointer that is in the display struct on the display
+        tft.print(sysComputedData[0]);                                               //print the value of the corrected syst pointer that is in the display struct on the display
         tft.print("  ");
         tft.setTextSize(2);
         tft.setCursor(165, 82);
@@ -195,7 +195,7 @@ void displayFunction(void* displayDataStruct){                                  
             tft.setTextColor(BLACK, BLACK);
         }
         tft.setCursor(35, 112);
-        tft.print(diaComputedData.last());                                              //print the value of the corrected dia pointer that is in the display struct on the display
+        tft.print(diaComputedData[0]);                                              //print the value of the corrected dia pointer that is in the display struct on the display
         tft.print("  ");
         tft.setTextSize(2);
         tft.setCursor(165, 119);
@@ -218,7 +218,7 @@ void displayFunction(void* displayDataStruct){                                  
             tft.setTextColor(BLACK, BLACK);
         }
         tft.setCursor(35, 149);
-        tft.print(pulseComputedData.last());                                                   //print the value of the corrected pulse pointer that is in the display struct on the display
+        tft.print(pulseComputedData[0]);                                                   //print the value of the corrected pulse pointer that is in the display struct on the display
         tft.print("  ");
         tft.setTextSize(2);
         tft.setCursor(165, 156);

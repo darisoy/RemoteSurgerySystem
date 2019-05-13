@@ -136,11 +136,11 @@ void tftSetup(void) {
     an_S.initButton(&tft, 18, 87, 30, 30, BLACK, GREY, YELLOW, "S", 3);
     an_D.initButton(&tft, 18, 124, 30, 30, BLACK, GREY, YELLOW, "D", 3);
     an_P.initButton(&tft, 18, 161, 30, 30, BLACK, GREY, YELLOW, "P", 3);
-    ack_T.initButton(&tft, 220, 30, 20, 20, BLACK, RED, BLACK, "", 3);
-    ack_S.initButton(&tft, 220, 57, 20, 20, BLACK, RED, BLACK, "", 3);
-    ack_D.initButton(&tft, 220, 84, 20, 20, BLACK, RED, BLACK, "", 3);
-    ack_P.initButton(&tft, 220, 111, 20, 20, BLACK, RED, BLACK, "", 3);
-    ack_B.initButton(&tft, 220, 138, 20, 20, BLACK, RED, BLACK, "", 3);
+    ack_T.initButton(&tft, 230, 30, 20, 20, BLACK, RED, BLACK, "", 3);
+    ack_S.initButton(&tft, 230, 57, 20, 20, BLACK, RED, BLACK, "", 3);
+    ack_D.initButton(&tft, 230, 84, 20, 20, BLACK, RED, BLACK, "", 3);
+    ack_P.initButton(&tft, 230, 111, 20, 20, BLACK, RED, BLACK, "", 3);
+    ack_B.initButton(&tft, 230, 138, 20, 20, BLACK, RED, BLACK, "", 3);
     menu.drawButton();
     annunciate.drawButton();
     exp1.drawButton();

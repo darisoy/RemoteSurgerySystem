@@ -80,7 +80,7 @@ void setup(void) {                                              //setup portion 
 
 void loop(void) {                                               //code arduino constatly loops through
     schedulerFunctionRun(&scheduler);
-    // task0.check();
+    task6.check();
     // task1.check();
     // task2.check();
     // task3.check();

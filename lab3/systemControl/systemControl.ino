@@ -85,11 +85,6 @@ void setup(void) {                                              //setup portion 
 
 void loop(void) {                                               //code arduino constatly loops through
     schedulerFunctionRun(&scheduler);
-    // task1.check();
-    // task2.check();
-    // task3.check();
-    // task4.check();
-    // task5.check();
 }
 
 void tftSetup(void) {
@@ -170,6 +165,4 @@ void initialize(void) {
     diaMeasure = 0;
     prMeasure = 0;
     batMeasure = 0;
-
-    pushed = false;
 }

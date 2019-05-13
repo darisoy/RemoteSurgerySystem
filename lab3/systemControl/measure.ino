@@ -54,6 +54,5 @@ void measureFunction(void* measureDataStruct) {                                 
             pulseRawData.push((digit13 * 100) + (digit14 * 10) + (digit15 * 1));          //assign the value of the pulse raw pointer from the measure struct to the pulse data
         }
     }
-    digitalWrite(REQ, HIGH);
-    digitalWrite(REQ, LOW);
+    
 }

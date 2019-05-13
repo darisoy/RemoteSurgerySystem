@@ -11,7 +11,7 @@ void alarmFunction(void* warningStruct){                                        
     wData->pDiastolicPressCorrected = &diastolicPressCorrected;                                        //assign corrected fia's address to corrected dia pointer from warning struct
     wData->pPulseRateCorrected      = &pulseRateCorrected;                                             //assign corrected pulse's address to corrected pulse pointer from warning struct
     wData->pBatteryState            = &batteryState;                                                   //assign battery state's address to battery state pointer from warning struct
-    if ((tempComputedData.first() <= 37.8) && (tempComputedData.first() >= 36.1)) {            //if value of the corrected temp pointer is less than 37.8 and greater than 36.1, make the boolean true, otherwise false
+    if ((tempComputedData[0] <= 37.8) && (tempComputedData[0] >= 36.1)) {            //if value of the corrected temp pointer is less than 37.8 and greater than 36.1, make the boolean true, otherwise false
         tempGoodBool = 0;
         if (annunciation) {
             ack_T.drawButton(true);
@@ -27,12 +27,12 @@ void alarmFunction(void* warningStruct){                                        
         }
     }
 
-    if ((sysComputedData.first() >= 120) && (sysComputedData.first() <= 130)) {                                        //if value of the corrected sys pointer is 120, make the boolean true, otherwise false
+    if ((sysComputedData[0] >= 120) && (sysComputedData[0] <= 130)) {                                        //if value of the corrected sys pointer is 120, make the boolean true, otherwise false
         sysGoodBool = 0;
         if (annunciation) {
             ack_S.drawButton(true);
         }
-    } else if (sysComputedData.first() >= 156) {
+    } else if (sysComputedData[0] >= 156) {
         sysGoodBool = 2;
     } else {
         sysGoodBool = 1;
@@ -45,7 +45,7 @@ void alarmFunction(void* warningStruct){                                        
         }
     }
 
-    if ((diaComputedData.first() <= 80) && (diaComputedData.first()>= 70)) {                                        //if value of the corrected dia pointer is 80, make the boolean true, otherwise false
+    if ((diaComputedData[0] <= 80) && (diaComputedData[0]>= 70)) {                                        //if value of the corrected dia pointer is 80, make the boolean true, otherwise false
         diaGoodBool = 0;
         if (annunciation) {
             ack_D.drawButton(true);
@@ -61,7 +61,7 @@ void alarmFunction(void* warningStruct){                                        
         }
     }
 
-    if ((pulseComputedData.first() > 60.0) && (pulseComputedData.first()< 100.0)) {   //if value of the corrected pulse rate pointer is greater than 60 and less than 100, make the boolean true, otherwise false
+    if ((pulseComputedData[0] > 60.0) && (pulseComputedData[0]< 100.0)) {   //if value of the corrected pulse rate pointer is greater than 60 and less than 100, make the boolean true, otherwise false
         prGoodBool = 0;
         if (annunciation) {
             ack_P.drawButton(true);

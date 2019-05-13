@@ -69,21 +69,22 @@ void setup(void) {                                              //setup portion 
     keypadT.functionPtr = keypadFunction;
     keypadT.dataPtr = (void*) &KeypadData;
     keypadT.timedActionPtr = &task5;
-    keypadT.next = &measureT;
+    keypadT.next = &communicationT;
     keypadT.prev = &displayT;
 
     communicationT.functionPtr = communicationFunction;
-    communicationT.dataPtr
+    communicationT.timedActionPtr = &task6;
+    communicationT.next = &measureT;
+    communicationT.prev = &displayT;
 
     scheduler.front = &measureT;
     scheduler.back = &keypadT;
     scheduler.placeholder = scheduler.front;
-    scheduler.size = 6;
+    scheduler.size = 7;
 }
 
 void loop(void) {                                               //code arduino constatly loops through
     schedulerFunctionRun(&scheduler);
-    task6.check();
     // task1.check();
     // task2.check();
     // task3.check();

@@ -1,5 +1,5 @@
-#include "dataStructs.h"
-#include "SchedulerFunction.h"
+#include "dataStructs.h"                                                                   //import the variables
+#include "SchedulerFunction.h"                                                             //import the header of this function
 
 #ifndef SchedulerFunction
 #define SchedulerFunction

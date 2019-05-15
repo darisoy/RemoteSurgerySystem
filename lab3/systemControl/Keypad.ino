@@ -12,7 +12,7 @@
 #define MAXPRESSURE 1000
 
 void keypadFunction(void* keypadDataStruct){
-    struct controlKeypadData *kData = (struct controlKeypadData*) keypadDataStruct;
+    struct controlKeypadData *kData = (struct controlKeypadData*) keypadDataStruct;         //deference the keypad struct
     kData->pMeasurementSelection = &measurementSelection;
     kData->pAlarmAcknowledge     = &alarmAcknowledge;
 

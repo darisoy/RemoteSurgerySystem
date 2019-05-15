@@ -10,6 +10,7 @@ void schedulerFunctionAdd(MyTCB* TCBPtr, void* list){
   TCBPtr->prev = newList->placeholder;
   newList->placeholder->next = TCBPtr;
   newList->placeholder->next->prev = TCBPtr;
+  newList->size++;
 }
 
 void schedulerFunctionDelete(MyTCB* TCBPtr, void* list){
@@ -23,11 +24,19 @@ void schedulerFunctionDelete(MyTCB* TCBPtr, void* list){
     }
     cur = cur->next;
   }
+  newList->size--;
 }
 
 void schedulerFunctionRun(void* list){
   struct LinkedList* newList = (struct LinkedList*) list;
   (*newList->placeholder->timedActionPtr).check();
+  MyTCB* cur = newList->placeholder;
+  if (runCompute) {
+      schedulerFunctionAdd(&computeT, &scheduler);
+      runCompute = false;
+  } else {
+      schedulerFunctionDelete(&computeT, &scheduler);
+  }
   newList->placeholder = newList->placeholder->next;
 }
 

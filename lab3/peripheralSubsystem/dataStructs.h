@@ -11,15 +11,15 @@ unsigned int systolicPressRaw;          //initializes syst. press. variable
 unsigned int diastolicPressRaw;         //initializes dias. press. variable
 unsigned int pulseRateRaw;              //initializes pulse rate variable
 
-boolean pinHighPS;
-boolean pinHighNS;
+boolean pinHighPS;                      //initializes the boolean values for sending signal states
+boolean pinHighNS;                      //initializes the boolean values for sending signal states
 
 int tempBool = 0;                       //initialize temperature boolean to be 0
 int pulseBool = 0;                      //initialize pulse boolean to be 0
-int tempCount;                        //initialize the pointer to the temp counter
-int pulseCount;                       //initialize the pointer to the pulse counter
-int sysCount;                         //initialize the pointer to the systolic counter
-int diaCount;                         //initialize the pointer to the diastolic counter
+int tempCount;                          //initialize the pointer to the temp counter
+int pulseCount;                         //initialize the pointer to the pulse counter
+int sysCount;                           //initialize the pointer to the systolic counter
+int diaCount;                           //initialize the pointer to the diastolic counter
 int* pDiastolicFunction;                //initialize the pointer to the diastolic function
 int* pSystolicFunction;                 //initialize the pointer to the systolic function
 

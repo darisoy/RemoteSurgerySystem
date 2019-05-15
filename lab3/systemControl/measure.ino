@@ -52,14 +52,12 @@ void measureFunction(void* measureDataStruct) {                                 
             sysRawData.push((digit5 * 100) + (digit6 * 10) + (digit7 * 1));      //assign the value of the systolic raw pointer from the measure struct to the systolic data
             diaRawData.push((digit9 * 100) + (digit10 * 10) + (digit11 * 1));     //assign the value of the diastolic raw pointer from the measure struct to the diastolic data
             pulseRawData.push((digit13 * 100) + (digit14 * 10) + (digit15 * 1));          //assign the value of the pulse raw pointer from the measure struct to the pulse data
+            runCompute = true;
+        } else {
+            runCompute = false;
         }
-        Serial.println("pulse raw");
-        for (int i = 0; i < 8; i++) {
-            Serial.print(pulseRawData[i]);
-            Serial.print(" ");
-        }
-        Serial.println();
-        Serial.println(pulseRawData.last());
+    } else {
+        runCompute = false;
     }
 
 }

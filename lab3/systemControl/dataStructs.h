@@ -55,13 +55,15 @@ CircularBuffer<double,8> tempRawData;
 CircularBuffer<double,8> pulseRawData;
 CircularBuffer<double,8> sysRawData;
 CircularBuffer<double,8> diaRawData;
-CircularBuffer[2] bpRawBuffer = {sysRawData, diaRawData};
+//CircularBuffer[2] bpRawBuffer = {sysRawData, diaRawData};
 
 CircularBuffer<double,8> tempComputedData;
 CircularBuffer<double,8> pulseComputedData;
 CircularBuffer<double,8> sysComputedData;
 CircularBuffer<double,8> diaComputedData;
-CircularBuffer[2] bpComputedBuffer = {sysComputedData, diaComputedData};
+//CircularBuffer[2] bpComputedBuffer = {sysComputedData, diaComputedData};
+
+boolean runCompute;
 
 
 struct controlMeasureData {             //create the MeasureData struct

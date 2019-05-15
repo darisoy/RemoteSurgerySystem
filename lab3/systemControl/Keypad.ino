@@ -4,104 +4,104 @@
 #include <stdbool.h>                                                                        //import necessary header files
 #include <stddef.h>                                                                         //import necessary header files
 
-#define TS_MINX 120
-#define TS_MAXX 900
-#define TS_MINY 70
-#define TS_MAXY 920
-#define MINPRESSURE 10
-#define MAXPRESSURE 1000
+#define TS_MINX 120                                                                         //define constants
+#define TS_MAXX 900                                                                         //define constants
+#define TS_MINY 70                                                                          //define constants
+#define TS_MAXY 920                                                                         //define constants
+#define MINPRESSURE 10                                                                      //define constants
+#define MAXPRESSURE 1000                                                                    //define constants
 
-void keypadFunction(void* keypadDataStruct){
+void keypadFunction(void* keypadDataStruct){                                                //function that controls the touchscreen
     struct controlKeypadData *kData = (struct controlKeypadData*) keypadDataStruct;         //deference the keypad struct
-    kData->pMeasurementSelection = &measurementSelection;
-    kData->pAlarmAcknowledge     = &alarmAcknowledge;
+    kData->pMeasurementSelection = &measurementSelection;                                   //assign measurementSelection's address to measurementSelection pointer from keypad struct
+    kData->pAlarmAcknowledge     = &alarmAcknowledge;                                       //assign alarmAcknowledge's address to alarmAcknowledge pointer from keypad struct
 
-    digitalWrite(13, HIGH);
-    TSPoint p = ts.getPoint();
-    digitalWrite(13, LOW);
-    pinMode(XM, OUTPUT);
-    pinMode(YP, OUTPUT);
+    digitalWrite(13, HIGH);                                                                 //set pin 13 to be high
+    TSPoint p = ts.getPoint();                                                              //get the coordinates of the touch on the screen
+    digitalWrite(13, LOW);                                                                  //set pin 13 to be low
+    pinMode(XM, OUTPUT);                                                                    //set pin to be output
+    pinMode(YP, OUTPUT);                                                                    //set pin to be output
 
 
     p.x = map(p.x, TS_MINX, TS_MAXX, 0, tft.width());                                       // scale from 0->1023 to tft.width
     p.y = (tft.height()-map(p.y, TS_MINY, TS_MAXY, 0, tft.height()));                       // scale from 0->1023 to tft.width
 
     if (menu.contains(p.x, p.y)) {                                                          //check is touch was within the button location
-        menu.press(true);  // tell the button it is pressed
-    } else {
-        menu.press(false);  // tell the button it is NOT pressed
+        menu.press(true);                                                                   // tell the button it is pressed
+    } else {                                                                                //if it doesn't contain it
+        menu.press(false);                                                                  // tell the button it is NOT pressed
     }
 
-    if (annunciate.contains(p.x, p.y)) {                                                          //check is touch was within the button location
-        annunciate.press(true);  // tell the button it is pressed
-    } else {
-        annunciate.press(false);  // tell the button it is NOT pressed
+    if (annunciate.contains(p.x, p.y)) {                                                    //check is touch was within the button location
+        annunciate.press(true);                                                             // tell the button it is pressed
+    } else {                                                                                //if it doesn't contain it
+        annunciate.press(false);                                                            // tell the button it is NOT pressed
     }
 
     if (an_T.contains(p.x, p.y)) {                                                          //check is touch was within the button location
-        an_T.press(true);  // tell the button it is pressed
-    } else {
-        an_T.press(false);  // tell the button it is NOT pressed
+        an_T.press(true);                                                                   // tell the button it is pressed
+    } else {                                                                                //if it doesn't contain it
+        an_T.press(false);                                                                  // tell the button it is NOT pressed
     }
 
     if (an_S.contains(p.x, p.y)) {                                                          //check is touch was within the button location
-        an_S.press(true);  // tell the button it is pressed
-    } else {
-        an_S.press(false);  // tell the button it is NOT pressed
+        an_S.press(true);                                                                   // tell the button it is pressed
+    } else {                                                                                //if it doesn't contain it
+        an_S.press(false);                                                                  // tell the button it is NOT pressed
     }
 
     if (an_D.contains(p.x, p.y)) {                                                          //check is touch was within the button location
-        an_D.press(true);  // tell the button it is pressed
-    } else {
-        an_D.press(false);  // tell the button it is NOT pressed
+        an_D.press(true);                                                                   // tell the button it is pressed
+    } else {                                                                                //if it doesn't contain it
+        an_D.press(false);                                                                  // tell the button it is NOT pressed
     }
 
     if (an_P.contains(p.x, p.y)) {                                                          //check is touch was within the button location
-        an_P.press(true);  // tell the button it is pressed
-    } else {
-        an_P.press(false);  // tell the button it is NOT pressed
+        an_P.press(true);                                                                   // tell the button it is pressed
+    } else {                                                                                //if it doesn't contain it
+        an_P.press(false);                                                                  // tell the button it is NOT pressed
     }
 
     if (exp1.contains(p.x, p.y)) {                                                          //check is touch was within the button location
-        exp1.press(true);  // tell the button it is pressed
-    } else {
-        exp1.press(false);  // tell the button it is NOT pressed
+        exp1.press(true);                                                                   // tell the button it is pressed
+    } else {                                                                                //if it doesn't contain it
+        exp1.press(false);                                                                  // tell the button it is NOT pressed
     }
 
     if (exp2.contains(p.x, p.y)) {                                                          //check is touch was within the button location
-        exp2.press(true);  // tell the button it is pressed
-    } else {
-        exp2.press(false);  // tell the button it is NOT pressed
+        exp2.press(true);                                                                   // tell the button it is pressed
+    } else {                                                                                //if it doesn't contain it
+        exp2.press(false);                                                                  // tell the button it is NOT pressed
     }
 
-    if (ack_T.contains(p.x, p.y)) {                                                          //check is touch was within the button location
-        ack_T.press(true);  // tell the button it is pressed
-    } else {
-        ack_T.press(false);  // tell the button it is NOT pressed
+    if (ack_T.contains(p.x, p.y)) {                                                         //check is touch was within the button location
+        ack_T.press(true);                                                                  // tell the button it is pressed
+    } else {                                                                                //if it doesn't contain it
+        ack_T.press(false);                                                                 // tell the button it is NOT pressed
     }
 
-    if (annunciation && tempGoodBool == 2 && ack_T.contains(p.x, p.y)) {
-        ack_T.drawButton(true);
-        tempMeasure = 0;
+    if (annunciation && tempGoodBool == 2 && ack_T.contains(p.x, p.y)) {                    //check if the ack button should be removed
+        ack_T.drawButton(true);                                                             //draw the inverse of the
+        tempMeasure = 0;                                                                    //change data text color
     }
 
-    if (annunciation && sysGoodBool == 2 && ack_S.contains(p.x, p.y)) {
-        ack_S.drawButton(true);
-        sysMeasure = 0;
+    if (annunciation && sysGoodBool == 2 && ack_S.contains(p.x, p.y)) {                     //check if the ack button should be removed
+        ack_S.drawButton(true);                                                             //draw the inverse of the
+        sysMeasure = 0;                                                                     //change data text color
     }
 
-    if (annunciation && diaGoodBool == 2 && ack_D.contains(p.x, p.y)) {
-        ack_D.drawButton(true);
-        diaMeasure = 0;
+    if (annunciation && diaGoodBool == 2 && ack_D.contains(p.x, p.y)) {                     //check if the ack button should be removed
+        ack_D.drawButton(true);                                                             //draw the inverse of the
+        diaMeasure = 0;                                                                     //change data text color
     }
 
-    if (annunciation && prGoodBool == 2 && ack_P.contains(p.x, p.y)) {
-        ack_P.drawButton(true);
-        prMeasure = 0;
+    if (annunciation && prGoodBool == 2 && ack_P.contains(p.x, p.y)) {                      //check if the ack button should be removed
+        ack_P.drawButton(true);                                                             //draw the inverse of the
+        prMeasure = 0;                                                                      //change data text color
     }
 
-    if (annunciation && batteryGoodBool == 2 && ack_B.contains(p.x, p.y)) {
-        ack_B.drawButton(true);
-        batMeasure = 0;
+    if (annunciation && batteryGoodBool == 2 && ack_B.contains(p.x, p.y)) {                 //check if the ack button should be removed
+        ack_B.drawButton(true);                                                             //draw the inverse of the
+        batMeasure = 0;                                                                     //change data text color
     }
 }

@@ -120,26 +120,26 @@ void tftSetup(void) {
         identifier=0x9328;                                              //sets the driver id to be 0x9328
 
     }
-    tft.begin(identifier);                                              //initializes the LCD screen
-    tft.setRotation(0);
-    tft.fillScreen(BLACK);                                              //fills the screen with the color black
-    menu.initButton(&tft, 50, 240, 80, 40, WHITE, BLUE, WHITE, "menu", 2); // x, y, w, h, outline, fill, text
-    annunciate.initButton(&tft, 60, 290, 100, 40, WHITE, BLUE, WHITE, "announ", 2);
-    exp1.initButton(&tft, 180, 240, 80, 40, WHITE, BLUE, WHITE, "exp1", 2);
-    exp2.initButton(&tft, 180, 290, 80, 40, WHITE, BLUE, WHITE, "exp2", 2);
-    an_T.initButton(&tft, 18, 50, 30, 30, BLACK, GREY, YELLOW, "T", 3);
-    an_S.initButton(&tft, 18, 87, 30, 30, BLACK, GREY, YELLOW, "S", 3);
-    an_D.initButton(&tft, 18, 124, 30, 30, BLACK, GREY, YELLOW, "D", 3);
-    an_P.initButton(&tft, 18, 161, 30, 30, BLACK, GREY, YELLOW, "P", 3);
-    ack_T.initButton(&tft, 230, 30, 20, 20, BLACK, RED, BLACK, "", 3);
-    ack_S.initButton(&tft, 230, 57, 20, 20, BLACK, RED, BLACK, "", 3);
-    ack_D.initButton(&tft, 230, 84, 20, 20, BLACK, RED, BLACK, "", 3);
-    ack_P.initButton(&tft, 230, 111, 20, 20, BLACK, RED, BLACK, "", 3);
-    ack_B.initButton(&tft, 230, 138, 20, 20, BLACK, RED, BLACK, "", 3);
-    menu.drawButton();
-    annunciate.drawButton();
-    exp1.drawButton();
-    exp2.drawButton();
+    tft.begin(identifier);                                                          //initializes the LCD screen
+    tft.setRotation(0);                                                             //set the screen to be potrait orientation
+    tft.fillScreen(BLACK);                                                          //fills the screen with the color black
+    menu.initButton(&tft, 50, 240, 80, 40, WHITE, BLUE, WHITE, "menu", 2);          // set location of button: x, y, w, h, outline, fill, text
+    annunciate.initButton(&tft, 60, 290, 100, 40, WHITE, BLUE, WHITE, "announ", 2); // set location of button: x, y, w, h, outline, fill, text
+    exp1.initButton(&tft, 180, 240, 80, 40, WHITE, BLUE, WHITE, "exp1", 2);         // set location of button: x, y, w, h, outline, fill, text
+    exp2.initButton(&tft, 180, 290, 80, 40, WHITE, BLUE, WHITE, "exp2", 2);         // set location of button: x, y, w, h, outline, fill, text
+    an_T.initButton(&tft, 18, 50, 30, 30, BLACK, GREY, YELLOW, "T", 3);             // set location of button: x, y, w, h, outline, fill, text
+    an_S.initButton(&tft, 18, 87, 30, 30, BLACK, GREY, YELLOW, "S", 3);             // set location of button: x, y, w, h, outline, fill, text
+    an_D.initButton(&tft, 18, 124, 30, 30, BLACK, GREY, YELLOW, "D", 3);            // set location of button: x, y, w, h, outline, fill, text
+    an_P.initButton(&tft, 18, 161, 30, 30, BLACK, GREY, YELLOW, "P", 3);            // set location of button: x, y, w, h, outline, fill, text
+    ack_T.initButton(&tft, 230, 30, 20, 20, BLACK, RED, BLACK, "", 3);              // set location of button: x, y, w, h, outline, fill, text
+    ack_S.initButton(&tft, 230, 57, 20, 20, BLACK, RED, BLACK, "", 3);              // set location of button: x, y, w, h, outline, fill, text
+    ack_D.initButton(&tft, 230, 84, 20, 20, BLACK, RED, BLACK, "", 3);              // set location of button: x, y, w, h, outline, fill, text
+    ack_P.initButton(&tft, 230, 111, 20, 20, BLACK, RED, BLACK, "", 3);             // set location of button: x, y, w, h, outline, fill, text
+    ack_B.initButton(&tft, 230, 138, 20, 20, BLACK, RED, BLACK, "", 3);             // set location of button: x, y, w, h, outline, fill, text
+    menu.drawButton();                                                              //draw normal button
+    annunciate.drawButton();                                                        //draw normal button
+    exp1.drawButton();                                                              //draw normal button
+    exp2.drawButton();                                                              //draw normal button
 }
 
 void initialize(void) {

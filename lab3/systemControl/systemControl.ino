@@ -39,20 +39,20 @@ void setup(void) {                                              //setup portion 
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the address of the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
     measureT.timedActionPtr = &task0;                           //set the timedActionPtr of measureT to be the address of task0
-    measureT.next = &computeT;                                  //set the TCB pointer next to the address of computeT
+    measureT.next = &statusT;                                   //set the TCB pointer next to the address of statusT
     measureT.prev = &keypadT;                                   //set the TCB pointer prev to the address of keypadT
 
     computeT.functionPtr = computeFunction;                     //set the functionPtr of computeT to be the computeFunction
     computeT.dataPtr = (void*) &ComputeData;                    //set the dataPtr of computeT to be the address of the ComputeData pointer
     computeT.timedActionPtr = &task1;                           //set the timedActionPtr of computeT to be the address of task1
-    computeT.next = &statusT;                                   //set the next TCB pointer to the address of statusT
-    computeT.prev = &measureT;                                  //set the prev TCB pointer to the address of measureT
+    computeT.next = NULL;                                       //set the next TCB pointer to nothing
+    computeT.prev = NULL;                                       //set the prev TCB pointer to nothing
 
     statusT.functionPtr = statusFunction;                       //set the functionPtr of statusT to be the statusFunction
     statusT.dataPtr = (void*) &StatusData;                      //set the dataPtr of statusT to be the address of the StatusData pointer
     statusT.timedActionPtr = &task2;                            //set the timedActionPtr of statusT to be the address of task2
     statusT.next = &warningT;                                   //set the next TCB pointer to the address of warningT
-    statusT.prev = &computeT;                                   //set the prev TCB pointer to the address of computeT
+    statusT.prev = &measureT;                                   //set the prev TCB pointer to the address of measureT
 
     warningT.functionPtr = alarmFunction;                       //set the functionPtr of warningT to be the alarmFunction
     warningT.dataPtr = (void*) &AlarmData;                      //set the dataPtr of warningT to be the address of the AlarmData pointer
@@ -80,7 +80,7 @@ void setup(void) {                                              //setup portion 
     scheduler.front = &measureT;                                //set the front TCB pointer of scheduler to be the address of measureT
     scheduler.back = &keypadT;                                  //set the back TCB pointer of scheduler to be the address of keypadT
     scheduler.placeholder = scheduler.front;                    //set the placeholder TCB pointer of scheduler to be equal to the scheduler.front TCB pointer
-    scheduler.size = 7;                                         //set the size of scheduler to be 7
+    scheduler.size = 6;                                         //set the size of scheduler to be 7
 }
 
 void loop(void) {                                               //code arduino constatly loops through
@@ -165,4 +165,5 @@ void initialize(void) {
     diaMeasure = 0;                 //initialize the diaMeasure value to be 0
     prMeasure = 0;                  //initialize the prMeasure value to be 0
     batMeasure = 0;                 //initialize the batMeasure value to be 0
+    runCompute = true;              //initialize the compute boolean to be true
 }

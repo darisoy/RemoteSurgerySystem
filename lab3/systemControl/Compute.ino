@@ -4,7 +4,7 @@
 #include <stdbool.h>                                                                 //import necessary header files
 #include <stddef.h>                                                                  //import necessary header files
 
-void computeFunction(void* computeDataStruct){                                       //function that computes data, takes compute struct as input
+void computeFunction(void* computeDataStruct){                                         //function that computes data, takes compute struct as input
     struct controlComputeData *cData = (struct controlComputeData*) computeDataStruct; //deference the compute struct
     cData->pTemperatureRaw            = &temperatureRaw;                               //assign raw temp's address to raw temp pointer from compute struct
     cData->pSystolicPressRaw          = &systolicPressRaw;                             //assign raw sys's address to raw sys pointer from compute struct
@@ -15,8 +15,8 @@ void computeFunction(void* computeDataStruct){                                  
     cData->pDiastolicPressCorrected   = &diastolicPressCorrected;                      //assign corrected dia's address to corrected dia pointer from compute struct
     cData->pPulseRateCorrected        = &pulseRateCorrected;                           //assign corrected pulse's address to corrected pulse pointer from compute struct
 
-    tempComputedData.push(5 + (0.75 * (tempRawData.last())));         //convert raw temp and point pTempComputed pointer to it
-    sysComputedData.push(9 + (2    * (sysRawData.last())));       //convert raw sys and point pSystolicPressComputed pointer to it
-    diaComputedData.push(6 + (1.5  * (diaRawData.last())));      //convert raw dia and point pDiastolicPressComputed pointer to it
-    pulseComputedData.push(8 + (3    * (pulseRawData.last())));           //convert raw pulse and point pPulseRateComputed pointer to it
+    tempComputedData.push(5 + (0.75 * (tempRawData.last())));                          //convert raw temp and push it to the buffer
+    sysComputedData.push(9 + (2    * (sysRawData.last())));                            //convert raw sys and push it to the buffer
+    diaComputedData.push(6 + (1.5  * (diaRawData.last())));                            //convert raw dia and push it to the buffer
+    pulseComputedData.push(8 + (3    * (pulseRawData.last())));                        //convert raw pulse and push it to the buffer
 }

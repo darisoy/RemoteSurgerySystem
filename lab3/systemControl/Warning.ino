@@ -5,13 +5,13 @@
 #include <stddef.h>                                                                                  //import necessary header files
 
 void alarmFunction(void* warningStruct){                                                             //function that checks if alarms should be going off, takes in the warning struct
-    struct controlWarningAlarmData *wData = (struct controlWarningAlarmData*) warningStruct;           //deference the warning struct
-    wData->pTempCorrected           = &tempCorrected;                                                  //assign corrected temp's address to corrected temp pointer from warning struct
-    wData->pSystolicPressCorrected  = &systolicPressCorrected;                                         //assign corrected sys's address to corrected sys pointer from warning struct
-    wData->pDiastolicPressCorrected = &diastolicPressCorrected;                                        //assign corrected fia's address to corrected dia pointer from warning struct
-    wData->pPulseRateCorrected      = &pulseRateCorrected;                                             //assign corrected pulse's address to corrected pulse pointer from warning struct
-    wData->pBatteryState            = &batteryState;                                                   //assign battery state's address to battery state pointer from warning struct
-    if ((tempComputedData.last() <= 37.8) && (tempComputedData.last() >= 36.1)) {            //if value of the corrected temp pointer is less than 37.8 and greater than 36.1, make the boolean true, otherwise false
+    struct controlWarningAlarmData *wData = (struct controlWarningAlarmData*) warningStruct;         //deference the warning struct
+    wData->pTempCorrected           = &tempCorrected;                                                //assign corrected temp's address to corrected temp pointer from warning struct
+    wData->pSystolicPressCorrected  = &systolicPressCorrected;                                       //assign corrected sys's address to corrected sys pointer from warning struct
+    wData->pDiastolicPressCorrected = &diastolicPressCorrected;                                      //assign corrected fia's address to corrected dia pointer from warning struct
+    wData->pPulseRateCorrected      = &pulseRateCorrected;                                           //assign corrected pulse's address to corrected pulse pointer from warning struct
+    wData->pBatteryState            = &batteryState;                                                 //assign battery state's address to battery state pointer from warning struct
+    if ((tempComputedData.last() <= 37.8) && (tempComputedData.last() >= 36.1)) {                    //if value of the corrected temp pointer is less than 37.8 and greater than 36.1, make the boolean true, otherwise false
         tempGoodBool = 0;
         if (annunciation) {
             ack_T.drawButton(true);
@@ -27,7 +27,7 @@ void alarmFunction(void* warningStruct){                                        
         }
     }
 
-    if ((sysComputedData.last() >= 120) && (sysComputedData.last() <= 130)) {                                        //if value of the corrected sys pointer is 120, make the boolean true, otherwise false
+    if ((sysComputedData.last() >= 120) && (sysComputedData.last() <= 130)) {                        //if value of the corrected sys pointer is 120, make the boolean true, otherwise false
         sysGoodBool = 0;
         if (annunciation) {
             ack_S.drawButton(true);

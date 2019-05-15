@@ -1,18 +1,18 @@
 #include <Elegoo_GFX.h>                                         // Core graphics library
 #include <Elegoo_TFTLCD.h>                                      // Hardware-specific library
-#include <TouchScreen.h>
-#include <TimedAction.h>
-#include <CircularBuffer.h>
+#include <TouchScreen.h>                                        // Touch screen library
+#include <TimedAction.h>                                        // Timed-Action method library
+#include <CircularBuffer.h>                                     // Circular buffer library
 
 #define LCD_RESET A4                                            // Can alternately just connect to Arduino's reset pin
 #define LCD_CS A3                                               // Chip Select goes to Analog 3
 #define LCD_CD A2                                               // Command/Data goes to Analog 2
 #define LCD_WR A1                                               // LCD Write goes to Analog 1
 #define LCD_RD A0                                               // LCD Read goes to Analog 0
-#define YP A3  // must be an analog pin, use "An" notation!
-#define XM A2  // must be an analog pin, use "An" notation!
-#define YM 9   // can be a digital pin
-#define XP 8   // can be a digital pin
+#define YP A3                                                   // must be an analog pin, use "An" notation!
+#define XM A2                                                   // must be an analog pin, use "An" notation!
+#define YM 9                                                    // can be a digital pin
+#define XP 8                                                    // can be a digital pin
 
 #define BLACK   0x0000                                          //set the keyword BLACK   to represent the number 0x0000
 #define BLUE    0x001F                                          //set the keyword BLUE    to represent the number 0x001F
@@ -22,70 +22,69 @@
 #define MAGENTA 0xF81F                                          //set the keyword MAGENTA to represent the number 0xF81F
 #define YELLOW  0xFFE0                                          //set the keyword YELLOW  to represent the number 0xFFE0
 #define WHITE   0xFFFF                                          //set the keyword WHITE   to represent the number 0xFFFF
-#define ORANGE  0xFD20
-#define GREY   0xC618
+#define ORANGE  0xFD20                                          //set the keyword ORGANE  to represent the number 0xFD20
+#define GREY   0xC618                                           //set the keyword Grey    to represent the number 0xC618
 
-#define REQ 22
-#include "dataStructs.h" //import the variables used in the file
-Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
-TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
+#define REQ 22                                                  // Initializes RED 22
+#include "dataStructs.h"                                        // Iimport the variables used in the file
+Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);   // TFT setup
+TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);              // Touch screen setup
 
 void setup(void) {                                              //setup portion of the arduino code
     Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
     Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
     tftSetup();                                                 //call the method that detects the TFT and it's version
-    pinMode(REQ, OUTPUT);                                   //setup pin 22 to be an output
+    pinMode(REQ, OUTPUT);                                       //setup pin 22 to be an output
     initialize();                                               //call the method that initalizes the variables
-    measureT.functionPtr = measureFunction;
+    measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the address of the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
-    measureT.timedActionPtr = &task0;
-    measureT.next = &statusT;
-    measureT.prev = &keypadT;                                                //assign raw pulse's address to raw pulse pointer from compute struct
+    measureT.timedActionPtr = &task0;                           //set the timedActionPtr of measureT to be the address of task0
+    measureT.next = &computeT;                                  //set the TCB pointer next to the address of computeT
+    measureT.prev = &keypadT;                                   //set the TCB pointer prev to the address of keypadT
 
     computeT.functionPtr = computeFunction;                     //set the functionPtr of computeT to be the computeFunction
     computeT.dataPtr = (void*) &ComputeData;                    //set the dataPtr of computeT to be the address of the ComputeData pointer
-    computeT.timedActionPtr = &task1;
-    computeT.next = NULL;
-    computeT.prev = NULL;
+    computeT.timedActionPtr = &task1;                           //set the timedActionPtr of computeT to be the address of task1
+    computeT.next = &statusT;                                   //set the next TCB pointer to the address of statusT
+    computeT.prev = &measureT;                                  //set the prev TCB pointer to the address of measureT
 
     statusT.functionPtr = statusFunction;                       //set the functionPtr of statusT to be the statusFunction
     statusT.dataPtr = (void*) &StatusData;                      //set the dataPtr of statusT to be the address of the StatusData pointer
-    statusT.timedActionPtr = &task2;
-    statusT.next = &warningT;
-    statusT.prev = &measureT;
+    statusT.timedActionPtr = &task2;                            //set the timedActionPtr of statusT to be the address of task2
+    statusT.next = &warningT;                                   //set the next TCB pointer to the address of warningT
+    statusT.prev = &computeT;                                   //set the prev TCB pointer to the address of computeT
 
     warningT.functionPtr = alarmFunction;                       //set the functionPtr of warningT to be the alarmFunction
     warningT.dataPtr = (void*) &AlarmData;                      //set the dataPtr of warningT to be the address of the AlarmData pointer
-    warningT.timedActionPtr = &task3;
-    warningT.next = &displayT;
-    warningT.prev = &statusT;
+    warningT.timedActionPtr = &task3;                           //set the timedActionPtr of warningT to be the address of task3
+    warningT.next = &displayT;                                  //set the next TCB pointer to the address of displayT
+    warningT.prev = &statusT;                                   //set the prev TCB pointer to the address of statusT
 
     displayT.functionPtr = displayFunction;                     //set the functionPtr of displayT to be the displayFunction
     displayT.dataPtr = (void*) &DisplayData;                    //set the dataPtr of displayT to be the address of the DisplayData pointer
-    displayT.timedActionPtr = &task4;
-    displayT.next = &keypadT;
-    displayT.prev = &warningT;
+    displayT.timedActionPtr = &task4;                           //set the timedActionPtr of displayT to the address of task4
+    displayT.next = &keypadT;                                   //set the next TCB pointer to the address of keypadT
+    displayT.prev = &warningT;                                  //set the prev TCB pointer to the address of warningT
 
-    keypadT.functionPtr = keypadFunction;
-    keypadT.dataPtr = (void*) &KeypadData;
-    keypadT.timedActionPtr = &task5;
-    keypadT.next = &communicationT;
-    keypadT.prev = &displayT;
+    keypadT.functionPtr = keypadFunction;                       //set the functionPtr of keypadT to be the keypadFunction
+    keypadT.dataPtr = (void*) &KeypadData;                      //set the dataPtr of keypadT to be the address of the KeypadData cast as a void*
+    keypadT.timedActionPtr = &task5;                            //set the timedActionPtr of keypadT to the address of task5
+    keypadT.next = &communicationT;                             //set the next TCB pointer to the address of communicationT
+    keypadT.prev = &displayT;                                   //set the prev TCB pointer to the address of displayT
 
-    communicationT.functionPtr = communicationFunction;
-    communicationT.timedActionPtr = &task6;
-    communicationT.next = &measureT;
-    communicationT.prev = &displayT;
+    communicationT.functionPtr = communicationFunction;         //set the functionPtr of communicationT to be the communicationFunction
+    communicationT.timedActionPtr = &task6;                     //set the timedActionPtr of communicationT to be the address of task6
+    communicationT.next = &measureT;                            //set the next TCB pointer to be the address of measureT
+    communicationT.prev = &displayT;                            //set the prev TCB pointer to be the address of displayT
 
-    scheduler.front = &measureT;
-    scheduler.back = &keypadT;
-    scheduler.placeholder = scheduler.front;
-    scheduler.size = 6;
+    scheduler.front = &measureT;                                //set the front TCB pointer of scheduler to be the address of measureT
+    scheduler.back = &keypadT;                                  //set the back TCB pointer of scheduler to be the address of keypadT
+    scheduler.placeholder = scheduler.front;                    //set the placeholder TCB pointer of scheduler to be equal to the scheduler.front TCB pointer
+    scheduler.size = 7;                                         //set the size of scheduler to be 7
 }
 
 void loop(void) {                                               //code arduino constatly loops through
-    schedulerFunctionRun(&scheduler);
-
+    schedulerFunctionRun(&scheduler);                           //run the schedulerFunctionRun on the placeholder TCB pointer
 }
 
 void tftSetup(void) {
@@ -161,11 +160,9 @@ void initialize(void) {
     prGoodBool = true;              //initialize warning boolean for pulse to be true
     batteryGoodBool = true;         //initialize warning boolean for battery to be true
 
-    tempMeasure = 0;
-    sysMeasure = 0;
-    diaMeasure = 0;
-    prMeasure = 0;
-    batMeasure = 0;
-
-    runCompute = true;
+    tempMeasure = 0;                //initialize the tempMeasure value to be 0
+    sysMeasure = 0;                 //initialize the sysMeasure value to be 0
+    diaMeasure = 0;                 //initialize the diaMeasure value to be 0
+    prMeasure = 0;                  //initialize the prMeasure value to be 0
+    batMeasure = 0;                 //initialize the batMeasure value to be 0
 }

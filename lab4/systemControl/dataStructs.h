@@ -32,7 +32,7 @@ int rrGoodBool;                         //initialized the warning boolean for pu
 int batteryGoodBool;                    //initialized the warning boolean for battery
 
 int timer;                              //initializes timer that will schedule when data will be requested
-char dataTransfered[16];                //initializes 5 long character array that will hold read values on serial
+char dataTransfered[20];                //initializes 5 long character array that will hold read values on serial
 
 int tempMeasure;                        //initialize variables that select data colors
 int sysMeasure;                         //initialize variables that select data colors

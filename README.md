@@ -19,8 +19,9 @@ UNO:
 - [ ] measure pressure
 
 REMOTE:
-- [ ] implement website
-- [ ] implement communication with mega
+- [x] implement website
+- [x] implement communication with mega
+- [ ] test
 
 # Questions [SOLVED]:
 - how is TS supposed to check every 2 seconds when the task is only executed every 5 seconds: ignore 5 second rule for this

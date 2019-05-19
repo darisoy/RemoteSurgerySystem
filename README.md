@@ -7,14 +7,20 @@ The project was built by Doruk Arisoy, Richard Wang and Kristi Stefanovicz.
 This project uses the Arduino MEGA and Arduino UNO boards. The UNO is designed to collect data from a patient (i.e. blood pressure, body temperature, pulse rate...) and send this data to the MEGA. MEGA has a TFT LCD display. After receiving the data, MEGA processes it and displays useful information on the TFT LCD display.
 
 # TODO list:
-- [x] Fix diastolic value generation
-- [x] Fix 5 seconds per task
-- [x] TouchScreen and going between screen
-- [ ] interrupt for scheduler, using doublylinked list
-- [x] global/hardware timer for scheduler
-- [ ] buffers
-- [x] ADC for pulse and pulse rate computation
-- [x] warning/alarms (acknowledgements and UNO LEDs)
+MEGA:
+- [ ] Fix doubly linked list
+- [x] Display mode on keypad (coordinates need to be fixed)
+- [x] Respiration variables
+- [x] Warning flashes / new warning stuff
+- [ ] remote peripheral communication
+
+UNO:
+- [ ] Raw respiration rate from function generator
+- [ ] measure pressure
+
+REMOTE:
+- [ ] implement website
+- [ ] implement communication with mega
 
 # Questions [SOLVED]:
 - how is TS supposed to check every 2 seconds when the task is only executed every 5 seconds: ignore 5 second rule for this

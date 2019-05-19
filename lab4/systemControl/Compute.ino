@@ -19,4 +19,5 @@ void computeFunction(void* computeDataStruct){                                  
     sysComputedData.push(9 + (2    * (sysRawData.last())));                            //convert raw sys and push it to the buffer
     diaComputedData.push(6 + (1.5  * (diaRawData.last())));                            //convert raw dia and push it to the buffer
     pulseComputedData.push(8 + (3    * (pulseRawData.last())));                        //convert raw pulse and push it to the buffer
+    respComputedData.push(7 + (3    * (respRawData.last())));                        //convert raw pulse and push it to the buffer
 }

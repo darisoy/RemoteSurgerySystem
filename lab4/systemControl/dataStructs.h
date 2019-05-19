@@ -10,11 +10,14 @@ unsigned int temperatureRaw;            //initializes the raw temperature variab
 unsigned int systolicPressRaw;          //initializes the raw syst. press. variable
 unsigned int diastolicPressRaw;         //initializes the raw dias. press. variable
 unsigned int pulseRateRaw;              //initializes the raw pulse rate variable
+unsigned int respRateRaw;              //initializes the raw pulse rate variable
+
 
 double tempCorrected;                   //initalizes the corrected temperature variable
 double systolicPressCorrected;          //initalizes the corrected syst. press. variable
 double diastolicPressCorrected;         //initalizes the corrected dias. press. variable
 double pulseRateCorrected;              //initalizes the corrected pulse rate variable
+double respRateCorrected;              //initalizes the corrected pulse rate variable
 
 unsigned int measurementSelection;      //variable that determines which measurement is selected
 unsigned int alarmAcknowledge;          //variable that determines which alarm is acknowledged
@@ -25,6 +28,7 @@ int tempGoodBool;                       //initialized the warning boolean for te
 int sysGoodBool;                        //initialized the warning boolean for systolic
 int diaGoodBool;                        //initialized the warning boolean for diastolic
 int prGoodBool;                         //initialized the warning boolean for pulse
+int rrGoodBool;                         //initialized the warning boolean for pulse
 int batteryGoodBool;                    //initialized the warning boolean for battery
 
 int timer;                              //initializes timer that will schedule when data will be requested
@@ -35,32 +39,40 @@ int sysMeasure;                         //initialize variables that select data 
 int diaMeasure;                         //initialize variables that select data colors
 int prMeasure;                          //initialize variables that select data colors
 int batMeasure;                         //initialize variables that select data colors
+int rrMeasure;                          //initialize variables that select data colors
 
 Elegoo_GFX_Button menu;                 //initialize the button
 Elegoo_GFX_Button annunciate;           //initialize the button
+Elegoo_GFX_Button display;           //initialize the button
+Elegoo_GFX_Button exp1;                 //initialize the button
+Elegoo_GFX_Button exp2;                 //initialize the button
+
 Elegoo_GFX_Button an_T;                 //initialize the button
 Elegoo_GFX_Button an_S;                 //initialize the button
 Elegoo_GFX_Button an_D;                 //initialize the button
 Elegoo_GFX_Button an_P;                 //initialize the button
-Elegoo_GFX_Button exp1;                 //initialize the button
-Elegoo_GFX_Button exp2;                 //initialize the button
+Elegoo_GFX_Button an_R;                 //initialize the button
+
 Elegoo_GFX_Button ack_T;                //initialize the button
 Elegoo_GFX_Button ack_S;                //initialize the button
 Elegoo_GFX_Button ack_D;                //initialize the button
 Elegoo_GFX_Button ack_P;                //initialize the button
 Elegoo_GFX_Button ack_B;                //initialize the button
+Elegoo_GFX_Button ack_R;                //initialize the button
 
 CircularBuffer<double,8> tempRawData;                                      //initialize raw buffer
 CircularBuffer<double,8> pulseRawData;                                     //initialize raw buffer
 CircularBuffer<double,8> sysRawData;                                       //initialize raw buffer
 CircularBuffer<double,8> diaRawData;                                       //initialize raw buffer
 CircularBuffer[2] bpRawBuffer = {sysRawData, diaRawData};                  //initialize raw combined buffer
+CircularBuffer<double,8> respRawData;                                       //initialize raw buffer
 
 CircularBuffer<double,8> tempComputedData;                                 //initalize computed buffer
 CircularBuffer<double,8> pulseComputedData;                                //initalize computed buffer
 CircularBuffer<double,8> sysComputedData;                                  //initalize computed buffer
 CircularBuffer<double,8> diaComputedData;                                  //initalize computed buffer
 CircularBuffer[2] bpComputedBuffer = {sysComputedData, diaComputedData};   //initialize corrected combined buffer
+CircularBuffer<double,8> respComputedData;                                       //initialize raw buffer
 
 boolean runCompute;                                                        //initalize boolean that determines when to run compute
 

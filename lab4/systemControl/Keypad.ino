@@ -38,6 +38,24 @@ void keypadFunction(void* keypadDataStruct){                                    
         annunciate.press(false);                                                            // tell the button it is NOT pressed
     }
 
+    if (display.contains(p.x, p.y)) {                                                    //check is touch was within the button location
+        display.press(true);                                                             // tell the button it is pressed
+    } else {                                                                                //if it doesn't contain it
+        display.press(false);                                                            // tell the button it is NOT pressed
+    }
+
+    if (exp1.contains(p.x, p.y)) {                                                          //check is touch was within the button location
+        exp1.press(true);                                                                   // tell the button it is pressed
+    } else {                                                                                //if it doesn't contain it
+        exp1.press(false);                                                                  // tell the button it is NOT pressed
+    }
+
+    if (exp2.contains(p.x, p.y)) {                                                          //check is touch was within the button location
+        exp2.press(true);                                                                   // tell the button it is pressed
+    } else {                                                                                //if it doesn't contain it
+        exp2.press(false);                                                                  // tell the button it is NOT pressed
+    }
+
     if (an_T.contains(p.x, p.y)) {                                                          //check is touch was within the button location
         an_T.press(true);                                                                   // tell the button it is pressed
     } else {                                                                                //if it doesn't contain it
@@ -62,46 +80,40 @@ void keypadFunction(void* keypadDataStruct){                                    
         an_P.press(false);                                                                  // tell the button it is NOT pressed
     }
 
-    if (exp1.contains(p.x, p.y)) {                                                          //check is touch was within the button location
-        exp1.press(true);                                                                   // tell the button it is pressed
+    if (an_R.contains(p.x, p.y)) {                                                         //check is touch was within the button location
+        an_R.press(true);                                                                  // tell the button it is pressed
     } else {                                                                                //if it doesn't contain it
-        exp1.press(false);                                                                  // tell the button it is NOT pressed
+        an_R.press(false);                                                                 // tell the button it is NOT pressed
     }
 
-    if (exp2.contains(p.x, p.y)) {                                                          //check is touch was within the button location
-        exp2.press(true);                                                                   // tell the button it is pressed
-    } else {                                                                                //if it doesn't contain it
-        exp2.press(false);                                                                  // tell the button it is NOT pressed
-    }
 
-    if (ack_T.contains(p.x, p.y)) {                                                         //check is touch was within the button location
-        ack_T.press(true);                                                                  // tell the button it is pressed
-    } else {                                                                                //if it doesn't contain it
-        ack_T.press(false);                                                                 // tell the button it is NOT pressed
-    }
-
-    if (annunciation && tempGoodBool == 2 && ack_T.contains(p.x, p.y)) {                    //check if the ack button should be removed
+    if ((annunciation == 0) && tempGoodBool == 2 && ack_T.contains(p.x, p.y)) {                    //check if the ack button should be removed
         ack_T.drawButton(true);                                                             //draw the inverse of the
         tempMeasure = 0;                                                                    //change data text color
     }
 
-    if (annunciation && sysGoodBool == 2 && ack_S.contains(p.x, p.y)) {                     //check if the ack button should be removed
+    if ((annunciation == 0) && sysGoodBool == 2 && ack_S.contains(p.x, p.y)) {                     //check if the ack button should be removed
         ack_S.drawButton(true);                                                             //draw the inverse of the
         sysMeasure = 0;                                                                     //change data text color
     }
 
-    if (annunciation && diaGoodBool == 2 && ack_D.contains(p.x, p.y)) {                     //check if the ack button should be removed
+    if ((annunciation == 0) && diaGoodBool == 2 && ack_D.contains(p.x, p.y)) {                     //check if the ack button should be removed
         ack_D.drawButton(true);                                                             //draw the inverse of the
         diaMeasure = 0;                                                                     //change data text color
     }
 
-    if (annunciation && prGoodBool == 2 && ack_P.contains(p.x, p.y)) {                      //check if the ack button should be removed
+    if ((annunciation == 0) && prGoodBool == 2 && ack_P.contains(p.x, p.y)) {                      //check if the ack button should be removed
         ack_P.drawButton(true);                                                             //draw the inverse of the
         prMeasure = 0;                                                                      //change data text color
     }
 
-    if (annunciation && batteryGoodBool == 2 && ack_B.contains(p.x, p.y)) {                 //check if the ack button should be removed
+    if ((annunciation == 0) && batteryGoodBool == 2 && ack_B.contains(p.x, p.y)) {                 //check if the ack button should be removed
         ack_B.drawButton(true);                                                             //draw the inverse of the
         batMeasure = 0;                                                                     //change data text color
+    }
+
+    if ((annunciation == 0) && respGoodBool == 2 && ack_R.contains(p.x, p.y)) {                 //check if the ack button should be removed
+        ack_R.drawButton(true);                                                             //draw the inverse of the
+        rrMeasure = 0;                                                                     //change data text color
     }
 }

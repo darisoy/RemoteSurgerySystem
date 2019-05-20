@@ -26,6 +26,8 @@
 #define GREY   0xC618                                           //set the keyword Grey    to represent the number 0xC618
 
 #define REQ 22                                                  // Initializes RED 22
+#define EXT 53
+
 #include "dataStructs.h"                                        // Iimport the variables used in the file
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);   // TFT setup
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);              // Touch screen setup
@@ -33,8 +35,10 @@ TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);              // Touch screen 
 void setup(void) {                                              //setup portion of the arduino code
     Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
     Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
+    Serial2.begin(9600);
     tftSetup();                                                 //call the method that detects the TFT and it's version
     pinMode(REQ, OUTPUT);                                       //setup pin 22 to be an output
+    pinMode(EX, INPUT);
     initialize();                                               //call the method that initalizes the variables
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the address of the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
@@ -124,22 +128,23 @@ void tftSetup(void) {
     tft.begin(identifier);                                                          //initializes the LCD screen
     tft.setRotation(0);                                                             //set the screen to be potrait orientation
     tft.fillScreen(BLACK);                                                          //fills the screen with the color black
-    menu.initButton(&tft, 50, 240, 80, 40, WHITE, BLUE, WHITE, "menu", 2);          // set location of button: x, y, w, h, outline, fill, text
-    annunciate.initButton(&tft, 60, 290, 100, 40, WHITE, BLUE, WHITE, "announ", 2); // set location of button: x, y, w, h, outline, fill, text
-    display.initButton(&tft, 60, 290, 100, 40, WHITE, BLUE, WHITE, "display", 2); // set location of button: x, y, w, h, outline, fill, text
-    exp1.initButton(&tft, 180, 240, 80, 40, WHITE, BLUE, WHITE, "exp1", 2);         // set location of button: x, y, w, h, outline, fill, text
-    exp2.initButton(&tft, 180, 290, 80, 40, WHITE, BLUE, WHITE, "exp2", 2);         // set location of button: x, y, w, h, outline, fill, text
-    an_T.initButton(&tft, 18, 50, 30, 30, BLACK, GREY, YELLOW, "temperature", 3);             // set location of button: x, y, w, h, outline, fill, text
-    an_S.initButton(&tft, 18, 87, 30, 30, BLACK, GREY, YELLOW, "sys press", 3);             // set location of button: x, y, w, h, outline, fill, text
-    an_D.initButton(&tft, 18, 124, 30, 30, BLACK, GREY, YELLOW, "dia press", 3);            // set location of button: x, y, w, h, outline, fill, text
-    an_P.initButton(&tft, 18, 161, 30, 30, BLACK, GREY, YELLOW, "pulse", 3);            // set location of button: x, y, w, h, outline, fill, text
-    an_R.initButton(&tft, 18, 161, 30, 30, BLACK, GREY, YELLOW, "respiration", 3);            // set location of button: x, y, w, h, outline, fill, text
+    menu.initButton(&tft, 40, 260, 60, 30, WHITE, BLUE, WHITE, "menu", 2);          // set location of button: x, y, w, h, outline, fill, text
+    annunciate.initButton(&tft, 140, 300, 100, 30, WHITE, BLUE, WHITE, "announ", 2); // set location of button: x, y, w, h, outline, fill, text
+    display.initButton(&tft, 40, 300, 60, 30, WHITE, BLUE, WHITE, "disp", 2); // set location of button: x, y, w, h, outline, fill, text
+    exp1.initButton(&tft, 120, 260, 60, 30, WHITE, BLUE, WHITE, "exp1", 2);         // set location of button: x, y, w, h, outline, fill, text
+    exp2.initButton(&tft, 200, 260, 60, 30, WHITE, BLUE, WHITE, "exp2", 2);         // set location of button: x, y, w, h, outline, fill, text
+    an_T.initButton(&tft, 120, 50, 150, 30, BLACK, GREY, YELLOW, "temperature", 2);             // set location of button: x, y, w, h, outline, fill, text
+    an_S.initButton(&tft, 120, 87, 150, 30, BLACK, GREY, YELLOW, "sys press", 2);             // set location of button: x, y, w, h, outline, fill, text
+    an_D.initButton(&tft, 120, 124, 150, 30, BLACK, GREY, YELLOW, "dia press", 2);            // set location of button: x, y, w, h, outline, fill, text
+    an_P.initButton(&tft, 120, 161, 150, 30, BLACK, GREY, YELLOW, "pulse", 2);            // set location of button: x, y, w, h, outline, fill, text
+    an_R.initButton(&tft, 120, 198, 150, 30, BLACK, GREY, YELLOW, "respiration", 2);            // set location of button: x, y, w, h, outline, fill, text
     ack_T.initButton(&tft, 230, 30, 20, 20, BLACK, RED, BLACK, "", 3);              // set location of button: x, y, w, h, outline, fill, text
-    ack_S.initButton(&tft, 230, 57, 20, 20, BLACK, RED, BLACK, "", 3);              // set location of button: x, y, w, h, outline, fill, text
-    ack_D.initButton(&tft, 230, 84, 20, 20, BLACK, RED, BLACK, "", 3);              // set location of button: x, y, w, h, outline, fill, text
-    ack_P.initButton(&tft, 230, 111, 20, 20, BLACK, RED, BLACK, "", 3);             // set location of button: x, y, w, h, outline, fill, text
-    ack_B.initButton(&tft, 230, 138, 20, 20, BLACK, RED, BLACK, "", 3);             // set location of button: x, y, w, h, outline, fill, text
-    ack_R.initButton(&tft, 230, 165, 20, 20, BLACK, RED, BLACK, "", 3);             // set location of button: x, y, w, h, outline, fill, text
+    ack_S.initButton(&tft, 230, 56, 20, 20, BLACK, RED, BLACK, "", 3);              // set location of button: x, y, w, h, outline, fill, text
+    ack_D.initButton(&tft, 230, 82, 20, 20, BLACK, RED, BLACK, "", 3);              // set location of button: x, y, w, h, outline, fill, text
+    ack_P.initButton(&tft, 230, 108, 20, 20, BLACK, RED, BLACK, "", 3);             // set location of button: x, y, w, h, outline, fill, text
+    ack_R.initButton(&tft, 230, 134, 20, 20, BLACK, RED, BLACK, "", 3);             // set location of button: x, y, w, h, outline, fill, text
+    ack_B.initButton(&tft, 230, 160, 20, 20, BLACK, RED, BLACK, "", 3);             // set location of button: x, y, w, h, outline, fill, text
+
     menu.drawButton();                                                              //draw normal button
     annunciate.drawButton();                                                        //draw normal button
     display.drawButton();
@@ -171,4 +176,7 @@ void initialize(void) {
     prMeasure = 0;                  //initialize the prMeasure value to be 0
     batMeasure = 0;                 //initialize the batMeasure value to be 0
     runCompute = true;              //initialize the compute boolean to be true
+
+    pinHighPS = false;              //set the inital state for pin mode
+    pinHighNS = false;              //set the inital state for pin mode
 }

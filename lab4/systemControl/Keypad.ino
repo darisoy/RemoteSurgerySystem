@@ -112,7 +112,7 @@ void keypadFunction(void* keypadDataStruct){                                    
         batMeasure = 0;                                                                     //change data text color
     }
 
-    if ((annunciation == 0) && respGoodBool == 2 && ack_R.contains(p.x, p.y)) {                 //check if the ack button should be removed
+    if ((annunciation == 0) && rrGoodBool == 2 && ack_R.contains(p.x, p.y)) {                 //check if the ack button should be removed
         ack_R.drawButton(true);                                                             //draw the inverse of the
         rrMeasure = 0;                                                                     //change data text color
     }

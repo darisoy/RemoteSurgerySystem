@@ -12,7 +12,7 @@ MEGA:
 - [x] Display mode on keypad (coordinates need to be fixed)
 - [x] Respiration variables
 - [x] Warning flashes / new warning stuff
-- [ ] remote peripheral communication
+- [x] remote peripheral communication
 
 UNO:
 - [ ] Raw respiration rate from function generator

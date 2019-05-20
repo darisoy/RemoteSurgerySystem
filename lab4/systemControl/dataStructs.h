@@ -82,6 +82,8 @@ struct controlMeasureData {             //create the MeasureData struct
     unsigned int* pSystolicPressRaw;    //struct contains raw syst. press. data
     unsigned int* pDiastolicPressRaw;   //struct contains raw dia. press. data
     unsigned int* pPulseRateRaw;        //struct contains raw pulse rate data
+    unsigned int* pMeasurementSelection;
+    unsigned int* pRespRawData;
 } MeasureData;                          //struct name
 
 struct controlComputeData {             //create the controlComputeData struct

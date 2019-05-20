@@ -6,18 +6,19 @@
 
 void alarmFunction(void* warningStruct){                                                             //function that checks if alarms should be going off, takes in the warning struct
     struct controlWarningAlarmData *wData = (struct controlWarningAlarmData*) warningStruct;         //deference the warning struct
-    wData->pTempCorrected           = &tempCorrected;                                                //assign corrected temp's address to corrected temp pointer from warning struct
-    wData->pSystolicPressCorrected  = &systolicPressCorrected;                                       //assign corrected sys's address to corrected sys pointer from warning struct
-    wData->pDiastolicPressCorrected = &diastolicPressCorrected;                                      //assign corrected fia's address to corrected dia pointer from warning struct
-    wData->pPulseRateCorrected      = &pulseRateCorrected;                                           //assign corrected pulse's address to corrected pulse pointer from warning struct
+    wData->pTempCorrected           = &tempComputedData;                                                //assign corrected temp's address to corrected temp pointer from warning struct
+    wData->pSystolicPressCorrected  = &sysComputedData;                                       //assign corrected sys's address to corrected sys pointer from warning struct
+    wData->pDiastolicPressCorrected = &diaComputedData;                                      //assign corrected fia's address to corrected dia pointer from warning struct
+    wData->pPulseRateCorrected      = &pulseComputedData;                                           //assign corrected pulse's address to corrected pulse pointer from warning struct
+    wData->pRespCorrected           = &respComputedData;
     wData->pBatteryState            = &batteryState;                                                 //assign battery state's address to battery state pointer from warning struct
 
-    if ((tempComputedData.last() <= 39.7) && (tempComputedData.last() >= 34.3)) {                    //if value of the corrected temp pointer is less than 37.8 and greater than 36.1, make the boolean true, otherwise false
+    if ((wData->pTempCorrected->last() <= 39.7) && (wData->pTempCorrected->last() >= 34.3)) {                    //if value of the corrected temp pointer is less than 37.8 and greater than 36.1, make the boolean true, otherwise false
         tempGoodBool = 0;                                                                            //change data text color
         if (annunciation == 0) {                                                                          //execute if in annunciation page
             ack_T.drawButton(true);                                                                  // draw inverse button
         }
-    } else if (tempComputedData.last() >= 43.5 || tempComputedData.last() <= 30.7) {                                                      //check if sys is more than 20% out of range
+    } else if (wData->pTempCorrected->last() >= 43.5 || wData->pTempCorrected->last() <= 30.7) {                                                      //check if sys is more than 20% out of range
         tempGoodBool = 2;                                                                             //change data text color
         tempMeasure++;                                                                                //keep track of how long it has been out of range for
         if (tempMeasure > 5) {                                                                        //if data out of range for more than 5 times in a row
@@ -36,12 +37,12 @@ void alarmFunction(void* warningStruct){                                        
         }
     }
 
-    if ((sysComputedData.last() >= 114) && (sysComputedData.last() <= 136.5)) {                        //if value of the corrected sys pointer is 120, make the boolean true, otherwise false
+    if ((wData->pSystolicPressCorrected->last() >= 114) && (wData->pSystolicPressCorrected->last() <= 136.5)) {                        //if value of the corrected sys pointer is 120, make the boolean true, otherwise false
         sysGoodBool = 0;                                                                             //change data text color
         if (annunciation == 0) {                                                                          //execute if in annunciation page
             ack_S.drawButton(true);                                                                  // draw inverse button
         }
-    } else if (sysComputedData.last() >= 156 || sysComputedData.last() <= 96) {                                                      //check if sys is more than 20% out of range
+    } else if (wData->pSystolicPressCorrected->last() >= 156 || wData->pSystolicPressCorrected->last() <= 96) {                                                      //check if sys is more than 20% out of range
         sysGoodBool = 2;                                                                             //change data text color
         sysMeasure++;                                                                                //keep track of how long it has been out of range for
         if (sysMeasure > 5) {                                                                        //if data out of range for more than 5 times in a row
@@ -60,7 +61,7 @@ void alarmFunction(void* warningStruct){                                        
         }
     }
 
-    if ((diaComputedData.last() <= 84) && (diaComputedData.last() >= 66.5)) {                           //if value of the corrected dia pointer is 80, make the boolean true, otherwise false
+    if ((wData->pDiastolicPressCorrected->last() <= 84) && (wData->pDiastolicPressCorrected->last() >= 66.5)) {                           //if value of the corrected dia pointer is 80, make the boolean true, otherwise false
         diaGoodBool = 0;                                                                             //change data text color
         if (annunciation == 0) {                                                                          //execute if in annunciation page
             ack_D.drawButton(true);                                                                  // draw inverse button
@@ -76,12 +77,12 @@ void alarmFunction(void* warningStruct){                                        
         }
     }
 
-    if ((pulseComputedData.last() >= 57) && (pulseComputedData.last() <= 105)) {                   //if value of the corrected pulse rate pointer is greater than 60 and less than 100, make the boolean true, otherwise false
+    if ((wData->pPulseRateCorrected->last() >= 57) && (wData->pPulseRateCorrected->last() <= 105)) {                   //if value of the corrected pulse rate pointer is greater than 60 and less than 100, make the boolean true, otherwise false
         prGoodBool = 0;                                                                              //change data text color
         if (annunciation == 0) {                                                                          //execute if in annunciation page
             ack_P.drawButton(true);                                                                  // draw inverse button
         }
-    } else if (pulseComputedData.last() >= 115 || pulseComputedData.last() <= 51) {                                                      //check if sys is more than 20% out of range
+    } else if (wData->pPulseRateCorrected->last() >= 115 || wData->pPulseRateCorrected->last() <= 51) {                                                      //check if sys is more than 20% out of range
         prGoodBool = 2;                                                                             //change data text color
         prMeasure++;                                                                                //keep track of how long it has been out of range for
         if (prMeasure > 5) {                                                                        //if data out of range for more than 5 times in a row
@@ -100,12 +101,12 @@ void alarmFunction(void* warningStruct){                                        
         }
     }
 
-    if ((respComputedData.last() <= 26.25) && (respComputedData.last() >= 11.4)) {                   //if value of the corrected pulse rate pointer is greater than 60 and less than 100, make the boolean true, otherwise false
+    if ((wData->pRespCorrected->last() <= 26.25) && (wData->pRespCorrected->last() >= 11.4)) {                   //if value of the corrected pulse rate pointer is greater than 60 and less than 100, make the boolean true, otherwise false
         rrGoodBool = 0;                                                                              //change data text color
         if (annunciation == 0) {                                                                          //execute if in annunciation page
             ack_R.drawButton(true);                                                                  // draw inverse button
         }
-    } else if (respComputedData.last() >= 28.8 || respComputedData.last() <= 10.2) {                                                      //check if sys is more than 20% out of range
+    } else if (wData->pRespCorrected->last() >= 28.8 || wData->pRespCorrected->last() <= 10.2) {                                                      //check if sys is more than 20% out of range
            rrGoodBool = 2;                                                                             //change data text color
            rrMeasure++;                                                                                //keep track of how long it has been out of range for
            if (rrMeasure > 5) {                                                                        //if data out of range for more than 5 times in a row

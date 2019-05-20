@@ -38,11 +38,7 @@ void setup(void) {                                              //setup portion 
     Serial2.begin(9600);
     tftSetup();                                                 //call the method that detects the TFT and it's version
     pinMode(REQ, OUTPUT);                                       //setup pin 22 to be an output
-<<<<<<< HEAD
     pinMode(EXT, INPUT);
-=======
-    pinMode(EX, INPUT);
->>>>>>> 15350f037adaf259630a182bf477a8855f5c00f3
     initialize();                                               //call the method that initalizes the variables
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the address of the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer

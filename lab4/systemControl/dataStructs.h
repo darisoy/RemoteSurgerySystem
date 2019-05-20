@@ -60,18 +60,21 @@ Elegoo_GFX_Button ack_P;                //initialize the button
 Elegoo_GFX_Button ack_B;                //initialize the button
 Elegoo_GFX_Button ack_R;                //initialize the button
 
+boolean pinHighPS;                      //initializes the boolean values for sending signal states
+boolean pinHighNS;                      //initializes the boolean values for sending signal states
+
 CircularBuffer<double,8> tempRawData;                                      //initialize raw buffer
 CircularBuffer<double,8> pulseRawData;                                     //initialize raw buffer
 CircularBuffer<double,8> sysRawData;                                       //initialize raw buffer
 CircularBuffer<double,8> diaRawData;                                       //initialize raw buffer
-CircularBuffer[2] bpRawBuffer = {sysRawData, diaRawData};                  //initialize raw combined buffer
+//CircularBuffer[2] bpRawBuffer = {sysRawData, diaRawData};                  //initialize raw combined buffer
 CircularBuffer<double,8> respRawData;                                       //initialize raw buffer
 
 CircularBuffer<double,8> tempComputedData;                                 //initalize computed buffer
 CircularBuffer<double,8> pulseComputedData;                                //initalize computed buffer
 CircularBuffer<double,8> sysComputedData;                                  //initalize computed buffer
 CircularBuffer<double,8> diaComputedData;                                  //initalize computed buffer
-CircularBuffer[2] bpComputedBuffer = {sysComputedData, diaComputedData};   //initialize corrected combined buffer
+//CircularBuffer[2] bpComputedBuffer = {sysComputedData, diaComputedData};   //initialize corrected combined buffer
 CircularBuffer<double,8> respComputedData;                                       //initialize raw buffer
 
 boolean runCompute;                                                        //initalize boolean that determines when to run compute
@@ -82,6 +85,8 @@ struct controlMeasureData {             //create the MeasureData struct
     unsigned int* pSystolicPressRaw;    //struct contains raw syst. press. data
     unsigned int* pDiastolicPressRaw;   //struct contains raw dia. press. data
     unsigned int* pPulseRateRaw;        //struct contains raw pulse rate data
+    unsigned int* pMeasurementSelection;
+    unsigned int* pRespRawData;
 } MeasureData;                          //struct name
 
 struct controlComputeData {             //create the controlComputeData struct

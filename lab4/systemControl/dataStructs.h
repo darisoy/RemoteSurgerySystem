@@ -6,19 +6,6 @@
 enum _myBool { FALSE = 0, TRUE = 1 };   //define boolean values
 typedef enum _myBool Bool;              //creates the boolean variable
 
-unsigned int temperatureRaw;            //initializes the raw temperature variable
-unsigned int systolicPressRaw;          //initializes the raw syst. press. variable
-unsigned int diastolicPressRaw;         //initializes the raw dias. press. variable
-unsigned int pulseRateRaw;              //initializes the raw pulse rate variable
-unsigned int respRateRaw;              //initializes the raw pulse rate variable
-
-
-double tempCorrected;                   //initalizes the corrected temperature variable
-double systolicPressCorrected;          //initalizes the corrected syst. press. variable
-double diastolicPressCorrected;         //initalizes the corrected dias. press. variable
-double pulseRateCorrected;              //initalizes the corrected pulse rate variable
-double respRateCorrected;              //initalizes the corrected pulse rate variable
-
 unsigned int measurementSelection;      //variable that determines which measurement is selected
 unsigned int alarmAcknowledge;          //variable that determines which alarm is acknowledged
 
@@ -81,38 +68,42 @@ boolean runCompute;                                                        //ini
 
 
 struct controlMeasureData {             //create the MeasureData struct
-    unsigned int* pTemperatureRaw;      //struct contains raw temp data
-    unsigned int* pSystolicPressRaw;    //struct contains raw syst. press. data
-    unsigned int* pDiastolicPressRaw;   //struct contains raw dia. press. data
-    unsigned int* pPulseRateRaw;        //struct contains raw pulse rate data
+    CircularBuffer<double, 8>* pTemperatureRaw;      //struct contains raw temp data
+    CircularBuffer<double, 8>* pSystolicPressRaw;    //struct contains raw syst. press. data
+    CircularBuffer<double, 8>* pDiastolicPressRaw;   //struct contains raw dia. press. data
+    CircularBuffer<double, 8>* pPulseRateRaw;        //struct contains raw pulse rate data
     unsigned int* pMeasurementSelection;
-    unsigned int* pRespRawData;
+    CircularBuffer<double, 8>* pRespRaw;
 } MeasureData;                          //struct name
 
 struct controlComputeData {             //create the controlComputeData struct
-    unsigned int* pTemperatureRaw;      //struct contains raw temp data
-    unsigned int* pSystolicPressRaw;    //struct contains raw syst. press. data
-    unsigned int* pDiastolicPressRaw;   //struct contains raw dia. press. data
-    unsigned int* pPulseRateRaw;        //struct contains raw pulse rate data
-    double* pTempCorrected;             //struct contains corrected temp data
-    double* pSystolicPressCorrected;    //struct contains corrected syst. press. data
-    double* pDiastolicPressCorrected;   //struct contains corrected dia. press. data
-    double* pPulseRateCorrected;        //struct contains corrected pulse rate data
+    CircularBuffer<double, 8>* pTemperatureRaw;      //struct contains raw temp data
+    CircularBuffer<double, 8>* pSystolicPressRaw;    //struct contains raw syst. press. data
+    CircularBuffer<double, 8>* pDiastolicPressRaw;   //struct contains raw dia. press. data
+    CircularBuffer<double, 8>* pPulseRateRaw;        //struct contains raw pulse rate data
+    CircularBuffer<double, 8>* pRespRaw;
+    CircularBuffer<double, 8>* pTempCorrected;             //struct contains corrected temp data
+    CircularBuffer<double, 8>* pSystolicPressCorrected;    //struct contains corrected syst. press. data
+    CircularBuffer<double, 8>* pDiastolicPressCorrected;   //struct contains corrected dia. press. data
+    CircularBuffer<double, 8>* pPulseRateCorrected;        //struct contains corrected pulse rate data
+    CircularBuffer<double, 8>* pRespCorrected;
 } ComputeData;                          //struct name
 
 struct controlDisplayData {             //create the controlDisplayData struct
-    double* pTempCorrected;             //struct contains corrected temp data
-    double* pSystolicPressCorrected;    //struct contains corrected syst. press. data
-    double* pDiastolicPressCorrected;   //struct contains corrected dia. press. data
-    double* pPulseRateCorrected;        //struct contains corrected pulse rate data
+    CircularBuffer<double, 8>* pTempCorrected;             //struct contains corrected temp data
+    CircularBuffer<double, 8>* pSystolicPressCorrected;    //struct contains corrected syst. press. data
+    CircularBuffer<double, 8>* pDiastolicPressCorrected;   //struct contains corrected dia. press. data
+    CircularBuffer<double, 8>* pPulseRateCorrected;        //struct contains corrected pulse rate data
+    CircularBuffer<double, 8>* pRespCorrected;
     unsigned short* pBatteryState;      //struct contians battery data
 } DisplayData;                          //struct name
 
 struct controlWarningAlarmData {        //create the controlWarningAlarmData struct
-    double* pTempCorrected;             //struct contains corrected temp data
-    double* pSystolicPressCorrected;    //struct contains corrected syst. press. data
-    double* pDiastolicPressCorrected;   //struct contains corrected dia. press. data
-    double* pPulseRateCorrected;        //struct contains corrected pulse rate data
+    CircularBuffer<double, 8>* pTempCorrected;             //struct contains corrected temp data
+    CircularBuffer<double, 8>* pSystolicPressCorrected;    //struct contains corrected syst. press. data
+    CircularBuffer<double, 8>* pDiastolicPressCorrected;   //struct contains corrected dia. press. data
+    CircularBuffer<double, 8>* pPulseRateCorrected;        //struct contains corrected pulse rate data
+    CircularBuffer<double, 8>* pRespCorrected;
     unsigned short* pBatteryState;      //struct contians battery data
 } AlarmData;                            //struct name
 
@@ -125,8 +116,8 @@ struct controlSchedulerData {           //create the controlSchedulerData struct
 } SchedulerData;                        //struct name
 
 struct controlKeypadData {              //create the MeasureData struct
-  unsigned int pMeasurementSelection;   //variable that selectes the measurement
-  unsigned int pAlarmAcknowledge;       //variable that acknowledges alarms
+  unsigned int* pMeasurementSelection;   //variable that selectes the measurement
+  unsigned int* pAlarmAcknowledge;       //variable that acknowledges alarms
 } KeypadData;                           //struct name
 
 struct MyTCB {                          //create the task control block struct

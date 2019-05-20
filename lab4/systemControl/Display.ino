@@ -39,10 +39,11 @@ TimedAction dflash = TimedAction(500, inverseD);            //initalize TimedAct
 
 void displayFunction(void* displayDataStruct){                                                //function that display the data on the TFT LCD display, takes display struct as input
     struct controlDisplayData *dData = (struct controlDisplayData*) displayDataStruct;        //deference the display struct
-    dData->pTempCorrected           = &tempCorrected;                                         //assign corrected temp's address to corrected temp pointer from display struct
-    dData->pSystolicPressCorrected  = &systolicPressCorrected;                                //assign corrected sys's address to corrected sys pointer from display struct
-    dData->pDiastolicPressCorrected = &diastolicPressCorrected;                               //assign corrected dia's address to corrected dia pointer from display struct
-    dData->pPulseRateCorrected      = &pulseRateCorrected;                                    //assign corrected pulse's address to corrected pulse pointer from display struct
+    dData->pTempCorrected           = &tempComputedData;                                         //assign corrected temp's address to corrected temp pointer from display struct
+    dData->pSystolicPressCorrected  = &sysComputedData;                                //assign corrected sys's address to corrected sys pointer from display struct
+    dData->pDiastolicPressCorrected = &diaComputedData;                               //assign corrected dia's address to corrected dia pointer from display struct
+    dData->pPulseRateCorrected      = &pulseComputedData;                                    //assign corrected pulse's address to corrected pulse pointer from display struct
+    dData->pRespCorrected           = &respComputedData;
     dData->pBatteryState            = &batteryState;                                          //assign battery state's address to battery state pointer from display struct
 
     if (annunciate.justPressed()) {                                                           //execute if annunciate button is just pressed
@@ -121,7 +122,7 @@ void displayFunction(void* displayDataStruct){                                  
         } else {                                                                              //if temperature is out of range for too long
             tft.setTextColor(RED, BLACK);                                                     //set font color to be red with black background
         }
-        tft.print(tempComputedData.last());                                                   //print the last value of the corrected temp buffer
+        tft.print(dData->pTempCorrected->last());                                                   //print the last value of the corrected temp buffer
         tft.println(" C   ");                                                                 //print "C" on display
 
         tft.setTextColor(WHITE, BLACK);                                                       //set font color with black background
@@ -140,7 +141,7 @@ void displayFunction(void* displayDataStruct){                                  
         } else {                                                                              //if temperature is out of range for too long
             tft.setTextColor(RED, BLACK);                                                     //set font color to be red with black background
         }
-        tft.print(sysComputedData.last());                                                    //print the last value of the corrected syst buffer
+        tft.print(dData->pSystolicPressCorrected->last());                                                    //print the last value of the corrected syst buffer
         tft.println(" mmHg ");                                                                //print "mm Hg" on display
 
         tft.setTextColor(WHITE, BLACK);                                                       //set font color with black background
@@ -159,7 +160,7 @@ void displayFunction(void* displayDataStruct){                                  
         } else {                                                                              //if temperature is out of range for too long
             tft.setTextColor(RED, BLACK);                                                     //set font color to be red with black background
         }
-        tft.print(diaComputedData.last());                                                    //print the last value of the corrected dia buffer
+        tft.print(dData->pDiastolicPressCorrected->last());                                                    //print the last value of the corrected dia buffer
         tft.println(" mmHg ");                                                                //print "mm Hg" on display
 
         tft.setTextColor(WHITE, BLACK);                                                       //set font color with black background
@@ -178,7 +179,7 @@ void displayFunction(void* displayDataStruct){                                  
         } else {                                                                              //if temperature is out of range for too long
             tft.setTextColor(RED, BLACK);                                                     //set font color to be red with black background
         }
-        tft.print(pulseComputedData.last());                                                  //print the last value of the corrected pulse buffer
+        tft.print(dData->pPulseRateCorrected->last());                                                  //print the last value of the corrected pulse buffer
         tft.println(" BPM ");                                                                 //print "BPM" on display
 
         //TODO: fix coordinates
@@ -192,7 +193,7 @@ void displayFunction(void* displayDataStruct){                                  
         } else {                                                                              //if temperature is out of range for too long
             tft.setTextColor(RED, BLACK);                                                     //set font color to be red with black background
         }
-        tft.print(respComputedData.last());                                                  //print the last value of the corrected pulse buffer
+        tft.print(dData->pRespCorrected->last());                                                  //print the last value of the corrected pulse buffer
         tft.println(" RR ");
 
         //TODO: fix coordinates
@@ -222,7 +223,7 @@ void displayFunction(void* displayDataStruct){                                  
             tft.setTextColor(BLACK, BLACK);                                                   //set font color with black background
         }
         tft.setCursor(35, 38);                                                                //move cursor to the specific x, y location on display
-        tft.print(tempComputedData.last());                                                   //print the last value of the corrected temp buffer
+        tft.print(dData->pTempCorrected->last());                                                   //print the last value of the corrected temp buffer
         tft.print("  ");                                                                      //print the space on display
         tft.setTextSize(2);                                                                   //set font size to be 2
         tft.setCursor(165, 45);                                                               //move cursor to the specific x, y location on display
@@ -238,7 +239,7 @@ void displayFunction(void* displayDataStruct){                                  
             tft.setTextColor(BLACK, BLACK);                                                   //set font color with black background
         }
         tft.setCursor(35, 75);                                                                //move cursor to the specific x, y location on display
-        tft.print(sysComputedData.last());                                                    //print the last value of the corrected sys buffer
+        tft.print(dData->pSystolicPressCorrected->last());                                                    //print the last value of the corrected sys buffer
         tft.print("  ");                                                                      //print the space on display
         tft.setTextSize(2);                                                                   //set font size to be 2
         tft.setCursor(165, 82);                                                               //move cursor to the specific x, y location on display
@@ -254,7 +255,7 @@ void displayFunction(void* displayDataStruct){                                  
             tft.setTextColor(BLACK, BLACK);                                                   //set font color with black background
         }
         tft.setCursor(35, 112);                                                               //move cursor to the specific x, y location on display
-        tft.print(diaComputedData.last());                                                    //print the last value of the corrected dia buffer
+        tft.print(dData->pDiastolicPressCorrected->last());                                                    //print the last value of the corrected dia buffer
         tft.print("  ");                                                                      //print the space on display
         tft.setTextSize(2);                                                                   //set font size to be 2
         tft.setCursor(165, 119);                                                              //move cursor to the specific x, y location on display
@@ -270,7 +271,7 @@ void displayFunction(void* displayDataStruct){                                  
             tft.setTextColor(BLACK, BLACK);                                                   //set font color with black background
         }
         tft.setCursor(35, 149);                                                               //move cursor to the specific x, y location on display
-        tft.print(pulseComputedData.last());                                                  //print the value of the corrected pulse pointer that is in the display struct on the display
+        tft.print(dData->pPulseRateCorrected->last());                                                  //print the value of the corrected pulse pointer that is in the display struct on the display
         tft.print("  ");                                                                      //print the space on display
         tft.setTextSize(2);                                                                   //set font size to be 2
         tft.setCursor(165, 156);                                                              //move cursor to the specific x, y location on display
@@ -287,7 +288,11 @@ void displayFunction(void* displayDataStruct){                                  
             tft.setTextColor(BLACK, BLACK);                                                   //set font color with black background
         }
         tft.setCursor(35, 186);                                                               //move cursor to the specific x, y location on display
+<<<<<<< HEAD
+        tft.print(dData->pRespCorrected->last());                                                  //print the value of the corrected pulse pointer that is in the display struct on the display
+=======
         tft.print(respComputedData.last());                                                  //print the value of the corrected pulse pointer that is in the display struct on the display
+>>>>>>> 15350f037adaf259630a182bf477a8855f5c00f3
         tft.print("  ");                                                                      //print the space on display
         tft.setTextSize(2);                                                                   //set font size to be 2
         tft.setCursor(165, 193);                                                              //move cursor to the specific x, y location on display

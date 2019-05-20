@@ -1,8 +1,3 @@
-/*********
-  Rui Santos
-  Complete project details at https://randomnerdtutorials.com
-*********/
-
 // Load Wi-Fi library
 #include <ESP8266WiFi.h>
 
@@ -48,36 +43,6 @@ void setup() {
 }
 
 void loop(){
-    if (Serial.read() == 'V') {                                                                //execture if the letter 'V' is read
-        Serial.readBytes(dataTransfered, 20);                                                  //store the next 4 characters written on serial one to dataTranfered character array
-        unsigned int digit1 = dataTransfered[1] - '0';                                          //convert the characters to digits
-        unsigned int digit2 = dataTransfered[2] - '0';                                          //convert the characters to digits
-        unsigned int digit3 = dataTransfered[3] - '0';                                          //convert the characters to digits
-        unsigned int digit5 = dataTransfered[5] - '0';                                          //convert the characters to digits
-        unsigned int digit6 = dataTransfered[6] - '0';                                          //convert the characters to digits
-        unsigned int digit7 = dataTransfered[7] - '0';                                          //convert the characters to digits
-        unsigned int digit9 = dataTransfered[9] - '0';                                          //convert the characters to digits
-        unsigned int digit10 = dataTransfered[10] - '0';                                        //convert the characters to digits
-        unsigned int digit11 = dataTransfered[11] - '0';                                        //convert the characters to digits
-        unsigned int digit13 = dataTransfered[13] - '0';                                        //convert the characters to digits
-        unsigned int digit14 = dataTransfered[14] - '0';                                        //convert the characters to digits
-        unsigned int digit15 = dataTransfered[15] - '0';                                        //convert the characters to digits
-        unsigned int digit13 = dataTransfered[17] - '0';                                        //convert the characters to digits
-        unsigned int digit14 = dataTransfered[18] - '0';                                        //convert the characters to digits
-        unsigned int digit15 = dataTransfered[19] - '0';                                        //convert the characters to digits
-
-        if ((dataTransfered[0] == 'T')  && (digit1 < 10)  && (digit2 < 10)  && (digit3 < 10)  &&
-            (dataTransfered[4] == 'S')  && (digit5 < 10)  && (digit6 < 10)  && (digit7 < 10)  &&
-            (dataTransfered[8] == 'D')  && (digit9 < 10)  && (digit10 < 10) && (digit11 < 10) &&
-            (dataTransfered[12] == 'P') && (digit13 < 10) && (digit14 < 10) && (digit15 < 10) &&
-            (dataTransfered[16] == 'R') && (digit17 < 10) && (digit18 < 10) && (digit19 < 10) &&) {//make sure all data revieced is valied
-            temp =  5 + (0.75 * ((digit1  * 100) + (digit2  * 10)  + (digit3 * 1)));                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
-            sys =   9 + (2    * ((digit5  * 100) + (digit6  * 10)  + (digit7 * 1)));                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
-            dia =   6 + (1.5  * ((digit9  * 100) + (digit10 * 10) + (digit11 * 1)));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
-            pulse = 8 + (3    * ((digit13 * 100) + (digit14 * 10) + (digit15 * 1)));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
-            resp =  7 + (3    * ((digit17 * 100) + (digit18 * 10) + (digit19 * 1)));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
-        }
-    }
     WiFiClient client = server.available();   // Listen for incoming clients
 
     if (client) {                             // If a new client connects,
@@ -99,9 +64,40 @@ void loop(){
 
                         // turns the GPIOs on and off
                         if (header.indexOf("GET data") >= 0) {
-                            digitalWrite(output5, HIGH);
+                            digitalWrite(request, HIGH);
                         } else {
-                            digitalWrite(output5, LOW);
+                            digitalWrite(request, LOW);
+                        }
+
+                        if (Serial.read() == 'V') {                                                                //execture if the letter 'V' is read
+                            Serial.readBytes(dataTransfered, 20);                                                  //store the next 4 characters written on serial one to dataTranfered character array
+                            unsigned int digit1 = dataTransfered[1] - '0';                                          //convert the characters to digits
+                            unsigned int digit2 = dataTransfered[2] - '0';                                          //convert the characters to digits
+                            unsigned int digit3 = dataTransfered[3] - '0';                                          //convert the characters to digits
+                            unsigned int digit5 = dataTransfered[5] - '0';                                          //convert the characters to digits
+                            unsigned int digit6 = dataTransfered[6] - '0';                                          //convert the characters to digits
+                            unsigned int digit7 = dataTransfered[7] - '0';                                          //convert the characters to digits
+                            unsigned int digit9 = dataTransfered[9] - '0';                                          //convert the characters to digits
+                            unsigned int digit10 = dataTransfered[10] - '0';                                        //convert the characters to digits
+                            unsigned int digit11 = dataTransfered[11] - '0';                                        //convert the characters to digits
+                            unsigned int digit13 = dataTransfered[13] - '0';                                        //convert the characters to digits
+                            unsigned int digit14 = dataTransfered[14] - '0';                                        //convert the characters to digits
+                            unsigned int digit15 = dataTransfered[15] - '0';                                        //convert the characters to digits
+                            unsigned int digit17 = dataTransfered[17] - '0';                                        //convert the characters to digits
+                            unsigned int digit18 = dataTransfered[18] - '0';                                        //convert the characters to digits
+                            unsigned int digit19 = dataTransfered[19] - '0';                                        //convert the characters to digits
+
+                            if ((dataTransfered[0] == 'T')  && (digit1 < 10)  && (digit2 < 10)  && (digit3 < 10)  &&
+                                (dataTransfered[4] == 'S')  && (digit5 < 10)  && (digit6 < 10)  && (digit7 < 10)  &&
+                                (dataTransfered[8] == 'D')  && (digit9 < 10)  && (digit10 < 10) && (digit11 < 10) &&
+                                (dataTransfered[12] == 'P') && (digit13 < 10) && (digit14 < 10) && (digit15 < 10) &&
+                                (dataTransfered[16] == 'R') && (digit17 < 10) && (digit18 < 10) && (digit19 < 10)) {//make sure all data revieced is valied
+                                temp =  5 + (0.75 * ((digit1  * 100) + (digit2  * 10)  + (digit3 * 1)));                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
+                                sys =   9 + (2    * ((digit5  * 100) + (digit6  * 10)  + (digit7 * 1)));                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
+                                dia =   6 + (1.5  * ((digit9  * 100) + (digit10 * 10) + (digit11 * 1)));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
+                                pulse = 8 + (3    * ((digit13 * 100) + (digit14 * 10) + (digit15 * 1)));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
+                                resp =  7 + (3    * ((digit17 * 100) + (digit18 * 10) + (digit19 * 1)));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
+                            }
                         }
 
                         // Display the HTML web page
@@ -115,11 +111,21 @@ void loop(){
                         client.println("<body style=\"background-color: #636363;\">");
                         client.println("<div style=\"position: relative; font-size:25px; color: white; text-align: left; left: 50%; transform: translate(-50%); width: 80%;\">");
                         client.println("<p style=\"color: #d1a7a7; text-align: left; font-size: 40px;\">Remote Surgery System</p>");
-                        client.println("<p>Temp: " + temp + " C </p>");
-                        client.println("<p>Syst: " + sys + " mmHg </p>");
-                        client.println("<p>Dias: " + dia + " mmHg </p>");
-                        client.println("<p>Puls: " + pulse + " BPM </p>");
-                        client.println("<p>Resp: " + resp + " RR </p>");
+                        client.print("<p>Temp: ");
+                        client.print(temp);
+                        client.println(" C </p>");
+                        client.print("<p>Syst: ");
+                        client.print(sys);
+                        client.println(" mmHg </p>");
+                        client.print("<p>Dias: ");
+                        client.print(dia);
+                        client.println(" mmHg </p>");
+                        client.print("<p>Puls: ");
+                        client.print("pulse");
+                        client.println(" BPM </p>");
+                        client.print("<p>Resp: ");
+                        client.print(resp);
+                        client.println(" RR </p>");
                         client.println("<br>");
                         client.println("<button href=\"data\" type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Get Data</button>");
                         client.println("</div>");

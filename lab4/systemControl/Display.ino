@@ -9,11 +9,33 @@ boolean bool_T = false;                                                         
 boolean bool_S = false;                                                                       //initialize boolean values for this file
 boolean bool_D = false;                                                                       //initialize boolean values for this file
 boolean bool_P = false;                                                                       //initialize boolean values for this file
+boolean bool_R = false;
 
 boolean tempflash = true;
 boolean pulseflash = true;
 boolean spressflash = true;
 boolean dpressflash = true;
+
+void inverseT() {
+    tempflash = !tempflash;
+}
+
+void inverseP() {
+    pulseflash = !pulseflash;
+}
+
+void inverseS() {
+    spressflash = !spressflash;
+}
+
+void inverseD() {
+    dpressflash = !dpressflash;
+}
+
+TimedAction tflash = TimedAction(1000, inverseT);            //initalize TimedAction to make sure function runs only every Xms
+TimedAction pflash = TimedAction(2000, inverseP);            //initalize TimedAction to make sure function runs only every Xms
+TimedAction sflash = TimedAction(500, inverseS);            //initalize TimedAction to make sure function runs only every Xms
+TimedAction dflash = TimedAction(500, inverseD);            //initalize TimedAction to make sure function runs only every Xms
 
 void displayFunction(void* displayDataStruct){                                                //function that display the data on the TFT LCD display, takes display struct as input
     struct controlDisplayData *dData = (struct controlDisplayData*) displayDataStruct;        //deference the display struct
@@ -28,7 +50,7 @@ void displayFunction(void* displayDataStruct){                                  
         tft.fillScreen(BLACK);                                                                //fill the screen in black
         menu.drawButton();                                                                    // draw normal button
         annunciate.drawButton();                                                              // draw normal button
-        dislay.drawButton();
+        display.drawButton();
         exp1.drawButton();                                                                    // draw normal button
         exp2.drawButton();                                                                    // draw normal button
         annunciation = 0;                                                                  //set annunciation bool to be true
@@ -42,7 +64,7 @@ void displayFunction(void* displayDataStruct){                                  
         tft.fillScreen(BLACK);                                                                //fill the screen in black
         annunciate.drawButton();                                                              // draw normal button
         menu.drawButton();                                                                    // draw normal button
-        dislay.drawButton();
+        display.drawButton();
         exp1.drawButton();                                                                    // draw normal button
         exp2.drawButton();                                                                    // draw normal button
         annunciation = 1;                                                                 //set annunciation bool to be false
@@ -51,18 +73,18 @@ void displayFunction(void* displayDataStruct){                                  
         menu.drawButton();                                                                    // draw normal button
     }
 
-    if (dislay.justPressed()) {                                                                 //check if the button is just pressed
-        dislay.drawButton(true);                                                                // draw inverted button
+    if (display.justPressed()) {                                                                 //check if the button is just pressed
+        display.drawButton(true);                                                                // draw inverted button
         tft.fillScreen(BLACK);                                                                //fill the screen in black
         annunciate.drawButton();                                                              // draw normal button
         menu.drawButton();                                                                    // draw normal button
         exp1.drawButton();                                                                    // draw normal button
-        dislay.drawButton();
+        display.drawButton();
         exp2.drawButton();                                                                    // draw normal button
         annunciation = 2;                                                                 //set annunciation bool to be false
     }
-    if (dislay.justReleased()) {                                                                //if button is just released, execute
-        dislay.drawButton();                                                                    // draw normal button
+    if (display.justReleased()) {                                                                //if button is just released, execute
+        display.drawButton();                                                                    // draw normal button
     }
 
     if (exp1.justPressed()) {                                                                 //if button is just pressed, execute
@@ -80,7 +102,7 @@ void displayFunction(void* displayDataStruct){                                  
     }
 
     if (annunciation == 0) {                                                                       //execute if in annunciation page
-        tft.setCursor(0, 0);                                                                  //move cursor to the begining of the display
+        tft.setCursor(50, 0);                                                                  //move cursor to the begining of the display
         tft.setTextSize(2);                                                                   //set font size to be 2
         tft.setTextColor(WHITE, BLACK);                                                       //set font color to be white with black background
         tft.println("ANNUNCIATION");                                                  //print the string on display
@@ -163,9 +185,9 @@ void displayFunction(void* displayDataStruct){                                  
         tft.setTextColor(WHITE, BLACK);                                                       //set font color with black background
         tft.setCursor(0, 125);                                                                //set font color to be white with black background
         tft.print("Resp: ");                                                                  //print "Batt:" on display
-        if (respGoodBool == 0) {                                                           //if battery is within range
+        if (rrGoodBool == 0) {                                                           //if battery is within range
             tft.setTextColor(GREEN, BLACK);                                                   //set font color to be green with black background
-        } else if (respGoodBool == 1) {                                                     //if battery is out of range
+        } else if (rrGoodBool == 1) {                                                     //if battery is out of range
             tft.setTextColor(ORANGE, BLACK);                                                  //set font color with black background
         } else {                                                                              //if temperature is out of range for too long
             tft.setTextColor(RED, BLACK);                                                     //set font color to be red with black background
@@ -192,7 +214,7 @@ void displayFunction(void* displayDataStruct){                                  
         tft.setCursor(75, 10);                                                                //move cursor to the specific x, y location on display
         tft.print("MENU");                                                                    //print the string on display
         tft.setTextColor(YELLOW, GREY);                                                      //set font color with black background
-        tft.setCursor(8, 8);                                                                  //move cursor to the specific x, y location on display
+        tft.setCursor(8, 38);                                                                  //move cursor to the specific x, y location on display
         tft.print("T");
         if (bool_T) {                                                                         //execute if boolean color select is true
             tft.setTextColor(WHITE, BLACK);                                                   //set font color with black background
@@ -257,69 +279,68 @@ void displayFunction(void* displayDataStruct){                                  
         //TODO: fix cursor coordinates
         tft.setTextSize(3);                                                                   //set font size to be 3
         tft.setTextColor(YELLOW, GREY);                                                      //set font color with black background
-        tft.setCursor(8, 149);
+        tft.setCursor(8, 186);
         tft.print("R");                                                              //move cursor to the specific x, y location on display
         if (bool_R) {                                                                         //execute if boolean color select is true
             tft.setTextColor(WHITE, BLACK);                                                   //set font color with black background
         } else {                                                                              //if false
             tft.setTextColor(BLACK, BLACK);                                                   //set font color with black background
         }
-        tft.setCursor(35, 149);                                                               //move cursor to the specific x, y location on display
+        tft.setCursor(35, 186);                                                               //move cursor to the specific x, y location on display
         tft.print(respComputedData.last());                                                  //print the value of the corrected pulse pointer that is in the display struct on the display
         tft.print("  ");                                                                      //print the space on display
         tft.setTextSize(2);                                                                   //set font size to be 2
-        tft.setCursor(165, 156);                                                              //move cursor to the specific x, y location on display
+        tft.setCursor(165, 193);                                                              //move cursor to the specific x, y location on display
         tft.print(" RR ");
     } else { //display
         tft.setTextSize(3);                                                                   //set font size to be 3
         tft.setTextColor(RED, BLACK);                                                         //set font color with black background
-        tft.setCursor(75, 10);                                                                //move cursor to the specific x, y location on display
+        tft.setCursor(55, 5);                                                                //move cursor to the specific x, y location on display
         tft.print("DISPLAY");
 
-        an_T.drawButton(bool_T);                                                                    // draw normal button
-        if (an_T.justPressed()) {                                                             //if button is just pressed, execute
+        if (bool_T) {
+            an_T.drawButton(true);
+        } else {
+            an_T.drawButton();                                                                    // draw normal button
+        }
+        if (an_T.justReleased()) {                                                             //if button is just pressed, execute
             bool_T = !bool_T;                                                                 //invert the boolean select
         }
 
-        an_S.drawButton(bool_S);                                                                    // draw normal button
-        if (an_S.justPressed()) {                                                             //if button is just pressed, execute
+        if (bool_S) {
+            an_S.drawButton(true);
+        } else {
+            an_S.drawButton();                                                                    // draw normal button
+        }                                                                   // draw normal button
+        if (an_S.justReleased()) {                                                             //if button is just pressed, execute
             bool_S = !bool_S;                                                                 //invert the boolean select
         }
 
-        an_D.drawButton(bool_D);                                                                    // draw normal button
-        if (an_D.justPressed()) {                                                             //if button is just pressed, execute
+        if (bool_D) {
+            an_D.drawButton(true);
+        } else {
+            an_D.drawButton();                                                                    // draw normal button
+        }                                                                    // draw normal button
+        if (an_D.justReleased()) {                                                             //if button is just pressed, execute
             bool_D = !bool_D;                                                                 //invert the boolean select
         }
 
-        an_P.drawButton(bool_P);                                                                    // draw normal button
-        if (an_P.justPressed()) {                                                             //if button is just pressed, execute
+        if (bool_P) {
+            an_P.drawButton(true);
+        } else {
+            an_P.drawButton();                                                                    // draw normal button
+        }                                                                   // draw normal button
+        if (an_P.justReleased()) {                                                             //if button is just pressed, execute
             bool_P = !bool_P;                                                                 //invert the boolean select
         }
 
-        an_R.drawButton(bool_P);                                                                    // draw normal button
-        if (an_P.justPressed()) {                                                             //if button is just pressed, execute
-            bool_P = !bool_P;                                                                 //invert the boolean select
+        if (bool_R) {
+            an_R.drawButton(true);
+        } else {
+            an_R.drawButton();                                                                    // draw normal button
+        }
+        if (an_R.justReleased()) {                                                             //if button is just pressed, execute
+            bool_R = !bool_R;                                                                 //invert the boolean select
         }
     }
 }
-
-void inverseT() {
-    tempflash = !tempflash;
-}
-
-void inverseP() {
-    pulseflash = !pulseflash;
-}
-
-void inverseS() {
-    spressflash = !spressflash;
-}
-
-void inverseD() {
-    dpressflash = !dpressflash;
-}
-
-TimedAction tflash = TimedAction(1000, inverseT);            //initalize TimedAction to make sure function runs only every Xms
-TimedAction pflash = TimedAction(2000, inverseP);            //initalize TimedAction to make sure function runs only every Xms
-TimedAction sflash = TimedAction(500, inverseS);            //initalize TimedAction to make sure function runs only every Xms
-TimedAction dflash = TimedAction(500, inverseD);            //initalize TimedAction to make sure function runs only every Xms

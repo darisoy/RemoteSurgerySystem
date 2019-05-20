@@ -43,7 +43,7 @@ int rrMeasure;                          //initialize variables that select data 
 
 Elegoo_GFX_Button menu;                 //initialize the button
 Elegoo_GFX_Button annunciate;           //initialize the button
-Elegoo_GFX_Button display;           //initialize the button
+Elegoo_GFX_Button display;              //initialize the button
 Elegoo_GFX_Button exp1;                 //initialize the button
 Elegoo_GFX_Button exp2;                 //initialize the button
 
@@ -60,18 +60,21 @@ Elegoo_GFX_Button ack_P;                //initialize the button
 Elegoo_GFX_Button ack_B;                //initialize the button
 Elegoo_GFX_Button ack_R;                //initialize the button
 
+boolean pinHighPS;                      //initializes the boolean values for sending signal states
+boolean pinHighNS;                      //initializes the boolean values for sending signal states
+
 CircularBuffer<double,8> tempRawData;                                      //initialize raw buffer
 CircularBuffer<double,8> pulseRawData;                                     //initialize raw buffer
 CircularBuffer<double,8> sysRawData;                                       //initialize raw buffer
 CircularBuffer<double,8> diaRawData;                                       //initialize raw buffer
-CircularBuffer[2] bpRawBuffer = {sysRawData, diaRawData};                  //initialize raw combined buffer
+//CircularBuffer[2] bpRawBuffer = {sysRawData, diaRawData};                  //initialize raw combined buffer
 CircularBuffer<double,8> respRawData;                                       //initialize raw buffer
 
 CircularBuffer<double,8> tempComputedData;                                 //initalize computed buffer
 CircularBuffer<double,8> pulseComputedData;                                //initalize computed buffer
 CircularBuffer<double,8> sysComputedData;                                  //initalize computed buffer
 CircularBuffer<double,8> diaComputedData;                                  //initalize computed buffer
-CircularBuffer[2] bpComputedBuffer = {sysComputedData, diaComputedData};   //initialize corrected combined buffer
+//CircularBuffer[2] bpComputedBuffer = {sysComputedData, diaComputedData};   //initialize corrected combined buffer
 CircularBuffer<double,8> respComputedData;                                       //initialize raw buffer
 
 boolean runCompute;                                                        //initalize boolean that determines when to run compute

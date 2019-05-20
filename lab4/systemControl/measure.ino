@@ -4,6 +4,7 @@
 #include <stdbool.h>                                                                            //import necessary header files
 #include <stddef.h>                                                                             //import necessary header files
 #define REQ 22                                                                                  //set REQ to be number 22
+#define EXT 53
 
 void measureFunction(void* measureDataStruct) {                                                 //function that recieves the raw data from UNO, takes measure struct as input
     struct controlMeasureData *mData = (struct controlMeasureData*) measureDataStruct;          //deference the display struct
@@ -45,15 +46,15 @@ void measureFunction(void* measureDataStruct) {                                 
         unsigned int digit13 = dataTransfered[13] - '0';                                        //convert the characters to digits
         unsigned int digit14 = dataTransfered[14] - '0';                                        //convert the characters to digits
         unsigned int digit15 = dataTransfered[15] - '0';                                        //convert the characters to digits
-        unsigned int digit13 = dataTransfered[17] - '0';                                        //convert the characters to digits
-        unsigned int digit14 = dataTransfered[18] - '0';                                        //convert the characters to digits
-        unsigned int digit15 = dataTransfered[19] - '0';                                        //convert the characters to digits
+        unsigned int digit17 = dataTransfered[17] - '0';                                        //convert the characters to digits
+        unsigned int digit18 = dataTransfered[18] - '0';                                        //convert the characters to digits
+        unsigned int digit19 = dataTransfered[19] - '0';                                        //convert the characters to digits
 
         if ((dataTransfered[0] == 'T')  && (digit1 < 10)  && (digit2 < 10)  && (digit3 < 10)  &&
             (dataTransfered[4] == 'S')  && (digit5 < 10)  && (digit6 < 10)  && (digit7 < 10)  &&
             (dataTransfered[8] == 'D')  && (digit9 < 10)  && (digit10 < 10) && (digit11 < 10) &&
             (dataTransfered[12] == 'P') && (digit13 < 10) && (digit14 < 10) && (digit15 < 10) &&
-            (dataTransfered[16] == 'R') && (digit17 < 10) && (digit18 < 10) && (digit19 < 10) &&) {//make sure all data revieced is valied
+            (dataTransfered[16] == 'R') && (digit17 < 10) && (digit18 < 10) && (digit19 < 10)) {//make sure all data revieced is valied
             tempRawData.push((digit1 * 100) + (digit2 * 10) + (digit3 * 1));                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
             sysRawData.push((digit5 * 100) + (digit6 * 10) + (digit7 * 1));                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
             diaRawData.push((digit9 * 100) + (digit10 * 10) + (digit11 * 1));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
@@ -67,4 +68,17 @@ void measureFunction(void* measureDataStruct) {                                 
         runCompute = false;                                                                     //set the boolean to run compute false
     }
 
+    if (!pinHighPS && (digitalRead(EXT) == HIGH)) {         //check if the request pin turned high
+        pinHighNS = true;                                   //if so, make the current state true
+    } else if (pinHighPS && (digitalRead(EXT) == HIGH)) {   //if request pin is true and it has been true
+        pinHighNS = true;                                   // keep the current state true
+    } else {                                                //in any other case
+      pinHighNS = false;                                    //make current case false
+    }
+
+    if (!pinHighPS && pinHighNS) {
+        Serial2.print("V");
+        Serial2.println(dataTranfered);
+    }
+    pinHighPS = pinHighNS;
 }

@@ -17,14 +17,14 @@ void alarmFunction(void* warningStruct){                                        
         if (annunciation == 0) {                                                                          //execute if in annunciation page
             ack_T.drawButton(true);                                                                  // draw inverse button
         }
-    } else if (tempComputedData.last() >= 43.5 || tempComputedData.last() <= 30.7) {                                                      //check if sys is more than 20% out of range
-        tempGoodBool = 2;                                                                             //change data text color
-        tempMeasure++;                                                                                //keep track of how long it has been out of range for
-        if (tempMeasure > 5) {                                                                        //if data out of range for more than 5 times in a row
-            if (annunciation == 0) {                                                                      //execute if in annunciation page
-                ack_T.drawButton();                                                                  // draw normal button
-            }
-        }
+    // } else if (tempComputedData.last() >= 43.5 || tempComputedData.last() <= 30.7) {                                                      //check if sys is more than 20% out of range
+    //     tempGoodBool = 2;                                                                             //change data text color
+    //     tempMeasure++;                                                                                //keep track of how long it has been out of range for
+    //     if (tempMeasure > 5) {                                                                        //if data out of range for more than 5 times in a row
+    //         if (annunciation == 0) {                                                                      //execute if in annunciation page
+    //             ack_T.drawButton();                                                                  // draw normal button
+    //         }
+    //     }
     } else {                                                                                         //if data out of range
         tempGoodBool = 1;                                                                            //change data text color
         tempMeasure++;                                                                               //keep track of how long it has been out of range for
@@ -41,14 +41,14 @@ void alarmFunction(void* warningStruct){                                        
         if (annunciation == 0) {                                                                          //execute if in annunciation page
             ack_S.drawButton(true);                                                                  // draw inverse button
         }
-    } else if (sysComputedData.last() >= 156 || sysComputedData.last() <= 96) {                                                      //check if sys is more than 20% out of range
-        sysGoodBool = 2;                                                                             //change data text color
-        sysMeasure++;                                                                                //keep track of how long it has been out of range for
-        if (sysMeasure > 5) {                                                                        //if data out of range for more than 5 times in a row
-            if (annunciation == 0) {                                                                      //execute if in annunciation page
-                ack_S.drawButton();                                                                  // draw normal button
-            }
-        }
+    // } else if (sysComputedData.last() >= 156 || sysComputedData.last() <= 96) {                                                      //check if sys is more than 20% out of range
+    //     sysGoodBool = 2;                                                                             //change data text color
+    //     sysMeasure++;                                                                                //keep track of how long it has been out of range for
+    //     if (sysMeasure > 5) {                                                                        //if data out of range for more than 5 times in a row
+    //         if (annunciation == 0) {                                                                      //execute if in annunciation page
+    //             ack_S.drawButton();                                                                  // draw normal button
+    //         }
+    //     }
     } else {                                                                                         //if data out of range
         sysGoodBool = 1;                                                                             //change data text color
         sysMeasure++;                                                                                //keep track of how long it has been out of range for
@@ -81,14 +81,14 @@ void alarmFunction(void* warningStruct){                                        
         if (annunciation == 0) {                                                                          //execute if in annunciation page
             ack_P.drawButton(true);                                                                  // draw inverse button
         }
-    } else if (pulseComputedData.last() >= 115 || pulseComputedData.last() <= 51) {                                                      //check if sys is more than 20% out of range
-        prGoodBool = 2;                                                                             //change data text color
-        prMeasure++;                                                                                //keep track of how long it has been out of range for
-        if (prMeasure > 5) {                                                                        //if data out of range for more than 5 times in a row
-            if (annunciation == 0) {                                                                      //execute if in annunciation page
-                ack_P.drawButton();                                                                  // draw normal button
-            }
-        }
+    // } else if (pulseComputedData.last() >= 115 || pulseComputedData.last() <= 51) {                                                      //check if sys is more than 20% out of range
+    //     prGoodBool = 2;                                                                             //change data text color
+    //     prMeasure++;                                                                                //keep track of how long it has been out of range for
+    //     if (prMeasure > 5) {                                                                        //if data out of range for more than 5 times in a row
+    //         if (annunciation == 0) {                                                                      //execute if in annunciation page
+    //             ack_P.drawButton();                                                                  // draw normal button
+    //         }
+    //     }
     } else {                                                                                         //if data out of range
         prGoodBool = 1;                                                                              //change data text color
         prMeasure++;                                                                                 //keep track of how long it has been out of range for
@@ -105,14 +105,14 @@ void alarmFunction(void* warningStruct){                                        
         if (annunciation == 0) {                                                                          //execute if in annunciation page
             ack_R.drawButton(true);                                                                  // draw inverse button
         }
-    } else if (respComputedData.last() >= 28.8 || respComputedData.last() <= 10.2) {                                                      //check if sys is more than 20% out of range
-           rrGoodBool = 2;                                                                             //change data text color
-           rrMeasure++;                                                                                //keep track of how long it has been out of range for
-           if (rrMeasure > 5) {                                                                        //if data out of range for more than 5 times in a row
-               if (annunciation == 0) {                                                                      //execute if in annunciation page
-                   ack_R.drawButton();                                                                  // draw normal button
-               }
-           }
+    // } else if (respComputedData.last() >= 28.8 || respComputedData.last() <= 10.2) {                                                      //check if sys is more than 20% out of range
+    //        rrGoodBool = 2;                                                                             //change data text color
+    //        rrMeasure++;                                                                                //keep track of how long it has been out of range for
+    //        if (rrMeasure > 5) {                                                                        //if data out of range for more than 5 times in a row
+    //            if (annunciation == 0) {                                                                      //execute if in annunciation page
+    //                ack_R.drawButton();                                                                  // draw normal button
+    //            }
+    //        }
     } else {                                                                                         //if data out of range
         rrGoodBool = 1;                                                                              //change data text color
         rrMeasure++;                                                                                 //keep track of how long it has been out of range for

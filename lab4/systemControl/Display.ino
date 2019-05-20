@@ -288,7 +288,11 @@ void displayFunction(void* displayDataStruct){                                  
             tft.setTextColor(BLACK, BLACK);                                                   //set font color with black background
         }
         tft.setCursor(35, 186);                                                               //move cursor to the specific x, y location on display
+<<<<<<< HEAD
         tft.print(dData->pRespCorrected->last());                                                  //print the value of the corrected pulse pointer that is in the display struct on the display
+=======
+        tft.print(respComputedData.last());                                                  //print the value of the corrected pulse pointer that is in the display struct on the display
+>>>>>>> 15350f037adaf259630a182bf477a8855f5c00f3
         tft.print("  ");                                                                      //print the space on display
         tft.setTextSize(2);                                                                   //set font size to be 2
         tft.setCursor(165, 193);                                                              //move cursor to the specific x, y location on display

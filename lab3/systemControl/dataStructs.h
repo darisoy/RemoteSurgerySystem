@@ -16,50 +16,54 @@ double systolicPressCorrected;          //initalizes the corrected syst. press. 
 double diastolicPressCorrected;         //initalizes the corrected dias. press. variable
 double pulseRateCorrected;              //initalizes the corrected pulse rate variable
 
-unsigned int measurementSelection;
-unsigned int alarmAcknowledge;
+unsigned int measurementSelection;      //variable that determines which measurement is selected
+unsigned int alarmAcknowledge;          //variable that determines which alarm is acknowledged
 
 unsigned short batteryState;            //initializes the battery state variable
 
-
-int tempGoodBool;                      //initialized the warning boolean for temperature
-int sysGoodBool;                       //initialized the warning boolean for systolic
-int diaGoodBool;                       //initialized the warning boolean for diastolic
-int prGoodBool;                        //initialized the warning boolean for pulse
-int batteryGoodBool;                   //initialized the warning boolean for battery
+int tempGoodBool;                       //initialized the warning boolean for temperature
+int sysGoodBool;                        //initialized the warning boolean for systolic
+int diaGoodBool;                        //initialized the warning boolean for diastolic
+int prGoodBool;                         //initialized the warning boolean for pulse
+int batteryGoodBool;                    //initialized the warning boolean for battery
 
 int timer;                              //initializes timer that will schedule when data will be requested
-char dataTransfered[16];                 //initializes 5 long character array that will hold read values on serial
+char dataTransfered[16];                //initializes 5 long character array that will hold read values on serial
 
-int tempMeasure;
-int sysMeasure;
-int diaMeasure;
-int prMeasure;
-int batMeasure;
+int tempMeasure;                        //initialize variables that select data colors
+int sysMeasure;                         //initialize variables that select data colors
+int diaMeasure;                         //initialize variables that select data colors
+int prMeasure;                          //initialize variables that select data colors
+int batMeasure;                         //initialize variables that select data colors
 
-Elegoo_GFX_Button menu;
-Elegoo_GFX_Button annunciate;
-Elegoo_GFX_Button an_T;
-Elegoo_GFX_Button an_S;
-Elegoo_GFX_Button an_D;
-Elegoo_GFX_Button an_P;
-Elegoo_GFX_Button exp1;
-Elegoo_GFX_Button exp2;
-Elegoo_GFX_Button ack_T;
-Elegoo_GFX_Button ack_S;
-Elegoo_GFX_Button ack_D;
-Elegoo_GFX_Button ack_P;
-Elegoo_GFX_Button ack_B;
+Elegoo_GFX_Button menu;                 //initialize the button
+Elegoo_GFX_Button annunciate;           //initialize the button
+Elegoo_GFX_Button an_T;                 //initialize the button
+Elegoo_GFX_Button an_S;                 //initialize the button
+Elegoo_GFX_Button an_D;                 //initialize the button
+Elegoo_GFX_Button an_P;                 //initialize the button
+Elegoo_GFX_Button exp1;                 //initialize the button
+Elegoo_GFX_Button exp2;                 //initialize the button
+Elegoo_GFX_Button ack_T;                //initialize the button
+Elegoo_GFX_Button ack_S;                //initialize the button
+Elegoo_GFX_Button ack_D;                //initialize the button
+Elegoo_GFX_Button ack_P;                //initialize the button
+Elegoo_GFX_Button ack_B;                //initialize the button
 
-CircularBuffer<double,8> tempRawData;
-CircularBuffer<double,8> pulseRawData;
-CircularBuffer<double,8> sysRawData;
-CircularBuffer<double,8> diaRawData;
+CircularBuffer<double,8> tempRawData;                                      //initialize raw buffer
+CircularBuffer<double,8> pulseRawData;                                     //initialize raw buffer
+CircularBuffer<double,8> sysRawData;                                       //initialize raw buffer
+CircularBuffer<double,8> diaRawData;                                       //initialize raw buffer
+CircularBuffer[2] bpRawBuffer = {sysRawData, diaRawData};                  //initialize raw combined buffer
 
-CircularBuffer<double,8> tempComputedData;
-CircularBuffer<double,8> pulseComputedData;
-CircularBuffer<double,8> sysComputedData;
-CircularBuffer<double,8> diaComputedData;
+CircularBuffer<double,8> tempComputedData;                                 //initalize computed buffer
+CircularBuffer<double,8> pulseComputedData;                                //initalize computed buffer
+CircularBuffer<double,8> sysComputedData;                                  //initalize computed buffer
+CircularBuffer<double,8> diaComputedData;                                  //initalize computed buffer
+CircularBuffer[2] bpComputedBuffer = {sysComputedData, diaComputedData};   //initialize corrected combined buffer
+
+boolean runCompute;                                                        //initalize boolean that determines when to run compute
+
 
 struct controlMeasureData {             //create the MeasureData struct
     unsigned int* pTemperatureRaw;      //struct contains raw temp data
@@ -103,66 +107,64 @@ struct controlSchedulerData {           //create the controlSchedulerData struct
                                         //struct does not contian any variables
 } SchedulerData;                        //struct name
 
-struct controlKeypadData {             //create the MeasureData struct
-  unsigned int pMeasurementSelection;
-  unsigned int pAlarmAcknowledge;
-} KeypadData;
+struct controlKeypadData {              //create the MeasureData struct
+  unsigned int pMeasurementSelection;   //variable that selectes the measurement
+  unsigned int pAlarmAcknowledge;       //variable that acknowledges alarms
+} KeypadData;                           //struct name
 
 struct MyTCB {                          //create the task control block struct
   void (*functionPtr)(void*);           //struct contains a pointer to a function
   void* dataPtr;                        //struct contains a pointer
-  TimedAction* timedActionPtr;
-  MyTCB* next;
-  MyTCB* prev;
+  TimedAction* timedActionPtr;          //struct contains a pointer to TimedAction
+  MyTCB* next;                          //struct contains a pointer to next function
+  MyTCB* prev;                          //struct contains a pointer to previous function
 } TCB;                                  //struct name
 
-MyTCB taskQueue[6];                     //initialize a 6 element array with MyTCB stuct
 MyTCB measureT,                         //initialize the measureT object using MyTCB struct
       computeT,                         //initialize the computeT object using MyTCB struct
       statusT,                          //initialize the statusT object using MyTCB struct
       warningT,                         //initialize the warningT object using MyTCB struct
       displayT,                         //initialize the displayT object using MyTCB struct
-      keypadT,
-      communicationT;
+      keypadT,                          //initialize the keypadT object using MyTCB struct
+      communicationT;                   //initialize the communicationT object using MyTCB struct
 
-struct LinkedList{
-  MyTCB* front;
-  MyTCB* back;
-  MyTCB* placeholder;
-  int size;
-}List;
+struct LinkedList{                      //create the LinkedList struct
+  MyTCB* front;                         //struct contains TCB pointer to front of the list
+  MyTCB* back;                          //struct contains TCB pointer to back of the list
+  MyTCB* placeholder;                   //struct contains TCB pointer to task on the list
+  int size;                             //struct contains size of the list
+}List;                                  //struct name
 
-LinkedList scheduler;
+LinkedList scheduler;                                       //initalize scheduler
 
-void calltask0() {
-  measureT.functionPtr(measureT.dataPtr);
+void calltask0() {                                          //function that simply runs a task
+  measureT.functionPtr(measureT.dataPtr);                   //run the measure function with measure data of that task
 }
-void calltask1() {
-  computeT.functionPtr(computeT.dataPtr);
+void calltask1() {                                          //function that simply runs a task
+  computeT.functionPtr(computeT.dataPtr);                   //run the compute function with compute data of that task
 }
-void calltask2() {
-  statusT.functionPtr(statusT.dataPtr);
+void calltask2() {                                          //function that simply runs a task
+  statusT.functionPtr(statusT.dataPtr);                     //run the status function with status data of that task
 }
-void calltask3() {
-  keypadT.functionPtr(keypadT.dataPtr);
+void calltask3() {                                          //function that simply runs a task
+  keypadT.functionPtr(keypadT.dataPtr);                     //run the keypad function with keypad data of that task
 }
-void calltask4() {
-  warningT.functionPtr(warningT.dataPtr);
+void calltask4() {                                          //function that simply runs a task
+  warningT.functionPtr(warningT.dataPtr);                   //run the warning function with warning data of that task
 }
-void calltask5() {
-  displayT.functionPtr(displayT.dataPtr);
+void calltask5() {                                          //function that simply runs a task
+  displayT.functionPtr(displayT.dataPtr);                   //run the display function with display data of that task
 }
-void calltask6(){
-  communicationT.functionPtr(communicationT.dataPtr);
+void calltask6(){                                           //function that simply runs a task
+  communicationT.functionPtr(communicationT.dataPtr);       //run the communication function with communication data of that task
 }
 
-TimedAction task0 = TimedAction(5000, calltask0);
-TimedAction task1 = TimedAction(5000, calltask1);
-TimedAction task2 = TimedAction(5000, calltask2);
-TimedAction task3 = TimedAction(100, calltask3);
-TimedAction task4 = TimedAction(5000, calltask4);
-TimedAction task5 = TimedAction(100, calltask5);
-TimedAction task6 = TimedAction(10000, calltask6);
-
+TimedAction task0 = TimedAction(5000, calltask0);            //initalize TimedAction to make sure function runs only every Xms
+TimedAction task1 = TimedAction(5000, calltask1);            //initalize TimedAction to make sure function runs only every Xms
+TimedAction task2 = TimedAction(5000, calltask2);            //initalize TimedAction to make sure function runs only every Xms
+TimedAction task3 = TimedAction(100, calltask3);             //initalize TimedAction to make sure function runs only every Xms
+TimedAction task4 = TimedAction(5000, calltask4);            //initalize TimedAction to make sure function runs only every Xms
+TimedAction task5 = TimedAction(100, calltask5);             //initalize TimedAction to make sure function runs only every Xms
+TimedAction task6 = TimedAction(10000, calltask6);           //initalize TimedAction to make sure function runs only every Xms
 
 #endif

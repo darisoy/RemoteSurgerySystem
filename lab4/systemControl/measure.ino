@@ -56,19 +56,11 @@ void measureFunction(void* measureDataStruct) {                                 
             (dataTransfered[8] == 'D')  && (digit9 < 10)  && (digit10 < 10) && (digit11 < 10) &&
             (dataTransfered[12] == 'P') && (digit13 < 10) && (digit14 < 10) && (digit15 < 10) &&
             (dataTransfered[16] == 'R') && (digit17 < 10) && (digit18 < 10) && (digit19 < 10)) {//make sure all data revieced is valied
-<<<<<<< HEAD
             mData->pTemperatureRaw->push((digit1 * 100) + (digit2 * 10) + (digit3 * 1));                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
             mData->pSystolicPressRaw->push((digit5 * 100) + (digit6 * 10) + (digit7 * 1));                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
             mData->pDiastolicPressRaw->push((digit9 * 100) + (digit10 * 10) + (digit11 * 1));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
             mData->pPulseRateRaw->push((digit13 * 100) + (digit14 * 10) + (digit15 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
             mData->pRespRaw->push((digit17 * 100) + (digit18 * 10) + (digit19 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
-=======
-            tempRawData.push((digit1 * 100) + (digit2 * 10) + (digit3 * 1));                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
-            sysRawData.push((digit5 * 100) + (digit6 * 10) + (digit7 * 1));                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
-            diaRawData.push((digit9 * 100) + (digit10 * 10) + (digit11 * 1));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
-            pulseRawData.push((digit13 * 100) + (digit14 * 10) + (digit15 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
-            respRawData.push((digit17 * 100) + (digit18 * 10) + (digit19 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
->>>>>>> 15350f037adaf259630a182bf477a8855f5c00f3
             runCompute = true;                                                                  //set the boolean to run compute true
         } else {
             runCompute = false;                                                                 //set the boolean to run compute false
@@ -87,11 +79,7 @@ void measureFunction(void* measureDataStruct) {                                 
 
     if (!pinHighPS && pinHighNS) {
         Serial2.print("V");
-<<<<<<< HEAD
         Serial2.println(dataTransfered);
-=======
-        Serial2.println(dataTranfered);
->>>>>>> 15350f037adaf259630a182bf477a8855f5c00f3
     }
     pinHighPS = pinHighNS;
 }

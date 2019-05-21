@@ -10,6 +10,7 @@ unsigned int temperatureRaw;            //initializes temperature variable
 unsigned int systolicPressRaw;          //initializes syst. press. variable
 unsigned int diastolicPressRaw;         //initializes dias. press. variable
 unsigned int pulseRateRaw;              //initializes pulse rate variable
+unsigned int respRaw;
 
 boolean pinHighPS;                      //initializes the boolean values for sending signal states
 boolean pinHighNS;                      //initializes the boolean values for sending signal states
@@ -28,5 +29,6 @@ struct controlMeasureData {             //create the MeasureData struct
     unsigned int* pSystolicPressRaw;    //struct contains syst. press. data
     unsigned int* pDiastolicPressRaw;   //struct contains dia. press. data
     unsigned int* pPulseRateRaw;        //struct contains pulse rate data
+    unsigned int* pRespRaw;      
 } MeasureData;                          //struct name
 #endif

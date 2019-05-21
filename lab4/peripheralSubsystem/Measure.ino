@@ -14,6 +14,7 @@ void measureFunction(struct controlMeasureData measureData,
     measureData.pSystolicPressRaw  = &systolicPressRaw;     //assign raw sys's address to sys pointer from stuct
     measureData.pDiastolicPressRaw = &diastolicPressRaw;    //assign raw dia's address to dia pointer from stuct
     measureData.pPulseRateRaw      = &pulseRateRaw;         //assign raw pulse's address to pulse pointer from stuct
+    measureData.pRespRaw           = &respRaw;
 
     if (!pinHighPS && (digitalRead(REQ) == HIGH)) {         //check if the request pin turned high
         pinHighNS = true;                                   //if so, make the current state true
@@ -51,17 +52,27 @@ void measureFunction(struct controlMeasureData measureData,
         }
         Serial.print(*measureData.pDiastolicPressRaw);      //print the value for the raw dia. pointer on the serial
 
-        pulseRateRawData(pPulseCount);                      //call the pulseRateRawData function to generate pulse data
+        pulseRateRawData();                      //call the pulseRateRawData function to generate pulse data
         Serial.print("P");                                  //print "VP" on the serial
         if (*measureData.pPulseRateRaw < 10) {              //if value for the raw pulse. pointer is less than 10
             Serial.print("00");                             //print "00" on the serial
         } else if (*measureData.pPulseRateRaw < 100) {      //if value for the raw pulse. pointer is less than 100
             Serial.print("0");                              //print "0" on the serial
         }
-        Serial.println(*measureData.pPulseRateRaw);         //print the value for the raw pulse. pointer on the serial
+        Serial.print(*measureData.pPulseRateRaw);         //print the value for the raw pulse. pointer on the serial
+
+        respRawData();                      //call the pulseRateRawData function to generate pulse data
+        Serial.print("R");                                  //print "VP" on the serial
+        if (*measureData.pRespRaw < 10) {              //if value for the raw pulse. pointer is less than 10
+            Serial.print("00");                             //print "00" on the serial
+        } else if (*measureData.pRespRaw < 100) {      //if value for the raw pulse. pointer is less than 100
+            Serial.print("0");                              //print "0" on the serial
+        }
+        Serial.println(*measureData.pRespRaw);         //print the value for the raw pulse. pointer on the serial
     }
     pinHighPS = pinHighNS;
-    pulseRateRawData(pPulseCount);
+    pulseRateRawData();
+    respRawData();
 }
 
 void temperatureRawData(int* pCount) {                      //simulates temperature data, takes an int pointer as input
@@ -124,7 +135,7 @@ void diastolicPressRawData(int* pCount) {                   //simulates diastoli
 
 double sum = 0;                                             //initalize sum variable for frequency measurement
 int count = 0;                                              //intialize the count variable for frequency measurement
-void pulseRateRawData(int* pCount) {                        //simulates diastolic press. data, takes an int pointer as input
+void pulseRateRawData() {                        //simulates diastolic press. data, takes an int pointer as input
     if (FreqMeasure.available()) {                          //execute if the frequency measurement is available
         sum = sum + FreqMeasure.read();                     //add the frequency measurement to the running sum count
         count = count + 1;                                  //incremenet the count by one
@@ -135,5 +146,8 @@ void pulseRateRawData(int* pCount) {                        //simulates diastoli
             count = 0;                                      //reset veriable to 0 for next frequency calculaiton
         }
     }
+}
 
+void respRawData() {
+    respRaw = meter.getFrequency();
 }

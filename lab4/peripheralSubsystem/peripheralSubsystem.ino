@@ -2,12 +2,17 @@
 #include "dataStructs.h"            //connect variables from dataStructs file
 #include "Measure.h"                // connect the function to the header file
 #include <FreqMeasure.h>
+//setup library
+#include <AudioFrequencyMeter.h>
+
+AudioFrequencyMeter meter;
 
 void setup() {                      //setup portion of the arduino code
     initialize();                   //call the initialize function
     Serial.begin(9600);             //initialize the serial with 9600 baud rate
     pinMode(14, INPUT);             //setup pin 14 to be an input
     FreqMeasure.begin();            //setup the frequency measurement
+    meter.begin(A2, 45000);
     sysCount=0;                     //initialize the pointer to the systolic counter
     diaCount=0;                     //initialize the pointer to the diastolic counter
     tempCount = 0;                  //initialize the pointer to the temperature counter

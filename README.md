@@ -17,7 +17,7 @@ MEGA:
 
 UNO:
 - [ ] Raw respiration rate from function generator
-- [ ] measure pressure
+- [ ] measure pressure with buttons
 - [ ] mega interupt trigger
 
 REMOTE:

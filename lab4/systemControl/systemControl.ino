@@ -89,6 +89,18 @@ void setup(void) {                                              //setup portion 
 
 void loop(void) {                                               //code arduino constatly loops through
     schedulerFunctionRun(&scheduler);                           //run the schedulerFunctionRun on the placeholder TCB pointer
+    //create an interupt when pin is TRUE
+    //execute new function that calls all task to be executed immediately
+    //attachInterrupt(where: pin, ___, ISR: add function to scheduler)
+    //function {
+    //  measure
+    //  compute
+    //  keypad
+    //  display
+    //  status
+    //  warning
+    //  communication
+    //}
 }
 
 void tftSetup(void) {

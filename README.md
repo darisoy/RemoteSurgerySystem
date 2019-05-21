@@ -8,7 +8,7 @@ This project uses the Arduino MEGA and Arduino UNO boards. The UNO is designed t
 
 # TODO list:
 MEGA:
-- [ ] Fix doubly linked list
+- [x] Fix doubly linked list
 - [x] Display mode on keypad (coordinates need to be fixed)
 - [x] Respiration variables
 - [x] Warning flashes / new warning stuff

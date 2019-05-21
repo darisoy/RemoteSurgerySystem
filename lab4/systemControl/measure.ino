@@ -83,8 +83,9 @@ void measureFunction(void* measureDataStruct) {                                 
     }
 
     if (!pinHighPS && pinHighNS) {
-        Serial2.print("V");
-        Serial2.println(dataTransfered);
+        Serial2.println("VT111S222D333P444R555");
+
+        //Serial2.println(mData->pTemperatureRaw->last());
     }
     pinHighPS = pinHighNS;
 }

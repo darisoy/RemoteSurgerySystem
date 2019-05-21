@@ -83,9 +83,16 @@ void measureFunction(void* measureDataStruct) {                                 
     }
 
     if (!pinHighPS && pinHighNS) {
-        Serial2.println("VT111S222D333P444R555");
-
-        //Serial2.println(mData->pTemperatureRaw->last());
+        Serial2.print("VT");
+        Serial2.print(mData->pTemperatureRaw->last());
+        Serial2.print("S");
+        Serial2.print(mData->pSystolicPressRaw->last());
+        Serial2.print("D");
+        Serial2.print(mData->pDiastolicPressRaw->last());
+        Serial2.print("P");
+        Serial2.print(mData->pPulseRateRaw->last());
+        Serial2.print("R");
+        Serial2.println(mData->pRespRaw->last());
     }
     pinHighPS = pinHighNS;
 }

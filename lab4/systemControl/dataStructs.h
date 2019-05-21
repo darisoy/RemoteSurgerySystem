@@ -30,7 +30,7 @@ int rrMeasure;                          //initialize variables that select data 
 
 Elegoo_GFX_Button menu;                 //initialize the button
 Elegoo_GFX_Button annunciate;           //initialize the button
-Elegoo_GFX_Button display;           //initialize the button
+Elegoo_GFX_Button display;              //initialize the button
 Elegoo_GFX_Button exp1;                 //initialize the button
 Elegoo_GFX_Button exp2;                 //initialize the button
 

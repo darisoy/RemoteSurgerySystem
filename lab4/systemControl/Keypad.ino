@@ -22,7 +22,6 @@ void keypadFunction(void* keypadDataStruct){                                    
     pinMode(XM, OUTPUT);                                                                    //set pin to be output
     pinMode(YP, OUTPUT);                                                                    //set pin to be output
 
-
     p.x = map(p.x, TS_MINX, TS_MAXX, 0, tft.width());                                       // scale from 0->1023 to tft.width
     p.y = (tft.height()-map(p.y, TS_MINY, TS_MAXY, 0, tft.height()));                       // scale from 0->1023 to tft.width
 

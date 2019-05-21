@@ -61,6 +61,14 @@ void measureFunction(void* measureDataStruct) {                                 
             mData->pDiastolicPressRaw->push((digit9 * 100) + (digit10 * 10) + (digit11 * 1));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
             mData->pPulseRateRaw->push((digit13 * 100) + (digit14 * 10) + (digit15 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
             mData->pRespRaw->push((digit17 * 100) + (digit18 * 10) + (digit19 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
+<<<<<<< HEAD
+=======
+            // tempRawData.push((digit1 * 100) + (digit2 * 10) + (digit3 * 1));                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
+            // sysRawData.push((digit5 * 100) + (digit6 * 10) + (digit7 * 1));                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
+            // diaRawData.push((digit9 * 100) + (digit10 * 10) + (digit11 * 1));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
+            // pulseRawData.push((digit13 * 100) + (digit14 * 10) + (digit15 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
+            // respRawData.push((digit17 * 100) + (digit18 * 10) + (digit19 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
+>>>>>>> e7e359f6e546e7d410d11a68172c2e1785163127
             runCompute = true;                                                                  //set the boolean to run compute true
         } else {
             runCompute = false;                                                                 //set the boolean to run compute false
@@ -78,8 +86,21 @@ void measureFunction(void* measureDataStruct) {                                 
     }
 
     if (!pinHighPS && pinHighNS) {
+<<<<<<< HEAD
         Serial2.print("V");
         Serial2.println(dataTransfered);
+=======
+        Serial2.print("VT");
+        Serial2.print(mData->pTemperatureRaw->last());
+        Serial2.print("S");
+        Serial2.print(mData->pSystolicPressRaw->last());
+        Serial2.print("D");
+        Serial2.print(mData->pDiastolicPressRaw->last());
+        Serial2.print("P");
+        Serial2.print(mData->pPulseRateRaw->last());
+        Serial2.print("R");
+        Serial2.println(mData->pRespRaw->last());
+>>>>>>> e7e359f6e546e7d410d11a68172c2e1785163127
     }
     pinHighPS = pinHighNS;
 }

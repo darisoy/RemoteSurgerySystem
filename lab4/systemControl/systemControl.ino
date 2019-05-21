@@ -23,7 +23,7 @@
 #define YELLOW  0xFFE0                                          //set the keyword YELLOW  to represent the number 0xFFE0
 #define WHITE   0xFFFF                                          //set the keyword WHITE   to represent the number 0xFFFF
 #define ORANGE  0xFD20                                          //set the keyword ORGANE  to represent the number 0xFD20
-#define GREY   0xC618                                           //set the keyword Grey    to represent the number 0xC618
+#define GREY    0xC618                                           //set the keyword Grey    to represent the number 0xC618
 
 #define REQ 22                                                  // Initializes RED 22
 #define EXT 53
@@ -89,6 +89,18 @@ void setup(void) {                                              //setup portion 
 
 void loop(void) {                                               //code arduino constatly loops through
     schedulerFunctionRun(&scheduler);                           //run the schedulerFunctionRun on the placeholder TCB pointer
+    //create an interupt when pin is TRUE
+    //execute new function that calls all task to be executed immediately
+    //attachInterrupt(where: pin, ___, ISR: add function to scheduler)
+    //function {
+    //  measure
+    //  compute
+    //  keypad
+    //  display
+    //  status
+    //  warning
+    //  communication
+    //}
 }
 
 void tftSetup(void) {

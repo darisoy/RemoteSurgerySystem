@@ -4,6 +4,7 @@
 #include <stdbool.h>                                        //import necessary header files
 #include <stddef.h>                                         //import necessary header files
 #define REQ 14                                              //set the keyword TEM_REQ to represent the number 13
+#define RESP 2
 
 void measureFunction(struct controlMeasureData measureData,
                      int* pTempCount,
@@ -14,6 +15,7 @@ void measureFunction(struct controlMeasureData measureData,
     measureData.pSystolicPressRaw  = &systolicPressRaw;     //assign raw sys's address to sys pointer from stuct
     measureData.pDiastolicPressRaw = &diastolicPressRaw;    //assign raw dia's address to dia pointer from stuct
     measureData.pPulseRateRaw      = &pulseRateRaw;         //assign raw pulse's address to pulse pointer from stuct
+    measureData.pRespRaw           = &respRaw;
 
     if (!pinHighPS && (digitalRead(REQ) == HIGH)) {         //check if the request pin turned high
         pinHighNS = true;                                   //if so, make the current state true
@@ -21,6 +23,18 @@ void measureFunction(struct controlMeasureData measureData,
         pinHighNS = true;                                   // keep the current state true
     } else {                                                //in any other case
       pinHighNS = false;                                    //make current case false
+    }
+
+    if (digitalRead(BUTTON1) == HIGH && !b1HighPS){
+      b1HighNS = true;
+    } else if (b1HighPS && digitalRead(BUTTON1) == HIGH){
+      b1HighNS = true;
+    } else {
+      b1HighNS = false;
+    }
+
+    if (!b1HighPS && b1HighNS){
+      bloodPressureRawData();
     }
 
     if (!pinHighPS && pinHighNS) {                          //if request pin has turned high after being low, then execute
@@ -33,7 +47,7 @@ void measureFunction(struct controlMeasureData measureData,
         }
         Serial.print(*measureData.pTemperatureRaw);         //print the value for the raw temp. pointer on the serial
 
-        systolicPressRawData(pSysCount);                    //call the systolicPressRawData function to generate sys. press. data
+        bloodPressureRawData();
         Serial.print("S");                                  //print "VS" on the serial
         if (*measureData.pSystolicPressRaw < 10) {          //if value for the raw sys. pointer is less than 10
             Serial.print("00");                             //print "00" on the serial
@@ -42,7 +56,6 @@ void measureFunction(struct controlMeasureData measureData,
         }
         Serial.print(*measureData.pSystolicPressRaw);       //print the value for the raw sys. pointer on the serial
 
-        diastolicPressRawData(pDiaCount);                   //call the diastolicPressRawData function to generate dia. press. data
         Serial.print("D");                                  //print "VD" on the serial
         if (*measureData.pDiastolicPressRaw < 10) {         //if value for the raw dia. pointer is less than 10
             Serial.print("00");                             //print "00" on the serial
@@ -51,17 +64,29 @@ void measureFunction(struct controlMeasureData measureData,
         }
         Serial.print(*measureData.pDiastolicPressRaw);      //print the value for the raw dia. pointer on the serial
 
-        pulseRateRawData(pPulseCount);                      //call the pulseRateRawData function to generate pulse data
+        pulseRateRawData();                      //call the pulseRateRawData function to generate pulse data
         Serial.print("P");                                  //print "VP" on the serial
         if (*measureData.pPulseRateRaw < 10) {              //if value for the raw pulse. pointer is less than 10
             Serial.print("00");                             //print "00" on the serial
         } else if (*measureData.pPulseRateRaw < 100) {      //if value for the raw pulse. pointer is less than 100
             Serial.print("0");                              //print "0" on the serial
         }
-        Serial.println(*measureData.pPulseRateRaw);         //print the value for the raw pulse. pointer on the serial
+        Serial.print(*measureData.pPulseRateRaw);         //print the value for the raw pulse. pointer on the serial
+
+        respRawData();                      //call the pulseRateRawData function to generate pulse data
+        Serial.print("R");                                  //print "VP" on the serial
+        if (*measureData.pRespRaw < 10) {              //if value for the raw pulse. pointer is less than 10
+            Serial.print("00");                             //print "00" on the serial
+        } else if (*measureData.pRespRaw < 100) {      //if value for the raw pulse. pointer is less than 100
+            Serial.print("0");                              //print "0" on the serial
+        }
+        Serial.println(*measureData.pRespRaw);         //print the value for the raw pulse. pointer on the serial
     }
     pinHighPS = pinHighNS;
-    pulseRateRawData(pPulseCount);
+    b1HighPS = b1HighNS;
+    b2HighPS = b2HighNS;
+    pulseRateRawData();
+    respRawData();
 }
 
 void temperatureRawData(int* pCount) {                      //simulates temperature data, takes an int pointer as input
@@ -86,54 +111,40 @@ void temperatureRawData(int* pCount) {                      //simulates temperat
     (*pCount)++;                                            //incremenet the value of the counter pointer by 1
 }
 
-void systolicPressRawData(int* pCount) {                    //simulates systolic press. data, takes an int pointer as input
-    if (systolicPressRaw <= 100) {                          //if systolic press is less than or equal to 100
-        if (*pCount % 2 == 0) {                             //if counter is even
-            systolicPressRaw += 3;                          //incremenet systolic press. by 3
-        } else {                                            //if counter is odd
-            systolicPressRaw--;                             //decrement systolic press. by 1
-        }
-    } else {                                                //if systolic press. is greater than 100
-        *pSystolicFunction = 1;                             //set the value of the systolic function pointer to be 1
-        if (*pDiastolicFunction) {                          //if the value of diastolic function pointer is 1
-            systolicPressRaw = 80;                          //set systolic press to be 0
-            *pSystolicFunction = 0;
-            *pCount = 0;                                    //decrement the value of the counter pointer by 1
-        }
-    }
-    (*pCount)++;                                            //incremenet the value of the counter pointer by 1
+void bloodPressureRawData(){
+  if (digitalRead(BUTTON2) == HIGH){
+      systolicPressRaw += systolicPressRaw * 0.1;
+      diastolicPressRaw += diastolicPressRaw * 0.1;
+  } else {
+      systolicPressRaw -= systolicPressRaw * 0.1;
+      diastolicPressRaw -= diastolicPressRaw * 0.1;
+  }
 }
 
-void diastolicPressRawData(int* pCount) {                   //simulates diastolic press. data, takes an int pointer as input
-    if (diastolicPressRaw >= 40) {                          //if diastolic press. is greater than or equal to 40
-        if ((*pCount) % 2 == 0) {                             //if counter is even
-            diastolicPressRaw -= 2;
-        } else {                                            //if counter is odd
-            diastolicPressRaw++;
-        }
-    } else {                                                //if diastolic press. is less than 40
-        *pDiastolicFunction = 1;                            //set the value of the diastolic function pointer to be 1
-        if (*pSystolicFunction) {                           //if the value of the systolic function pointer is 1
-            *pDiastolicFunction = 0;
-            diastolicPressRaw = 80;                         //set diastolic press. to be 0
-            (*pCount) = 0;                                  //decrement the value of the counter pointer by 1
-        }
-    }
-    (*pCount)++;                                            //incremenet the value of the counter pointer by 1
-}
-
-double sum = 0;                                             //initalize sum variable for frequency measurement
-int count = 0;                                              //intialize the count variable for frequency measurement
-void pulseRateRawData(int* pCount) {                        //simulates diastolic press. data, takes an int pointer as input
+void pulseRateRawData() {                        //simulates diastolic press. data, takes an int pointer as input
     if (FreqMeasure.available()) {                          //execute if the frequency measurement is available
-        sum = sum + FreqMeasure.read();                     //add the frequency measurement to the running sum count
-        count = count + 1;                                  //incremenet the count by one
-        if (count > 30) {                                   //if counter is greater than 30
+        pulseSum = pulseSum + FreqMeasure.read();                     //add the frequency measurement to the running sum count
+        pulseCount = pulseCount + 1;                                  //incremenet the count by one
+        if (pulseCount > 30) {                                   //if counter is greater than 30
             pulseRateRaw = (int)
-            FreqMeasure.countToFrequency(sum / count);      //average the frequency from past 30 counts
-            sum = 0;                                        //reset veriable to 0 for next frequency calculaiton
-            count = 0;                                      //reset veriable to 0 for next frequency calculaiton
+            FreqMeasure.countToFrequency(pulseSum / pulseCount);      //average the frequency from past 30 counts
+            pulseSum = 0;                                        //reset veriable to 0 for next frequency calculaiton
+            pulseCount = 0;                                      //reset veriable to 0 for next frequency calculaiton
         }
     }
+}
 
+void respRawData() {
+    respInputState = digitalRead(RESP);
+    if (respInputState != respLastState) {
+        respCount++;
+        respLastState = respInputState;
+    }
+
+    // runs every half second, count is equal to Hz
+    if (millis() - respPrevCount >= 500) {
+        respPrevCount += countMillis;
+        respRaw = respCount;
+        respCount = 0;
+    }
 }

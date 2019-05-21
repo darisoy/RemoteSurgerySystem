@@ -1,14 +1,9 @@
-/*********
-  Rui Santos
-  Complete project details at https://randomnerdtutorials.com
-*********/
-
 // Load Wi-Fi library
 #include <ESP8266WiFi.h>
 
 // Replace with your network credentials
-const char* ssid     = "RemoteSurgery";
-const char* password = "Group7";
+const char* ssid     = "d1r1karsy";
+const char* password = "fenerbahce";
 
 // Set web server port number to 80
 WiFiServer server(80);
@@ -68,8 +63,9 @@ void loop(){
                         client.println();
 
                         // turns the GPIOs on and off
-                        if (header.indexOf("GET data") >= 0) {
+                        if (header.indexOf("GET /data") >= 0) {
                             digitalWrite(request, HIGH);
+                            delay(5000);
                         } else {
                             digitalWrite(request, LOW);
                         }
@@ -126,13 +122,13 @@ void loop(){
                         client.print(dia);
                         client.println(" mmHg </p>");
                         client.print("<p>Puls: ");
-                        client.print("pulse");
+                        client.print(pulse);
                         client.println(" BPM </p>");
                         client.print("<p>Resp: ");
                         client.print(resp);
                         client.println(" RR </p>");
                         client.println("<br>");
-                        client.println("<button href=\"data\" type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Get Data</button>");
+                        client.println("<a href = \"/data\"><button type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Get Data</button></a>");
                         client.println("</div>");
                         client.println("</body>");
                         client.println("</html>");

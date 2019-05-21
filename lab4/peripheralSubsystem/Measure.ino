@@ -4,6 +4,7 @@
 #include <stdbool.h>                                        //import necessary header files
 #include <stddef.h>                                         //import necessary header files
 #define REQ 14                                              //set the keyword TEM_REQ to represent the number 13
+#define RESP 2
 
 void measureFunction(struct controlMeasureData measureData,
                      int* pTempCount,
@@ -133,21 +134,30 @@ void diastolicPressRawData(int* pCount) {                   //simulates diastoli
     (*pCount)++;                                            //incremenet the value of the counter pointer by 1
 }
 
-double sum = 0;                                             //initalize sum variable for frequency measurement
-int count = 0;                                              //intialize the count variable for frequency measurement
 void pulseRateRawData() {                        //simulates diastolic press. data, takes an int pointer as input
     if (FreqMeasure.available()) {                          //execute if the frequency measurement is available
-        sum = sum + FreqMeasure.read();                     //add the frequency measurement to the running sum count
-        count = count + 1;                                  //incremenet the count by one
-        if (count > 30) {                                   //if counter is greater than 30
+        pulseSum = pulseSum + FreqMeasure.read();                     //add the frequency measurement to the running sum count
+        pulseCount = pulseCount + 1;                                  //incremenet the count by one
+        if (pulseCount > 30) {                                   //if counter is greater than 30
             pulseRateRaw = (int)
-            FreqMeasure.countToFrequency(sum / count);      //average the frequency from past 30 counts
-            sum = 0;                                        //reset veriable to 0 for next frequency calculaiton
-            count = 0;                                      //reset veriable to 0 for next frequency calculaiton
+            FreqMeasure.countToFrequency(pulseSum / pulseCount);      //average the frequency from past 30 counts
+            pulseSum = 0;                                        //reset veriable to 0 for next frequency calculaiton
+            pulseCount = 0;                                      //reset veriable to 0 for next frequency calculaiton
         }
     }
 }
 
 void respRawData() {
-    respRaw = meter.getFrequency();
+    respInputState = digitalRead(RESP);
+    if (respInputState != respLastState) {
+        respCount++;
+        respLastState = respInputState;
+    }
+
+    // runs every half second, count is equal to Hz
+    if (millis() - respPrevCount >= 500) {
+        respPrevCount += countMillis;
+        respRaw = respCount;
+        respCount = 0;
+    }
 }

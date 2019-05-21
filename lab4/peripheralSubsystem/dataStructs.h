@@ -24,11 +24,19 @@ int diaCount;                           //initialize the pointer to the diastoli
 int* pDiastolicFunction;                //initialize the pointer to the diastolic function
 int* pSystolicFunction;                 //initialize the pointer to the systolic function
 
+double pulseSum;                                             //initalize sum variable for frequency measurement
+int pulseCount;                                              //intialize the count variable for frequency measurement
+
+boolean respInputState;
+boolean respLastState;
+int respCount;
+unsigned long respPrevCount;
+
 struct controlMeasureData {             //create the MeasureData struct
     unsigned int* pTemperatureRaw;      //struct contains temp data
     unsigned int* pSystolicPressRaw;    //struct contains syst. press. data
     unsigned int* pDiastolicPressRaw;   //struct contains dia. press. data
     unsigned int* pPulseRateRaw;        //struct contains pulse rate data
-    unsigned int* pRespRaw;      
+    unsigned int* pRespRaw;
 } MeasureData;                          //struct name
 #endif

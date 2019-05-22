@@ -62,12 +62,12 @@ void measureFunction(void* measureDataStruct) {                                 
             mData->pDiastolicPressRaw->push((digit9 * 100) + (digit10 * 10) + (digit11 * 1));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
             mData->pPulseRateRaw->push((digit13 * 100) + (digit14 * 10) + (digit15 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
             mData->pRespRaw->push((digit17 * 100) + (digit18 * 10) + (digit19 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
-            //runCompute = true;                                                                  //set the boolean to run compute true
+            runCompute = true;                                                                  //set the boolean to run compute true
         } else {
-            //runCompute = false;                                                                 //set the boolean to run compute false
+            runCompute = false;                                                                 //set the boolean to run compute false
         }
     } else {
-        //runCompute = false;                                                                     //set the boolean to run compute false
+        runCompute = false;                                                                     //set the boolean to run compute false
     }
 
     if (!pinHighPS && (digitalRead(EXT) == HIGH)) {         //check if the request pin turned high

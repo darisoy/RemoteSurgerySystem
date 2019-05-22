@@ -33,10 +33,25 @@ void schedulerFunctionDelete(MyTCB* TCBPtr, void* list){                  //the 
     struct LinkedList* newList = (struct LinkedList*) list;                 //the void pointer is dereferenced into a linkedlist pointer
     MyTCB* cur = newList->front;                                            //a MyTCB pointer is created pointing at the front of the newList
     for (int i = 0; i < newList->size; i++){                                //a for loop that runs for the size of the newList
+      Serial.print("cur: ");
+      Serial.print(cur->TCBname);
+      Serial.print(" TCBPtr: ");
+      Serial.println(TCBPtr->TCBname);
         if (cur->TCBname == TCBPtr->TCBname){                                                   //if the MyTCB pointer cur is the same as the TCBPtr
-            cur->prev->next = cur->next;                                        //the prev TCB's next pointer points to the cur's next pointer
-            cur->next->prev = cur->prev;                                        //the prev TCB's prev pointer points to the cur's prev pointer
-            newList->size--;                                                        //decrement size by 1
+            //cur->prev->next = cur->next;                                        //the prev TCB's next pointer points to the cur's next pointer
+            //cur->next->prev = cur->prev;                                        //the prev TCB's prev pointer points to the cur's prev pointer
+            cur->next = cur->next->next;
+            //cur->next = NULL;                                                       //decrement size by 1
+            //cur->prev = NULL;
+            newList->size--; 
+            MyTCB* temp = newList->front;
+            for (int i = 0; i < newList->size; i++){
+              Serial.print(temp->TCBname);
+              Serial.print(" % ");
+              temp = temp->next; 
+            }
+            Serial.println("");
+            
             return;                                                              //the code ends
         }
         cur = cur->next;                                                      //cur is not cur.next
@@ -53,11 +68,11 @@ void schedulerFunctionRun(void* list){                                    //func
         Serial.println("added compute");
         runCompute = false;                                                 //change runCompute boolean value to false
     } else if (schedulerContains(&computeT, list)) {
-        Serial.print(newList->size);
-        Serial.print(newList->placeholder->TCBname);
-        schedulerFunctionDelete(&computeT, &scheduler);                     //delete compute to task queue
-        Serial.print("deleted compute");
-        Serial.println(newList->size);
+        //Serial.print(newList->size);
+        Serial.println(newList->placeholder->TCBname);
+        schedulerFunctionDelete(&measureT, &scheduler);                     //delete compute to task queue
+        Serial.println("deleted compute");
+        //Serial.println(newList->size);
         
     }
     newList->placeholder = newList->placeholder->next;                      //placeholder is now equal to placeholder.next

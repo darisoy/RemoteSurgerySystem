@@ -126,6 +126,7 @@ struct MyTCB {                          //create the task control block struct
   TimedAction* timedActionPtr;          //struct contains a pointer to TimedAction
   MyTCB* next;                          //struct contains a pointer to next function
   MyTCB* prev;                          //struct contains a pointer to previous function
+  int TCBname;
 } TCB;                                  //struct name
 
 MyTCB measureT,                         //initialize the measureT object using MyTCB struct

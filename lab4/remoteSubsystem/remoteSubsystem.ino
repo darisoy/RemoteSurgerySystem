@@ -23,7 +23,7 @@ double resp;
 char dataTransfered[20];
 
 void setup() {
-    Serial.begin(9600);
+    Serial.begin(115200);
     // Initialize the output variables as outputs
     pinMode(request, OUTPUT);
     pinMode(acknowledge, INPUT);

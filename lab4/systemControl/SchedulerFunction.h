@@ -4,4 +4,4 @@ void schedulerFunctionDelete(MyTCB* TCBPtr, void* LinkedList);      //header for
                                                                     //takes in the pointer for task and for LinkedList
 void schedulerFunctionRun(void* LinkedList);                        //header for schedulerFunctionRun
                                                                     //takes in the pointer for LinkedList
-void schedulerContains(MyTCB* TCBPtr, void* LinkedList);
+boolean schedulerContains(MyTCB* TCBPtr, void* LinkedList);

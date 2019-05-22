@@ -14,6 +14,7 @@ void measureFunction(void* measureDataStruct) {                                 
     mData->pDiastolicPressRaw  = &diaRawData;                                            //assign raw dia's address to raw dia pointer from measure struct
     mData->pPulseRateRaw       = &pulseRawData;
     mData->pRespRaw            = &respRawData;                                               //assign raw pulse's address to raw pulse pointer from measure struct
+    Serial.println("In MEASURE");
     if (Serial1.read() == 'V') {                                                                //execture if the letter 'V' is read
         Serial1.readBytes(dataTransfered, 20);                                                  //store the next 4 characters written on serial one to dataTranfered character array
         Serial.print(dataTransfered[0]);                                                        //print the charater array on serial for troubleshooting purposes

@@ -173,6 +173,6 @@ TimedAction task2 = TimedAction(5000, calltask2);            //initalize TimedAc
 TimedAction task3 = TimedAction(100, calltask3);             //initalize TimedAction to make sure function runs only every Xms
 TimedAction task4 = TimedAction(5000, calltask4);            //initalize TimedAction to make sure function runs only every Xms
 TimedAction task5 = TimedAction(100, calltask5);             //initalize TimedAction to make sure function runs only every Xms
-TimedAction task6 = TimedAction(10000, calltask6);           //initalize TimedAction to make sure function runs only every Xms
+TimedAction task6 = TimedAction(5000, calltask6);           //initalize TimedAction to make sure function runs only every Xms
 
 #endif

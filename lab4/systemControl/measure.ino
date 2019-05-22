@@ -5,6 +5,7 @@
 #include <stddef.h>                                                                             //import necessary header files
 #define REQ 22                                                                                  //set REQ to be number 22
 #define EXT 53
+#define ACK 52
 
 void measureFunction(void* measureDataStruct) {                                                 //function that recieves the raw data from UNO, takes measure struct as input
     struct controlMeasureData *mData = (struct controlMeasureData*) measureDataStruct;          //deference the display struct
@@ -61,17 +62,12 @@ void measureFunction(void* measureDataStruct) {                                 
             mData->pDiastolicPressRaw->push((digit9 * 100) + (digit10 * 10) + (digit11 * 1));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
             mData->pPulseRateRaw->push((digit13 * 100) + (digit14 * 10) + (digit15 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
             mData->pRespRaw->push((digit17 * 100) + (digit18 * 10) + (digit19 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
-            // tempRawData.push((digit1 * 100) + (digit2 * 10) + (digit3 * 1));                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
-            // sysRawData.push((digit5 * 100) + (digit6 * 10) + (digit7 * 1));                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
-            // diaRawData.push((digit9 * 100) + (digit10 * 10) + (digit11 * 1));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
-            // pulseRawData.push((digit13 * 100) + (digit14 * 10) + (digit15 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
-            // respRawData.push((digit17 * 100) + (digit18 * 10) + (digit19 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
-            runCompute = true;                                                                  //set the boolean to run compute true
+            //runCompute = true;                                                                  //set the boolean to run compute true
         } else {
-            runCompute = false;                                                                 //set the boolean to run compute false
+            //runCompute = false;                                                                 //set the boolean to run compute false
         }
     } else {
-        runCompute = false;                                                                     //set the boolean to run compute false
+        //runCompute = false;                                                                     //set the boolean to run compute false
     }
 
     if (!pinHighPS && (digitalRead(EXT) == HIGH)) {         //check if the request pin turned high
@@ -83,16 +79,43 @@ void measureFunction(void* measureDataStruct) {                                 
     }
 
     if (!pinHighPS && pinHighNS) {
-        Serial2.print("VT");
-        Serial2.print(mData->pTemperatureRaw->last());
-        Serial2.print("S");
-        Serial2.print(mData->pSystolicPressRaw->last());
-        Serial2.print("D");
-        Serial2.print(mData->pDiastolicPressRaw->last());
-        Serial2.print("P");
-        Serial2.print(mData->pPulseRateRaw->last());
-        Serial2.print("R");
-        Serial2.println(mData->pRespRaw->last());
+        digitalWrite(ACK, HIGH);
+        Serial2.print("VT");                                 //print "VT" on the serial
+        if ((int)mData->pTemperatureRaw->last() < 10) {            //if value for the raw temp. pointer is less than 10
+            Serial2.print("00");                             //print "00" on the serial
+        } else if ((int)mData->pTemperatureRaw->last() < 100) {    //if value for the raw temp. pointer is less than 100
+            Serial2.print("0");                              //print "0" on the serial
+        }
+        Serial2.print((int)mData->pTemperatureRaw->last());         //print the value for the raw temp. pointer on the serial
+        Serial2.print("S");                                  //print "VS" on the serial
+        if ((int)mData->pSystolicPressRaw->last() < 10) {          //if value for the raw sys. pointer is less than 10
+            Serial2.print("00");                             //print "00" on the serial
+        } else if ((int)mData->pSystolicPressRaw->last() < 100) {  //if value for the raw sys. pointer is less than 100
+            Serial2.print("0");                              //print "0" on the serial
+        }
+        Serial2.print((int)mData->pSystolicPressRaw->last());       //print the value for the raw sys. pointer on the serial
+        Serial2.print("D");                                  //print "VD" on the serial
+        if ((int)mData->pDiastolicPressRaw->last() < 10) {         //if value for the raw dia. pointer is less than 10
+            Serial2.print("00");                             //print "00" on the serial
+        } else if ((int)mData->pDiastolicPressRaw->last() < 100) { //if value for the raw dia. pointer is less than 100
+            Serial2.print("0");                              //print "0" on the serial
+        }
+        Serial2.print((int)mData->pDiastolicPressRaw->last());      //print the value for the raw dia. pointer on the serial                    //call the pulseRateRawData function to generate pulse data
+        Serial2.print("P");                                  //print "VP" on the serial
+        if ((int)mData->pPulseRateRaw->last() < 10) {              //if value for the raw pulse. pointer is less than 10
+            Serial2.print("00");                             //print "00" on the serial
+        } else if ((int)mData->pPulseRateRaw->last() < 100) {      //if value for the raw pulse. pointer is less than 100
+            Serial2.print("0");                              //print "0" on the serial
+        }
+        Serial2.print((int)mData->pPulseRateRaw->last());         //print the value for the raw pulse. pointer on the serial
+        Serial2.print("R");                                  //print "VP" on the serial
+        if ((int)mData->pRespRaw->last() < 10) {              //if value for the raw pulse. pointer is less than 10
+            Serial2.print("00");                             //print "00" on the serial
+        } else if ((int)mData->pRespRaw->last() < 100) {      //if value for the raw pulse. pointer is less than 100
+            Serial2.print("0");                              //print "0" on the serial
+        }
+        Serial2.println((int)mData->pRespRaw->last());
     }
+    digitalWrite(ACK, LOW);
     pinHighPS = pinHighNS;
 }

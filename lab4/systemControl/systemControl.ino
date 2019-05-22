@@ -27,6 +27,7 @@
 
 #define REQ 22                                                  // Initializes RED 22
 #define EXT 53
+#define ACK 52
 
 #include "dataStructs.h"                                        // Iimport the variables used in the file
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);   // TFT setup
@@ -39,24 +40,25 @@ void setup(void) {                                              //setup portion 
     tftSetup();                                                 //call the method that detects the TFT and it's version
     pinMode(REQ, OUTPUT);                                       //setup pin 22 to be an output
     pinMode(EXT, INPUT);
+    pinMode(ACK, OUTPUT);
     initialize();                                               //call the method that initalizes the variables
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the address of the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
     measureT.timedActionPtr = &task0;                           //set the timedActionPtr of measureT to be the address of task0
-    measureT.next = &statusT;                                   //set the TCB pointer next to the address of statusT
+    measureT.next = &computeT;                                   //set the TCB pointer next to the address of statusT
     measureT.prev = &keypadT;                                   //set the TCB pointer prev to the address of keypadT
 
     computeT.functionPtr = computeFunction;                     //set the functionPtr of computeT to be the computeFunction
     computeT.dataPtr = (void*) &ComputeData;                    //set the dataPtr of computeT to be the address of the ComputeData pointer
     computeT.timedActionPtr = &task1;                           //set the timedActionPtr of computeT to be the address of task1
-    computeT.next = NULL;                                       //set the next TCB pointer to nothing
-    computeT.prev = NULL;                                       //set the prev TCB pointer to nothing
+    computeT.next = &statusT;                                       //set the next TCB pointer to nothing
+    computeT.prev = &measureT;                                       //set the prev TCB pointer to nothing
 
     statusT.functionPtr = statusFunction;                       //set the functionPtr of statusT to be the statusFunction
     statusT.dataPtr = (void*) &StatusData;                      //set the dataPtr of statusT to be the address of the StatusData pointer
     statusT.timedActionPtr = &task2;                            //set the timedActionPtr of statusT to be the address of task2
     statusT.next = &warningT;                                   //set the next TCB pointer to the address of warningT
-    statusT.prev = &measureT;                                   //set the prev TCB pointer to the address of measureT
+    statusT.prev = &computeT;                                   //set the prev TCB pointer to the address of measureT
 
     warningT.functionPtr = alarmFunction;                       //set the functionPtr of warningT to be the alarmFunction
     warningT.dataPtr = (void*) &AlarmData;                      //set the dataPtr of warningT to be the address of the AlarmData pointer

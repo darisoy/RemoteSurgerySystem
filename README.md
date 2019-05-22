@@ -8,17 +8,19 @@ This project uses the Arduino MEGA, Arduino UNO boards and ESP8266 WIFI board. T
 
 # TODO list:
 MEGA:
-- [x] Fix doubly linked list
+- [ ] Fix doubly linked list
 - [x] Display mode on keypad (coordinates need to be fixed)
 - [x] Respiration variables
 - [x] Warning flashes / new warning stuff
 - [x] remote peripheral communication
+- [x] Subsystem communication
 - [ ] add interupts
 
 UNO:
 - [ ] Raw respiration rate from function generator
-- [ ] measure pressure with buttons
+- [x] measure pressure with buttons
 - [ ] mega interupt trigger
+- [x] communication
 
 REMOTE:
 - [x] implement website

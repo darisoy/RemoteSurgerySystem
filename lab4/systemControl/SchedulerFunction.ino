@@ -31,12 +31,12 @@ void schedulerFunctionRun(void* list){                                    //func
     struct LinkedList* newList = (struct LinkedList*) list;                 //the void pointer is dereferenced into a linkedlist pointer
     (*newList->placeholder->timedActionPtr).check();                        //the check method is run on the timedActionPtr of the MyTCB
     MyTCB* cur = newList->placeholder;                                      //the MyTCB pointer cur is now pointing to the placeholder
-    if (runCompute) {                                                       //if compute needs to be run
-        schedulerFunctionAdd(&computeT, &scheduler);                        //add compute to task queue
-        runCompute = false;                                                 //change runCompute boolean value to false
-    } else {
-        schedulerFunctionDelete(&computeT, &scheduler);                     //delete compute to task queue
-    }
+    // if (runCompute) {                                                       //if compute needs to be run
+    //     schedulerFunctionAdd(&computeT, &scheduler);                        //add compute to task queue
+    //     runCompute = false;                                                 //change runCompute boolean value to false
+    // } else {
+    //     schedulerFunctionDelete(&computeT, &scheduler);                     //delete compute to task queue
+    // }
     newList->placeholder = newList->placeholder->next;                      //placeholder is now equal to placeholder.next
 }
 

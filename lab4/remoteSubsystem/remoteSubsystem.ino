@@ -13,6 +13,7 @@ String header;
 
 // Assign output variables to GPIO pins
 const int request = 5;
+const int acknowledge = 4;
 
 double temp;
 double sys;
@@ -25,12 +26,13 @@ void setup() {
     Serial.begin(9600);
     // Initialize the output variables as outputs
     pinMode(request, OUTPUT);
+    pinMode(acknowledge, INPUT);
     // Set outputs to LOW
     digitalWrite(request, LOW);
     // Connect to Wi-Fi network with SSID and password
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+      delay(500);
     }
     // Print local IP address and start web server
     server.begin();
@@ -65,8 +67,7 @@ void loop(){
                         // turns the GPIOs on and off
                         if (header.indexOf("GET /data") >= 0) {
                             digitalWrite(request, HIGH);
-                            delay(5000);
-                        } else {
+                        } else if (digitalRead(acknowledge)==HIGH) {
                             digitalWrite(request, LOW);
                         }
 

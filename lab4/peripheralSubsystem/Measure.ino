@@ -136,14 +136,26 @@ void pulseRateRawData() {                        //simulates diastolic press. da
 
 void respRawData() {
     respInputState = digitalRead(RESP);
+        Serial.println("respCount | respInputState | respLastState | respRaw\n");
+        Serial.print(respCount);
+        Serial.print("   ");
+        Serial.print(respInputState);
+        Serial.print("   ");
+        Serial.print(respLastState);
+        Serial.println("   ");
+        Serial.print(respRaw);
+        Serial.println("   ");
+    
     if (respInputState != respLastState) {
         respCount++;
         respLastState = respInputState;
+
     }
+
 
     // runs every half second, count is equal to Hz
     if (millis() - respPrevCount >= 500) {
-        respPrevCount += countMillis;
+        respPrevCount += 500;
         respRaw = respCount;
         respCount = 0;
     }

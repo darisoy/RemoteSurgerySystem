@@ -79,7 +79,9 @@ void measureFunction(void* measureDataStruct) {                                 
     }
 
     if (!pinHighPS && pinHighNS) {
+        Serial.println("We are in");
         digitalWrite(ACK, HIGH);
+
         Serial2.print("VT");                                 //print "VT" on the serial
         if ((int)mData->pTemperatureRaw->last() < 10) {            //if value for the raw temp. pointer is less than 10
             Serial2.print("00");                             //print "00" on the serial
@@ -115,7 +117,8 @@ void measureFunction(void* measureDataStruct) {                                 
             Serial2.print("0");                              //print "0" on the serial
         }
         Serial2.println((int)mData->pRespRaw->last());
+        digitalWrite(ACK, LOW);
     }
-    digitalWrite(ACK, LOW);
+
     pinHighPS = pinHighNS;
 }

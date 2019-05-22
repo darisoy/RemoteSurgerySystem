@@ -135,28 +135,36 @@ void pulseRateRawData() {                        //simulates diastolic press. da
 }
 
 void respRawData() {
-    respInputState = digitalRead(RESP);
-        Serial.println("respCount | respInputState | respLastState | respRaw\n");
-        Serial.print(respCount);
-        Serial.print("   ");
-        Serial.print(respInputState);
-        Serial.print("   ");
-        Serial.print(respLastState);
-        Serial.println("   ");
-        Serial.print(respRaw);
-        Serial.println("   ");
-    
-    if (respInputState != respLastState) {
-        respCount++;
-        respLastState = respInputState;
+//    respInputState = digitalRead(RESP);
+//        Serial.println("respCount | respInputState | respLastState | respRaw\n");
+//        Serial.print(respCount);
+//        Serial.print("   ");
+//        Serial.print(respInputState);
+//        Serial.print("   ");
+//        Serial.print(respLastState);
+//        Serial.println("   ");
+//        Serial.print(respRaw);
+//        Serial.println("   ");
+//
+//    if (respInputState != respLastState) {
+//        respCount++;
+//        respLastState = respInputState;
+//
+//    }
+//
+//
+//    // runs every half second, count is equal to Hz
+//    if (millis() - respPrevCount >= 500) {
+//        respPrevCount += 500;
+//        respRaw = respCount;
+//        respCount = 0;
+//    }
+// Use the rising edge of an interrupt to increment count.
+// Use first interrupt to mark time.
+// Every time reading is requested,
+// report count/(current time - marked time),
+// then reset all.
 
-    }
+attachInterrupt()
 
-
-    // runs every half second, count is equal to Hz
-    if (millis() - respPrevCount >= 500) {
-        respPrevCount += 500;
-        respRaw = respCount;
-        respCount = 0;
-    }
 }

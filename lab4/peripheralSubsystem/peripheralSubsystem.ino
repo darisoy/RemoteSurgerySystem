@@ -44,7 +44,7 @@ void initialize() {                 //initializing the global variables
     pulseSum = 0;
     pulseCount = 0;
 
-    respInputState = false;
+ 
     respLastState = false;
     respCount = 0;
     respPrevCount = millis();

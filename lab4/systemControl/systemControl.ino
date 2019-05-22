@@ -80,13 +80,18 @@ void setup(void) {                                              //setup portion 
 
     communicationT.functionPtr = communicationFunction;         //set the functionPtr of communicationT to be the communicationFunction
     communicationT.timedActionPtr = &task6;                     //set the timedActionPtr of communicationT to be the address of task6
-    communicationT.next = &measureT;                            //set the next TCB pointer to be the address of measureT
-    communicationT.prev = &displayT;                            //set the prev TCB pointer to be the address of displayT
+    communicationT.next = &remoteComT;                            //set the next TCB pointer to be the address of measureT
+    communicationT.prev = &keypadT;                            //set the prev TCB pointer to be the address of displayT
+
+    remoteComT.functionPtr = remoteComFunction;
+    remoteComT.timedActionPtr = &task7;
+    remoteComT.next = measureT;
+    remoteComtT.prev = communicationT;
 
     scheduler.front = &measureT;                                //set the front TCB pointer of scheduler to be the address of measureT
     scheduler.back = &keypadT;                                  //set the back TCB pointer of scheduler to be the address of keypadT
     scheduler.placeholder = scheduler.front;                    //set the placeholder TCB pointer of scheduler to be equal to the scheduler.front TCB pointer
-    scheduler.size = 6;                                         //set the size of scheduler to be 7
+    scheduler.size = 7;                                         //set the size of scheduler to be 7
 }
 
 void loop(void) {                                               //code arduino constatly loops through

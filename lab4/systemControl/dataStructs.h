@@ -120,6 +120,15 @@ struct controlKeypadData {              //create the MeasureData struct
   unsigned int* pAlarmAcknowledge;       //variable that acknowledges alarms
 } KeypadData;                           //struct name
 
+struct controlRemoteComData {
+  CircularBuffer<double, 8>* pTemperatureRaw;      //struct contains raw temp data
+  CircularBuffer<double, 8>* pSystolicPressRaw;    //struct contains raw syst. press. data
+  CircularBuffer<double, 8>* pDiastolicPressRaw;   //struct contains raw dia. press. data
+  CircularBuffer<double, 8>* pPulseRateRaw;        //struct contains raw pulse rate data
+  unsigned int* pMeasurementSelection;
+  CircularBuffer<double, 8>* pRespRaw;
+} remoteComData;
+
 struct MyTCB {                          //create the task control block struct
   void (*functionPtr)(void*);           //struct contains a pointer to a function
   void* dataPtr;                        //struct contains a pointer
@@ -134,7 +143,8 @@ MyTCB measureT,                         //initialize the measureT object using M
       warningT,                         //initialize the warningT object using MyTCB struct
       displayT,                         //initialize the displayT object using MyTCB struct
       keypadT,                          //initialize the keypadT object using MyTCB struct
-      communicationT;                   //initialize the communicationT object using MyTCB struct
+      communicationT,                   //initialize the communicationT object using MyTCB struct
+      remoteComT;
 
 struct LinkedList{                      //create the LinkedList struct
   MyTCB* front;                         //struct contains TCB pointer to front of the list

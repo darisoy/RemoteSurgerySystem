@@ -45,41 +45,48 @@ void setup(void) {                                              //setup portion 
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the address of the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
     measureT.timedActionPtr = &task0;                           //set the timedActionPtr of measureT to be the address of task0
-    measureT.next = &computeT;                                   //set the TCB pointer next to the address of statusT
+    measureT.next = &statusT;                                   //set the TCB pointer next to the address of statusT
     measureT.prev = &keypadT;                                   //set the TCB pointer prev to the address of keypadT
+    measureT.TCBname = 1;
 
     computeT.functionPtr = computeFunction;                     //set the functionPtr of computeT to be the computeFunction
     computeT.dataPtr = (void*) &ComputeData;                    //set the dataPtr of computeT to be the address of the ComputeData pointer
     computeT.timedActionPtr = &task1;                           //set the timedActionPtr of computeT to be the address of task1
-    computeT.next = &statusT;                                       //set the next TCB pointer to nothing
-    computeT.prev = &measureT;                                       //set the prev TCB pointer to nothing
+    computeT.next = NULL;                                       //set the next TCB pointer to nothing
+    computeT.prev = NULL;                                       //set the prev TCB pointer to nothing
+    computeT.TCBname = 2;
 
     statusT.functionPtr = statusFunction;                       //set the functionPtr of statusT to be the statusFunction
     statusT.dataPtr = (void*) &StatusData;                      //set the dataPtr of statusT to be the address of the StatusData pointer
     statusT.timedActionPtr = &task2;                            //set the timedActionPtr of statusT to be the address of task2
     statusT.next = &warningT;                                   //set the next TCB pointer to the address of warningT
-    statusT.prev = &computeT;                                   //set the prev TCB pointer to the address of measureT
+    statusT.prev = &measureT;                                   //set the prev TCB pointer to the address of measureT
+    statusT.TCBname = 3;
 
     warningT.functionPtr = alarmFunction;                       //set the functionPtr of warningT to be the alarmFunction
     warningT.dataPtr = (void*) &AlarmData;                      //set the dataPtr of warningT to be the address of the AlarmData pointer
     warningT.timedActionPtr = &task3;                           //set the timedActionPtr of warningT to be the address of task3
     warningT.next = &displayT;                                  //set the next TCB pointer to the address of displayT
     warningT.prev = &statusT;                                   //set the prev TCB pointer to the address of statusT
+    warningT.TCBname = 4;
 
     displayT.functionPtr = displayFunction;                     //set the functionPtr of displayT to be the displayFunction
     displayT.dataPtr = (void*) &DisplayData;                    //set the dataPtr of displayT to be the address of the DisplayData pointer
     displayT.timedActionPtr = &task4;                           //set the timedActionPtr of displayT to the address of task4
     displayT.next = &keypadT;                                   //set the next TCB pointer to the address of keypadT
     displayT.prev = &warningT;                                  //set the prev TCB pointer to the address of warningT
+    displayT.TCBname = 5;
 
     keypadT.functionPtr = keypadFunction;                       //set the functionPtr of keypadT to be the keypadFunction
     keypadT.dataPtr = (void*) &KeypadData;                      //set the dataPtr of keypadT to be the address of the KeypadData cast as a void*
     keypadT.timedActionPtr = &task5;                            //set the timedActionPtr of keypadT to the address of task5
     keypadT.next = &communicationT;                             //set the next TCB pointer to the address of communicationT
     keypadT.prev = &displayT;                                   //set the prev TCB pointer to the address of displayT
+    keypadT.TCBname = 6;
 
     communicationT.functionPtr = communicationFunction;         //set the functionPtr of communicationT to be the communicationFunction
     communicationT.timedActionPtr = &task6;                     //set the timedActionPtr of communicationT to be the address of task6
+<<<<<<< HEAD
     communicationT.next = &remoteComT;                            //set the next TCB pointer to be the address of measureT
     communicationT.prev = &keypadT;                            //set the prev TCB pointer to be the address of displayT
 
@@ -87,6 +94,11 @@ void setup(void) {                                              //setup portion 
     remoteComT.timedActionPtr = &task7;
     remoteComT.next = measureT;
     remoteComtT.prev = communicationT;
+=======
+    communicationT.next = &measureT;                            //set the next TCB pointer to be the address of measureT
+    communicationT.prev = &displayT;                            //set the prev TCB pointer to be the address of displayT
+    communicationT.TCBname = 7;
+>>>>>>> 8f523ba93732e75aa9b4629c8fa3290840290703
 
     scheduler.front = &measureT;                                //set the front TCB pointer of scheduler to be the address of measureT
     scheduler.back = &keypadT;                                  //set the back TCB pointer of scheduler to be the address of keypadT
@@ -190,7 +202,7 @@ void initialize(void) {
     diaMeasure = 0;                 //initialize the diaMeasure value to be 0
     prMeasure = 0;                  //initialize the prMeasure value to be 0
     batMeasure = 0;                 //initialize the batMeasure value to be 0
-    runCompute = true;              //initialize the compute boolean to be true
+    runCompute = false;              //initialize the compute boolean to be true
 
     pinHighPS = false;              //set the inital state for pin mode
     pinHighNS = false;              //set the inital state for pin mode

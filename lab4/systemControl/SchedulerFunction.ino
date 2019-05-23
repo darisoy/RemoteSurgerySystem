@@ -3,10 +3,9 @@
 
 #ifndef SchedulerFunction                                                //check to see if variables are defined elsewhere
 #define SchedulerFunction                                                 //assigns definiton to dataStructs
-/* ^^^ These ifndef and define indicate that this is a header file? */
-// Stubbed warningISR
+
 void warningISR(void) {
-  
+
   return 0;
 }
 

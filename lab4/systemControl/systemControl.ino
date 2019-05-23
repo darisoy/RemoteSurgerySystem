@@ -100,6 +100,9 @@ void setup(void) {                                              //setup portion 
     scheduler.back = &keypadT;                                  //set the back TCB pointer of scheduler to be the address of keypadT
     scheduler.placeholder = scheduler.front;                    //set the placeholder TCB pointer of scheduler to be equal to the scheduler.front TCB pointer
     scheduler.size = 7;                                         //set the size of scheduler to be 7
+
+    // This initializes the interrupt for the stub function "warningISR"
+    attachInterrupt(/*PIN#*/, warningISR, RISING);
 }
 
 void loop(void) {                                               //code arduino constatly loops through

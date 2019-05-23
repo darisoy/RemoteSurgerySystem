@@ -4,6 +4,12 @@
 #ifndef SchedulerFunction                                                 //check to see if variables are defined elsewhere
 #define SchedulerFunction                                                 //assigns definiton to dataStructs
 
+// Stubbed warningISR
+void warningISR(void) {
+
+  return 0;
+}
+
 void schedulerFunctionAdd(MyTCB* TCBPtr, void* list){                     //Function takes in a TCB pointer and a void pointer
     struct LinkedList* newList = (struct LinkedList*) list;                 //the void pointer is dereferenced into a linkedlist pointer
     TCBPtr->next = newList->placeholder->next;                              //the TCB pointer's next TCB is now the placeholder's next
@@ -17,14 +23,14 @@ boolean schedulerContains(MyTCB* TCBPtr, void* list){
   struct LinkedList* newList = (struct LinkedList*) list;
   MyTCB* cur = newList->front;
   boolean test = false;
-  
+
   for (int i = 0; i < newList->size; i++){
     if (cur->TCBname == TCBPtr->TCBname){
       test = true;
-      
+
     }
     Serial.print(cur->TCBname);
-    
+
     cur = cur->next;
   }
   Serial.println("");
@@ -37,7 +43,7 @@ void schedulerFunctionDelete(MyTCB* TCBPtr, void* list){                  //the 
     for (int i = 0; i < newList->size; i++){                                //a for loop that runs for the size of the newList
         if (cur->TCBname == TCBPtr->TCBname){                                                   //if the MyTCB pointer cur is the same as the TCBPtr                                      //the prev TCB's prev pointer points to the cur's prev pointer
             cur->next = cur->next->next;
-            newList->size--; 
+            newList->size--;
             return;                                                              //the code ends
         }
         cur = cur->next;                                                      //cur is not cur.next
@@ -55,7 +61,7 @@ void schedulerFunctionRun(void* list){                                    //func
     } else if (schedulerContains(&computeT, list)) {
         schedulerFunctionDelete(&measureT, &scheduler);                     //delete compute to task queue
         Serial.println("deleted compute");
-        
+
     }
     newList->placeholder = newList->placeholder->next;                      //placeholder is now equal to placeholder.next
 }

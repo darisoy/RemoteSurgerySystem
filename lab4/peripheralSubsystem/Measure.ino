@@ -39,7 +39,7 @@ void measureFunction(struct controlMeasureData measureData,
 
     getFrequency();
 
-    if (!pinHighPS && pinHighNS) {                          //if request pin has turned high after being low, then execute
+    if (!pinHighPS && pinHighNS && (digitalRead(APIN) == HIGH)) {                          //if request pin has turned high after being low, then execute
         temperatureRawData(pTempCount);                     //call the temperatureRawData function to generate temp data
         Serial.print("VT");                                 //print "VT" on the serial
         if (*measureData.pTemperatureRaw < 10) {            //if value for the raw temp. pointer is less than 10
@@ -145,7 +145,7 @@ void pulseRateRawData() {                        //simulates diastolic press. da
 }
 
 void respRawData() {
-  respRaw = frequency/3;
+  respRaw = frequency / 3;
 //    respInputState = digitalRead(RESP);
 //        Serial.println("respCount | respInputState | respLastState | respRaw\n");
 //        Serial.print(respCount);

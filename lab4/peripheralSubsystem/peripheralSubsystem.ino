@@ -6,6 +6,7 @@
 #define RESP 2
 #define BUTTON1 13
 #define BUTTON2 10
+#define APIN 15
 
 void setup() {                      //setup portion of the arduino code
     initialize();                   //call the initialize function
@@ -14,6 +15,7 @@ void setup() {                      //setup portion of the arduino code
     pinMode(RESP, INPUT);
     pinMode(BUTTON1, INPUT);
     pinMode(BUTTON2, INPUT);
+    pinMode(APIN, INPUT);
     FreqMeasure.begin();            //setup the frequency measurement
 }
 
@@ -44,7 +46,7 @@ void initialize() {                 //initializing the global variables
     pulseSum = 0;
     pulseCount = 0;
 
- 
+
     respLastState = false;
     respCount = 0;
     respPrevCount = millis();

@@ -34,7 +34,6 @@ void measureFunction(struct controlMeasureData measureData,
     }
 
     if (!b1HighPS && b1HighNS){
-      Serial.println("in pressure");
       bloodPressureRawData();
     }
 

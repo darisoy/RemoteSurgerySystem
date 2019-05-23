@@ -5,7 +5,6 @@
 #include <stddef.h>                                                                             //import necessary header files
 #define REQ 22                                                                                  //set REQ to be number 22
 #define EXT 53
-#define ACK 52
 
 void measureFunction(void* measureDataStruct) {                                                 //function that recieves the raw data from UNO, takes measure struct as input
     struct controlMeasureData *mData = (struct controlMeasureData*) measureDataStruct;          //deference the display struct
@@ -81,8 +80,6 @@ void measureFunction(void* measureDataStruct) {                                 
 
     if (!pinHighPS && pinHighNS) {
         Serial.println("We are in");
-        digitalWrite(ACK, HIGH);
-
         Serial2.print("VT");                                 //print "VT" on the serial
         if ((int)mData->pTemperatureRaw->last() < 10) {            //if value for the raw temp. pointer is less than 10
             Serial2.print("00");                             //print "00" on the serial
@@ -118,7 +115,6 @@ void measureFunction(void* measureDataStruct) {                                 
             Serial2.print("0");                              //print "0" on the serial
         }
         Serial2.println((int)mData->pRespRaw->last());
-        digitalWrite(ACK, LOW);
     }
 
     pinHighPS = pinHighNS;

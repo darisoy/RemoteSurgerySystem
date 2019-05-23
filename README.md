@@ -8,7 +8,7 @@ This project uses the Arduino MEGA, Arduino UNO boards and ESP8266 WIFI board. T
 
 # TODO list:
 MEGA:
-- [ ] Fix doubly linked list
+- [x] Fix doubly linked list
 - [x] Display mode on keypad (coordinates need to be fixed)
 - [x] Respiration variables
 - [x] Warning flashes / new warning stuff

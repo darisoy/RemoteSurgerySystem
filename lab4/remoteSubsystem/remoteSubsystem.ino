@@ -13,7 +13,6 @@ String header;
 
 // Assign output variables to GPIO pins
 const int request = 5;
-const int acknowledge = 4;
 
 double temp;
 double sys;
@@ -21,12 +20,12 @@ double dia;
 double pulse;
 double resp;
 char dataTransfered[20];
+int start;
 
 void setup() {
     Serial.begin(115200);
     // Initialize the output variables as outputs
     pinMode(request, OUTPUT);
-    pinMode(acknowledge, INPUT);
     // Set outputs to LOW
     digitalWrite(request, LOW);
     // Connect to Wi-Fi network with SSID and password
@@ -36,7 +35,7 @@ void setup() {
     }
     // Print local IP address and start web server
     server.begin();
-
+    start = 0;
     temp = 0;
     sys = 0;
     dia = 0;
@@ -67,9 +66,13 @@ void loop(){
                         // turns the GPIOs on and off
                         if (header.indexOf("GET /data") >= 0) {
                             digitalWrite(request, HIGH);
-                        } else if (digitalRead(acknowledge)==HIGH) {
-                            digitalWrite(request, LOW);
+                            start = milis();
                         }
+                        if (milis() - start >= 5000) {
+                            digitalWrite(request, LOW);
+                            start = 0;
+                        }
+
 
                         if (Serial.read() == 'V') {                                                                //execture if the letter 'V' is read
                             Serial.readBytes(dataTransfered, 20);                                                  //store the next 4 characters written on serial one to dataTranfered character array

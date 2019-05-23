@@ -14,11 +14,10 @@ MEGA:
 - [x] Warning flashes / new warning stuff
 - [x] remote peripheral communication
 - [x] Subsystem communication
-- [ ] add interupts
 
 UNO:
 - [ ] Raw respiration rate from function generator
-- [x] measure pressure with buttons
+- [ ] measure pressure with buttons
 - [ ] mega interupt trigger
 - [x] communication
 

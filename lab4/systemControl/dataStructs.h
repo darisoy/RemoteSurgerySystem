@@ -115,6 +115,10 @@ struct controlSchedulerData {           //create the controlSchedulerData struct
                                         //struct does not contian any variables
 } SchedulerData;                        //struct name
 
+struct controlCommunicationData {           //create the controlSchedulerData struct
+                                        //struct does not contian any variables
+} communicationData;
+
 struct controlKeypadData {              //create the MeasureData struct
   unsigned int* pMeasurementSelection;   //variable that selectes the measurement
   unsigned int* pAlarmAcknowledge;       //variable that acknowledges alarms
@@ -127,7 +131,7 @@ struct controlRemoteComData {
   CircularBuffer<double, 8>* pPulseRateRaw;        //struct contains raw pulse rate data
   unsigned int* pMeasurementSelection;
   CircularBuffer<double, 8>* pRespRaw;
-} remoteComData;
+} RemoteComData;
 
 struct MyTCB {                          //create the task control block struct
   void (*functionPtr)(void*);           //struct contains a pointer to a function
@@ -177,6 +181,9 @@ void calltask5() {                                          //function that simp
 void calltask6(){                                           //function that simply runs a task
   communicationT.functionPtr(communicationT.dataPtr);       //run the communication function with communication data of that task
 }
+void calltask7(){                                           //function that simply runs a task
+  remoteComT.functionPtr(remoteComT.dataPtr);       //run the communication function with communication data of that task
+}
 
 TimedAction task0 = TimedAction(5000, calltask0);            //initalize TimedAction to make sure function runs only every Xms
 TimedAction task1 = TimedAction(5000, calltask1);            //initalize TimedAction to make sure function runs only every Xms
@@ -185,5 +192,6 @@ TimedAction task3 = TimedAction(100, calltask3);             //initalize TimedAc
 TimedAction task4 = TimedAction(5000, calltask4);            //initalize TimedAction to make sure function runs only every Xms
 TimedAction task5 = TimedAction(100, calltask5);             //initalize TimedAction to make sure function runs only every Xms
 TimedAction task6 = TimedAction(5000, calltask6);           //initalize TimedAction to make sure function runs only every Xms
+TimedAction task7 = TimedAction(1000, calltask7);
 
 #endif

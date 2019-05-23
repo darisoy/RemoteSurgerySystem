@@ -83,20 +83,18 @@ void setup(void) {                                              //setup portion 
     keypadT.TCBname = 6;
 
     communicationT.functionPtr = communicationFunction;         //set the functionPtr of communicationT to be the communicationFunction
+    communicationT.dataPtr = (void*) &communicationData;
     communicationT.timedActionPtr = &task6;                     //set the timedActionPtr of communicationT to be the address of task6
-<<<<<<< HEAD
     communicationT.next = &remoteComT;                            //set the next TCB pointer to be the address of measureT
     communicationT.prev = &keypadT;                            //set the prev TCB pointer to be the address of displayT
+    communicationT.TCBname = 7;
 
     remoteComT.functionPtr = remoteComFunction;
+    remoteComT.dataPtr = (void*) &RemoteComData;
     remoteComT.timedActionPtr = &task7;
-    remoteComT.next = measureT;
-    remoteComtT.prev = communicationT;
-=======
-    communicationT.next = &measureT;                            //set the next TCB pointer to be the address of measureT
-    communicationT.prev = &displayT;                            //set the prev TCB pointer to be the address of displayT
-    communicationT.TCBname = 7;
->>>>>>> 8f523ba93732e75aa9b4629c8fa3290840290703
+    remoteComT.next = &measureT;
+    remoteComT.prev = &communicationT;
+    remoteComT.TCBname = 8;
 
     scheduler.front = &measureT;                                //set the front TCB pointer of scheduler to be the address of measureT
     scheduler.back = &keypadT;                                  //set the back TCB pointer of scheduler to be the address of keypadT

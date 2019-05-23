@@ -66,9 +66,9 @@ void loop(){
                         // turns the GPIOs on and off
                         if (header.indexOf("GET /data") >= 0) {
                             digitalWrite(request, HIGH);
-                            start = milis();
+                            start = millis();
                         }
-                        if (milis() - start >= 5000) {
+                        if (millis() - start >= 5000) {
                             digitalWrite(request, LOW);
                             start = 0;
                         }

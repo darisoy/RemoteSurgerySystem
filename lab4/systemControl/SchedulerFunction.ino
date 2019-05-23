@@ -21,9 +21,13 @@ boolean schedulerContains(MyTCB* TCBPtr, void* list){
   for (int i = 0; i < newList->size; i++){
     if (cur->TCBname == TCBPtr->TCBname){
       test = true;
+      
     }
+    Serial.print(cur->TCBname);
+    
     cur = cur->next;
   }
+  Serial.println("");
   return test;
 }
 

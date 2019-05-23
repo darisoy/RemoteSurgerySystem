@@ -6,8 +6,8 @@
 #define REQ 22                                                                                  //set REQ to be number 22
 #define EXT 53
 
-void measureFunction(void* measureDataStruct) {                                                 //function that recieves the raw data from UNO, takes measure struct as input
-    struct controlMeasureData *mData = (struct controlMeasureData*) measureDataStruct;          //deference the display struct
+void measureFunction(void* data) {                                                 //function that recieves the raw data from UNO, takes measure struct as input
+    struct controlMeasureData *mData = (struct controlMeasureData*) data;          //deference the display struct
     mData->pTemperatureRaw     = &tempRawData;                                               //assign raw temp's address to raw temp pointer from measure struct
     mData->pSystolicPressRaw   = &sysRawData;                                             //assign raw sys's address to raw sys pointer from measure struct
     mData->pDiastolicPressRaw  = &diaRawData;                                            //assign raw dia's address to raw dia pointer from measure struct

@@ -32,6 +32,10 @@ double pulseSum;                                             //initalize sum var
 int pulseCount;                                              //intialize the count variable for frequency measurement
 int countMillis;
 
+int diastolicCount;
+int systolicCount;
+int frequency;
+
 boolean respInputState;
 boolean respLastState;
 int respCount;

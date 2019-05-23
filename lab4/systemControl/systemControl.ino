@@ -27,6 +27,7 @@
 
 #define REQ 22                                                  // Initializes RED 22
 #define EXT 53
+#define ACK 52
 
 #include "dataStructs.h"                                        // Iimport the variables used in the file
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);   // TFT setup
@@ -39,6 +40,7 @@ void setup(void) {                                              //setup portion 
     tftSetup();                                                 //call the method that detects the TFT and it's version
     pinMode(REQ, OUTPUT);                                       //setup pin 22 to be an output
     pinMode(EXT, INPUT);
+    pinMode(ACK, OUTPUT);
     initialize();                                               //call the method that initalizes the variables
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the address of the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
@@ -83,14 +85,12 @@ void setup(void) {                                              //setup portion 
     keypadT.TCBname = 6;
 
     communicationT.functionPtr = communicationFunction;         //set the functionPtr of communicationT to be the communicationFunction
-    communicationT.dataPtr = (void*) &communicationData;
     communicationT.timedActionPtr = &task6;                     //set the timedActionPtr of communicationT to be the address of task6
     communicationT.next = &remoteComT;                            //set the next TCB pointer to be the address of measureT
     communicationT.prev = &keypadT;                            //set the prev TCB pointer to be the address of displayT
     communicationT.TCBname = 7;
 
     remoteComT.functionPtr = remoteComFunction;
-    remoteComT.dataPtr = (void*) &RemoteComData;
     remoteComT.timedActionPtr = &task7;
     remoteComT.next = &measureT;
     remoteComT.prev = &communicationT;

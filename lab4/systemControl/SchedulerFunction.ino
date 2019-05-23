@@ -4,8 +4,16 @@
 #ifndef SchedulerFunction                                                //check to see if variables are defined elsewhere
 #define SchedulerFunction                                                 //assigns definiton to dataStructs
 
-void warningISR(void) {
-
+void warningISR(MyTCB meaureT, MyTCB computeT, MyTCB keypadT, MyTCB displayT, MyTCB statusT, MyTCB warningT, MyTCB communicationT,
+                MyTCB remoteComT) {
+  communicationT.functionPtr(communicationT.dataPtr);
+  remoteComT.functionPtr(remoteComT.dataPtr);
+  measureT.functionPtr(measureT.dataPtr);
+  computeT.functionPtr(computeT.dataPtr);
+  statusT.functionPtr(statusT.dataPtr);
+  keypadT.functionPtr(keypadT.dataPtr);
+  warningT.functionPtr(warningT.dataPtr); 
+  displayT.functionPtr(displayT.dataPtr);
   return 0;
 }
 

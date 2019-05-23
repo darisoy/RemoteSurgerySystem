@@ -23,11 +23,11 @@ boolean schedulerContains(MyTCB* TCBPtr, void* list){
       test = true;
       
     }
-    Serial.print(cur->TCBname);
+    //Serial.print(cur->TCBname);
     
     cur = cur->next;
   }
-  Serial.println("");
+  //Serial.println("");
   return test;
 }
 

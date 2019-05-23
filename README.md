@@ -16,8 +16,8 @@ MEGA:
 - [x] Subsystem communication
 
 UNO:
-- [ ] Raw respiration rate from function generator
-- [ ] measure pressure with buttons
+- [x] Raw respiration rate from function generator
+- [x] measure pressure with buttons
 - [ ] mega interupt trigger
 - [x] communication
 

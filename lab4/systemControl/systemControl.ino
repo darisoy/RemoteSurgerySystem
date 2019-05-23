@@ -27,6 +27,7 @@
 
 #define REQ 22                                                  // Initializes RED 22
 #define EXT 53
+#define ACK 23
 
 #include "dataStructs.h"                                        // Iimport the variables used in the file
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);   // TFT setup
@@ -38,7 +39,9 @@ void setup(void) {                                              //setup portion 
     Serial2.begin(115200);
     tftSetup();                                                 //call the method that detects the TFT and it's version
     pinMode(REQ, OUTPUT);                                       //setup pin 22 to be an output
+    pinMode(ACK, OUTPUT);
     pinMode(EXT, INPUT);
+    digitalWrite(ACK, HIGH);
     initialize();                                               //call the method that initalizes the variables
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the address of the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer

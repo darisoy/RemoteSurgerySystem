@@ -3,6 +3,7 @@
 #include <TouchScreen.h>                                        // Touch screen library
 #include <TimedAction.h>                                        // Timed-Action method library
 #include <CircularBuffer.h>                                     // Circular buffer library
+#include "dataStructs.h"                                        // Iimport the variables used in the file
 
 #define LCD_RESET A4                                            // Can alternately just connect to Arduino's reset pin
 #define LCD_CS A3                                               // Chip Select goes to Analog 3
@@ -29,7 +30,6 @@
 #define EXT 53
 #define ACK 23
 
-#include "dataStructs.h"                                        // Iimport the variables used in the file
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);   // TFT setup
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);              // Touch screen setup
 
@@ -86,14 +86,12 @@ void setup(void) {                                              //setup portion 
     keypadT.TCBname = 6;
 
     communicationT.functionPtr = communicationFunction;         //set the functionPtr of communicationT to be the communicationFunction
-    communicationT.dataPtr = (void*) &communicationData;
     communicationT.timedActionPtr = &task6;                     //set the timedActionPtr of communicationT to be the address of task6
     communicationT.next = &remoteComT;                            //set the next TCB pointer to be the address of measureT
     communicationT.prev = &keypadT;                            //set the prev TCB pointer to be the address of displayT
     communicationT.TCBname = 7;
 
     remoteComT.functionPtr = remoteComFunction;
-    remoteComT.dataPtr = (void*) &RemoteComData;
     remoteComT.timedActionPtr = &task7;
     remoteComT.next = &measureT;
     remoteComT.prev = &communicationT;
@@ -103,6 +101,9 @@ void setup(void) {                                              //setup portion 
     scheduler.back = &keypadT;                                  //set the back TCB pointer of scheduler to be the address of keypadT
     scheduler.placeholder = scheduler.front;                    //set the placeholder TCB pointer of scheduler to be equal to the scheduler.front TCB pointer
     scheduler.size = 7;                                         //set the size of scheduler to be 7
+
+    // This initializes the interrupt for the stub function "warningISR"
+    attachInterrupt(/*PIN#*/, warningISR, RISING);
 }
 
 void loop(void) {                                               //code arduino constatly loops through

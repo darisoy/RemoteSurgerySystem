@@ -37,7 +37,9 @@ void measureFunction(struct controlMeasureData measureData,
       bloodPressureRawData();
     }
 
-    if (!pinHighPS && pinHighNS) {                          //if request pin has turned high after being low, then execute
+    getFrequency();
+
+    if (!pinHighPS && pinHighNS && (digitalRead(APIN) == HIGH)) {                          //if request pin has turned high after being low, then execute
         temperatureRawData(pTempCount);                     //call the temperatureRawData function to generate temp data
         Serial.print("VT");                                 //print "VT" on the serial
         if (*measureData.pTemperatureRaw < 10) {            //if value for the raw temp. pointer is less than 10
@@ -47,7 +49,6 @@ void measureFunction(struct controlMeasureData measureData,
         }
         Serial.print(*measureData.pTemperatureRaw);         //print the value for the raw temp. pointer on the serial
 
-        bloodPressureRawData();
         Serial.print("S");                                  //print "VS" on the serial
         if (*measureData.pSystolicPressRaw < 10) {          //if value for the raw sys. pointer is less than 10
             Serial.print("00");                             //print "00" on the serial
@@ -111,30 +112,40 @@ void temperatureRawData(int* pCount) {                      //simulates temperat
     (*pCount)++;                                            //incremenet the value of the counter pointer by 1
 }
 
+void getFrequency(){
+  if (FreqMeasure.available()) {                          //execute if the frequency measurement is available
+      pulseSum = pulseSum + FreqMeasure.read();                     //add the frequency measurement to the running sum count
+      pulseCount = pulseCount + 1;                                  //incremenet the count by one
+      if (pulseCount > 30) {                                   //if counter is greater than 30
+          frequency = (int) FreqMeasure.countToFrequency(pulseSum / pulseCount);      //average the frequency from past 30 counts
+          pulseSum = 0;                                        //reset veriable to 0 for next frequency calculaiton
+          pulseCount = 0;                                      //reset veriable to 0 for next frequency calculaiton
+      }
+  }
+}
+
 void bloodPressureRawData(){
   if (digitalRead(BUTTON2) == HIGH){
-      systolicPressRaw += systolicPressRaw * 0.1;
-      diastolicPressRaw += diastolicPressRaw * 0.1;
+      systolicCount++;
+      if (systolicCount >= 10){
+        systolicPressRaw = frequency;
+        systolicCount = 0;
+      }
   } else {
-      systolicPressRaw -= systolicPressRaw * 0.1;
-      diastolicPressRaw -= diastolicPressRaw * 0.1;
+      diastolicCount++;
+      if (diastolicCount >= 10){
+        diastolicPressRaw = frequency;
+        diastolicCount = 0;
+      }
   }
 }
 
 void pulseRateRawData() {                        //simulates diastolic press. data, takes an int pointer as input
-    if (FreqMeasure.available()) {                          //execute if the frequency measurement is available
-        pulseSum = pulseSum + FreqMeasure.read();                     //add the frequency measurement to the running sum count
-        pulseCount = pulseCount + 1;                                  //incremenet the count by one
-        if (pulseCount > 30) {                                   //if counter is greater than 30
-            pulseRateRaw = (int)
-            FreqMeasure.countToFrequency(pulseSum / pulseCount);      //average the frequency from past 30 counts
-            pulseSum = 0;                                        //reset veriable to 0 for next frequency calculaiton
-            pulseCount = 0;                                      //reset veriable to 0 for next frequency calculaiton
-        }
-    }
+    pulseRateRaw = frequency;
 }
 
 void respRawData() {
+  respRaw = frequency / 3;
 //    respInputState = digitalRead(RESP);
 //        Serial.println("respCount | respInputState | respLastState | respRaw\n");
 //        Serial.print(respCount);

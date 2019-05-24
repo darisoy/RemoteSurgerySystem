@@ -29,6 +29,7 @@
 #define REQ 22                                                  // Initializes RED 22
 #define EXT 53
 #define ACK 23
+#define WARN 24
 
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);   // TFT setup
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);              // Touch screen setup
@@ -103,23 +104,12 @@ void setup(void) {                                              //setup portion 
     scheduler.size = 7;                                         //set the size of scheduler to be 7
 
     // This initializes the interrupt for the stub function "warningISR"
-    attachInterrupt(/*PIN#*/, warningISR, RISING);
+    attachInterrupt(digitalPinToInterrupt(WARN), warningISR, RISING);
 }
 
 void loop(void) {                                               //code arduino constatly loops through
     schedulerFunctionRun(&scheduler);                           //run the schedulerFunctionRun on the placeholder TCB pointer
-    //create an interupt when pin is TRUE
-    //execute new function that calls all task to be executed immediately
-    //attachInterrupt(where: pin, ___, ISR: add function to scheduler)
-    //function {
-    //  measure
-    //  compute
-    //  keypad
-    //  display
-    //  status
-    //  warning
-    //  communication
-    //}
+
 }
 
 void tftSetup(void) {

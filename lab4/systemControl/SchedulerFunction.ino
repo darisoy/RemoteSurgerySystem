@@ -3,16 +3,27 @@
 
 #ifndef SchedulerFunction                                                //check to see if variables are defined elsewhere
 #define SchedulerFunction                                                 //assigns definiton to dataStructs
-
-void warningISR(MyTCB meaureT, MyTCB computeT, MyTCB keypadT, MyTCB displayT, MyTCB statusT, MyTCB warningT, MyTCB communicationT,
-                MyTCB remoteComT) {
+   
+    //create an interupt when pin is TRUE
+    //execute new function that calls all task to be executed immediately
+    //attachInterrupt(where: pin, ___, ISR: add function to scheduler)
+    //function {
+    //  measure
+    //  compute
+    //  keypad
+    //  display
+    //  status
+    //  warning
+    //  communication
+    //}
+void warningISR() {
   communicationT.functionPtr(communicationT.dataPtr);
   remoteComT.functionPtr(remoteComT.dataPtr);
   measureT.functionPtr(measureT.dataPtr);
   computeT.functionPtr(computeT.dataPtr);
   statusT.functionPtr(statusT.dataPtr);
   keypadT.functionPtr(keypadT.dataPtr);
-  warningT.functionPtr(warningT.dataPtr); 
+  warningT.functionPtr(warningT.dataPtr);
   displayT.functionPtr(displayT.dataPtr);
   return 0;
 }

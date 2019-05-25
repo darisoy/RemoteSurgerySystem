@@ -18,6 +18,8 @@ int prGoodBool;                         //initialized the warning boolean for pu
 int rrGoodBool;                         //initialized the warning boolean for pulse
 int batteryGoodBool;                    //initialized the warning boolean for battery
 
+boolean wifiAckowledge;
+
 int timer;                              //initializes timer that will schedule when data will be requested
 char dataTransfered[20];                //initializes 5 long character array that will hold read values on serial
 
@@ -185,13 +187,13 @@ void calltask7(){                                           //function that simp
   remoteComT.functionPtr(remoteComT.dataPtr);       //run the communication function with communication data of that task
 }
 
-TimedAction task0 = TimedAction(5000, calltask0);            //initalize TimedAction to make sure function runs only every Xms
+TimedAction task0 = TimedAction(100, calltask0);            //initalize TimedAction to make sure function runs only every Xms
 TimedAction task1 = TimedAction(5000, calltask1);            //initalize TimedAction to make sure function runs only every Xms
 TimedAction task2 = TimedAction(5000, calltask2);            //initalize TimedAction to make sure function runs only every Xms
 TimedAction task3 = TimedAction(100, calltask3);             //initalize TimedAction to make sure function runs only every Xms
 TimedAction task4 = TimedAction(5000, calltask4);            //initalize TimedAction to make sure function runs only every Xms
 TimedAction task5 = TimedAction(100, calltask5);             //initalize TimedAction to make sure function runs only every Xms
-TimedAction task6 = TimedAction(10000, calltask6);           //initalize TimedAction to make sure function runs only every Xms
-TimedAction task7 = TimedAction(1000, calltask7);
+TimedAction task6 = TimedAction(5000, calltask6);           //initalize TimedAction to make sure function runs only every Xms
+TimedAction task7 = TimedAction(100, calltask7);
 
 #endif

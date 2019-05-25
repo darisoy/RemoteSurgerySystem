@@ -3,7 +3,6 @@
 #include <TouchScreen.h>                                        // Touch screen library
 #include <TimedAction.h>                                        // Timed-Action method library
 #include <CircularBuffer.h>                                     // Circular buffer library
-#include "dataStructs.h"                                        // Iimport the variables used in the file
 
 #define LCD_RESET A4                                            // Can alternately just connect to Arduino's reset pin
 #define LCD_CS A3                                               // Chip Select goes to Analog 3
@@ -26,28 +25,36 @@
 #define ORANGE  0xFD20                                          //set the keyword ORGANE  to represent the number 0xFD20
 #define GREY    0xC618                                           //set the keyword Grey    to represent the number 0xC618
 
-#define REQ 22                                                  // Initializes RED 22
-#define EXT 53
-#define ACK 23
+#define UNOREQ 22                                                  // Initializes RED 22
+#define UNOACK 23
+#define WIFIREQ 53
+#define WIFIACK 52
+//interupt stuff NEW
+#define WARN 20
 
+#include "dataStructs.h"                                        // Iimport the variables used in the file
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);   // TFT setup
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);              // Touch screen setup
 
 void setup(void) {                                              //setup portion of the arduino code
     Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
     Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
-    Serial2.begin(115200);
+    Serial2.begin(9600);
+    //interupt stuff NEW
+    attachInterrupt(digitalPinToInterrupt(WARN), warningISR, RISING);
     tftSetup();                                                 //call the method that detects the TFT and it's version
-    pinMode(REQ, OUTPUT);                                       //setup pin 22 to be an output
-    pinMode(ACK, OUTPUT);
-    pinMode(EXT, INPUT);
-    digitalWrite(ACK, HIGH);
+    pinMode(UNOREQ, OUTPUT);                                       //setup pin 22 to be an output
+    pinMode(UNOACK, OUTPUT);
+    pinMode(WIFIREQ, INPUT);
+    pinMode(WIFIACK, INPUT);
+    //interupt stuff NEW
+    pinMode(WARN, INPUT_PULLUP);
     initialize();                                               //call the method that initalizes the variables
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the address of the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
     measureT.timedActionPtr = &task0;                           //set the timedActionPtr of measureT to be the address of task0
     measureT.next = &statusT;                                   //set the TCB pointer next to the address of statusT
-    measureT.prev = &keypadT;                                   //set the TCB pointer prev to the address of keypadT
+    measureT.prev = &remoteComT;                                   //set the TCB pointer prev to the address of keypadT
     measureT.TCBname = 1;
 
     computeT.functionPtr = computeFunction;                     //set the functionPtr of computeT to be the computeFunction
@@ -92,34 +99,35 @@ void setup(void) {                                              //setup portion 
     communicationT.TCBname = 7;
 
     remoteComT.functionPtr = remoteComFunction;
+    remoteComT.dataPtr = (void*) &RemoteComData;
     remoteComT.timedActionPtr = &task7;
     remoteComT.next = &measureT;
     remoteComT.prev = &communicationT;
     remoteComT.TCBname = 8;
 
     scheduler.front = &measureT;                                //set the front TCB pointer of scheduler to be the address of measureT
-    scheduler.back = &keypadT;                                  //set the back TCB pointer of scheduler to be the address of keypadT
+    scheduler.back = &remoteComT;                                  //set the back TCB pointer of scheduler to be the address of keypadT
     scheduler.placeholder = scheduler.front;                    //set the placeholder TCB pointer of scheduler to be equal to the scheduler.front TCB pointer
     scheduler.size = 7;                                         //set the size of scheduler to be 7
-
-    // This initializes the interrupt for the stub function "warningISR"
-    attachInterrupt(/*PIN#*/, warningISR, RISING);
 }
 
 void loop(void) {                                               //code arduino constatly loops through
     schedulerFunctionRun(&scheduler);                           //run the schedulerFunctionRun on the placeholder TCB pointer
-    //create an interupt when pin is TRUE
-    //execute new function that calls all task to be executed immediately
-    //attachInterrupt(where: pin, ___, ISR: add function to scheduler)
-    //function {
-    //  measure
-    //  compute
-    //  keypad
-    //  display
-    //  status
-    //  warning
-    //  communication
-    //}
+}
+
+//interupt stuff NEW
+void warningISR() {
+    Serial.println("START interreupotyjrgkwnjkgn");
+    communicationT.functionPtr(communicationT.dataPtr);
+    //measureT.functionPtr(measureT.dataPtr);
+    computeT.functionPtr(computeT.dataPtr);
+    statusT.functionPtr(statusT.dataPtr);
+    warningT.functionPtr(warningT.dataPtr);
+    //displayT.functionPtr(displayT.dataPtr);
+    //keypadT.functionPtr(keypadT.dataPtr);
+    //remoteComT.functionPtr(remoteComT.dataPtr);
+    Serial.println("END interreupotyjrgkwnjkgn");
+    return 0;
 }
 
 void tftSetup(void) {
@@ -203,6 +211,8 @@ void initialize(void) {
     prMeasure = 0;                  //initialize the prMeasure value to be 0
     batMeasure = 0;                 //initialize the batMeasure value to be 0
     runCompute = false;              //initialize the compute boolean to be true
+
+    wifiAckowledge = true;
 
     pinHighPS = false;              //set the inital state for pin mode
     pinHighNS = false;              //set the inital state for pin mode

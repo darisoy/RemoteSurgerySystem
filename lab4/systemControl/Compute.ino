@@ -17,7 +17,6 @@ void computeFunction(void* computeDataStruct){                                  
     cData->pPulseRateCorrected        = &pulseComputedData;                           //assign corrected pulse's address to corrected pulse pointer from compute struct
     cData->pRespCorrected             = &respComputedData;
 
-    Serial.println("In COMPUTE");
     cData->pTempCorrected->push(5 + (0.75 * (cData->pTemperatureRaw->last())));                          //convert raw temp and push it to the buffer
     cData->pSystolicPressCorrected->push(9 + (2    * (cData->pSystolicPressRaw->last())));                            //convert raw sys and push it to the buffer
     cData->pDiastolicPressCorrected->push(6 + (1.5  * (cData->pDiastolicPressRaw->last())));                            //convert raw dia and push it to the buffer

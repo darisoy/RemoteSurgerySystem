@@ -3,8 +3,6 @@
 #include <stdio.h>                                          //import necessary header files
 #include <stdbool.h>                                        //import necessary header files
 #include <stddef.h>                                         //import necessary header files
-#define REQ 14                                              //set the keyword TEM_REQ to represent the number 13
-#define RESP 2
 
 void measureFunction(struct controlMeasureData measureData,
                      int* pTempCount,
@@ -17,9 +15,9 @@ void measureFunction(struct controlMeasureData measureData,
     measureData.pPulseRateRaw      = &pulseRateRaw;         //assign raw pulse's address to pulse pointer from stuct
     measureData.pRespRaw           = &respRaw;
 
-    if (!pinHighPS && (digitalRead(REQ) == HIGH)) {         //check if the request pin turned high
+    if (!pinHighPS && (digitalRead(MEGAREQ) == HIGH)) {         //check if the request pin turned high
         pinHighNS = true;                                   //if so, make the current state true
-    } else if (pinHighPS && (digitalRead(REQ) == HIGH)) {   //if request pin is true and it has been true
+    } else if (pinHighPS && (digitalRead(MEGAREQ) == HIGH)) {   //if request pin is true and it has been true
         pinHighNS = true;                                   // keep the current state true
     } else {                                                //in any other case
       pinHighNS = false;                                    //make current case false
@@ -34,12 +32,17 @@ void measureFunction(struct controlMeasureData measureData,
     }
 
     if (!b1HighPS && b1HighNS){
-      bloodPressureRawData();
+        bloodPressureRawData();
     }
 
     getFrequency();
 
-    if (!pinHighPS && pinHighNS && (digitalRead(APIN) == HIGH)) {                          //if request pin has turned high after being low, then execute
+    if (digitalRead(MEGAACK) == HIGH) {
+        megaAckowledge = true;
+        //Serial.println("MEGA ackowledged");
+    }
+
+    if (!pinHighPS && pinHighNS && megaAckowledge) {                          //if request pin has turned high after being low, then execute
         temperatureRawData(pTempCount);                     //call the temperatureRawData function to generate temp data
         Serial.print("VT");                                 //print "VT" on the serial
         if (*measureData.pTemperatureRaw < 10) {            //if value for the raw temp. pointer is less than 10
@@ -82,6 +85,7 @@ void measureFunction(struct controlMeasureData measureData,
             Serial.print("0");                              //print "0" on the serial
         }
         Serial.println(*measureData.pRespRaw);         //print the value for the raw pulse. pointer on the serial
+        megaAckowledge = false;
     }
     pinHighPS = pinHighNS;
     b1HighPS = b1HighNS;
@@ -145,7 +149,7 @@ void pulseRateRawData() {                        //simulates diastolic press. da
 }
 
 void respRawData() {
-  respRaw = frequency / 3;
+  respRaw = frequency/3;
 //    respInputState = digitalRead(RESP);
 //        Serial.println("respCount | respInputState | respLastState | respRaw\n");
 //        Serial.print(respCount);

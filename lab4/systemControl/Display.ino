@@ -45,7 +45,7 @@ void displayFunction(void* displayDataStruct){                                  
     dData->pPulseRateCorrected      = &pulseComputedData;                                    //assign corrected pulse's address to corrected pulse pointer from display struct
     dData->pRespCorrected           = &respComputedData;
     dData->pBatteryState            = &batteryState;                                          //assign battery state's address to battery state pointer from display struct
-
+    
     if (annunciate.justPressed()) {                                                           //execute if annunciate button is just pressed
         annunciate.drawButton(true);                                                          // draw inverted button
         tft.fillScreen(BLACK);                                                                //fill the screen in black

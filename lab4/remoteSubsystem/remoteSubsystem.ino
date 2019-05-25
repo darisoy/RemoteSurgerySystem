@@ -12,7 +12,8 @@ WiFiServer server(80);
 String header;
 
 // Assign output variables to GPIO pins
-const int request = 5;
+const int megareq = 5;
+const int megaack = 4;
 
 double temp;
 double sys;
@@ -23,11 +24,12 @@ char dataTransfered[20];
 int start;
 
 void setup() {
-    Serial.begin(115200);
+    Serial.begin(9600);
     // Initialize the output variables as outputs
-    pinMode(request, OUTPUT);
+    pinMode(megareq, OUTPUT);
+    pinMode(megaack, OUTPUT);
     // Set outputs to LOW
-    digitalWrite(request, LOW);
+    digitalWrite(megareq, LOW);
     // Connect to Wi-Fi network with SSID and password
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
@@ -65,14 +67,15 @@ void loop(){
 
                         // turns the GPIOs on and off
                         if (header.indexOf("GET /data") >= 0) {
-                            digitalWrite(request, HIGH);
-                            start = millis();
-                        }
-                        if (millis() - start >= 5000) {
-                            digitalWrite(request, LOW);
-                            start = 0;
+                            digitalWrite(megareq, HIGH);
+                            // start = millis();
+                            //delay(5000);
                         }
 
+                        // if (millis() - start >= 3000) {
+                        //     digitalWrite(megareq, LOW);
+                        //     start = 0;
+                        // }
 
                         if (Serial.read() == 'V') {                                                                //execture if the letter 'V' is read
                             Serial.readBytes(dataTransfered, 20);                                                  //store the next 4 characters written on serial one to dataTranfered character array
@@ -97,11 +100,14 @@ void loop(){
                                 (dataTransfered[8] == 'D')  && (digit9 < 10)  && (digit10 < 10) && (digit11 < 10) &&
                                 (dataTransfered[12] == 'P') && (digit13 < 10) && (digit14 < 10) && (digit15 < 10) &&
                                 (dataTransfered[16] == 'R') && (digit17 < 10) && (digit18 < 10) && (digit19 < 10)) {//make sure all data revieced is valied
+                                digitalWrite(megaack, HIGH);
                                 temp =  5 + (0.75 * ((digit1  * 100) + (digit2  * 10)  + (digit3 * 1)));                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
                                 sys =   9 + (2    * ((digit5  * 100) + (digit6  * 10)  + (digit7 * 1)));                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
                                 dia =   6 + (1.5  * ((digit9  * 100) + (digit10 * 10) + (digit11 * 1)));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
                                 pulse = 8 + (3    * ((digit13 * 100) + (digit14 * 10) + (digit15 * 1)));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
                                 resp =  7 + (3    * ((digit17 * 100) + (digit18 * 10) + (digit19 * 1)));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
+                                digitalWrite(megaack, LOW);
+                                digitalWrite(megareq, LOW);
                             }
                         }
 

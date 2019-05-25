@@ -15,6 +15,8 @@ unsigned int respRaw;
 boolean pinHighPS;                      //initializes the boolean values for sending signal states
 boolean pinHighNS;                      //initializes the boolean values for sending signal states
 
+boolean megaAckowledge;
+
 boolean b1HighPS;
 boolean b1HighNS;
 boolean b2HighPS;

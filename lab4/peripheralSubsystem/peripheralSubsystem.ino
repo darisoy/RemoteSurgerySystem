@@ -2,20 +2,18 @@
 #include "dataStructs.h"            //connect variables from dataStructs file
 #include "Measure.h"                // connect the function to the header file
 #include <FreqMeasure.h>
-#define REQ 14                                              //set the keyword TEM_REQ to represent the number 13
-#define RESP 2
+#define MEGAREQ 14                                              //set the keyword TEM_REQ to represent the number 13
+#define MEGAACK 15
 #define BUTTON1 13
 #define BUTTON2 10
-#define APIN 15
 
 void setup() {                      //setup portion of the arduino code
     initialize();                   //call the initialize function
     Serial.begin(9600);             //initialize the serial with 9600 baud rate
-    pinMode(REQ, INPUT);             //setup pin 14 to be an input
-    pinMode(RESP, INPUT);
+    pinMode(MEGAREQ, INPUT);             //setup pin 14 to be an input
+    pinMode(MEGAACK, INPUT);
     pinMode(BUTTON1, INPUT);
     pinMode(BUTTON2, INPUT);
-    pinMode(APIN, INPUT);
     FreqMeasure.begin();            //setup the frequency measurement
 }
 
@@ -46,6 +44,7 @@ void initialize() {                 //initializing the global variables
     pulseSum = 0;
     pulseCount = 0;
 
+    megaAckowledge = true;
 
     respLastState = false;
     respCount = 0;

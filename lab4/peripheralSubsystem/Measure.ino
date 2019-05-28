@@ -116,7 +116,7 @@ void temperatureRawData(int* pCount) {                      //simulates temperat
     (*pCount)++;                                            //incremenet the value of the counter pointer by 1
 }
 
-void getFrequency(){
+void getFrequency() {
   if (FreqMeasure.available()) {                          //execute if the frequency measurement is available
       pulseSum = pulseSum + FreqMeasure.read();                     //add the frequency measurement to the running sum count
       pulseCount = pulseCount + 1;                                  //incremenet the count by one
@@ -128,8 +128,8 @@ void getFrequency(){
   }
 }
 
-void bloodPressureRawData(){
-  if (digitalRead(BUTTON2) == HIGH){
+void bloodPressureRawData() {
+  if (digitalRead(BUTTON2) == HIGH) {
       systolicCount++;
       if (systolicCount >= 10){
         systolicPressRaw = frequency;
@@ -149,37 +149,5 @@ void pulseRateRawData() {                        //simulates diastolic press. da
 }
 
 void respRawData() {
-  respRaw = frequency/3;
-//    respInputState = digitalRead(RESP);
-//        Serial.println("respCount | respInputState | respLastState | respRaw\n");
-//        Serial.print(respCount);
-//        Serial.print("   ");
-//        Serial.print(respInputState);
-//        Serial.print("   ");
-//        Serial.print(respLastState);
-//        Serial.println("   ");
-//        Serial.print(respRaw);
-//        Serial.println("   ");
-//
-//    if (respInputState != respLastState) {
-//        respCount++;
-//        respLastState = respInputState;
-//
-//    }
-//
-//
-//    // runs every half second, count is equal to Hz
-//    if (millis() - respPrevCount >= 500) {
-//        respPrevCount += 500;
-//        respRaw = respCount;
-//        respCount = 0;
-//    }
-// Use the rising edge of an interrupt to increment count.
-// Use first interrupt to mark time.
-// Every time reading is requested,
-// report count/(current time - marked time),
-// then reset all.
-
-//attachInterrupt(digitalPinToInterrupt(RESP), count)
-
+  respRaw = frequency / 3;
 }

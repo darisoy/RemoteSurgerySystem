@@ -13,23 +13,22 @@ void schedulerFunctionAdd(MyTCB* TCBPtr, void* list){                     //Func
     newList->size++;                                                        //increment size by 1
 }
 
-boolean schedulerContains(MyTCB* TCBPtr, void* list){
-  struct LinkedList* newList = (struct LinkedList*) list;
+int schedulerContains(MyTCB* TCBPtr, LinkedList* newList){
   MyTCB* cur = newList->front;
-  boolean test = false;
+
   for (int i = 0; i < newList->size; i++){
     if (cur->TCBname == TCBPtr->TCBname){
-      test = true;
-      Serial.println("Test true");
-    }
-    Serial.print(cur->TCBname);
 
+      Serial.print(cur->TCBname);
+      Serial.print(" is equal to ");
+      Serial.println(TCBPtr->TCBname);
+      return 1;
+
+    }
     cur = cur->next;
   }
-  Serial.print("    return value: ");
-  Serial.print(test);
   Serial.println("");
-  return test;
+  return 0;
 }
 
 void schedulerFunctionDelete(MyTCB* TCBPtr, void* list){                  //the function takes in a TCB pointer and a void pointer
@@ -49,17 +48,19 @@ void schedulerFunctionRun(void* list){                                    //func
     struct LinkedList* newList = (struct LinkedList*) list;                 //the void pointer is dereferenced into a linkedlist pointer
     (*newList->placeholder->timedActionPtr).check();                        //the check method is run on the timedActionPtr of the MyTCB
     MyTCB* cur = newList->placeholder;                                      //the MyTCB pointer cur is now pointing to the placeholder
-    if (runCompute && !schedulerContains(&computeT, list)) {                                                       //if compute needs to be run
+    Serial.print(runCompute);
+    Serial.println(" is Compute");
+    int output = schedulerContains(&computeT, newList);
+    Serial.print(output);
+    Serial.println(" is scheduler");
+    if (runCompute && schedulerContains(&computeT, newList) == 0) {                                                       //if compute needs to be run
         schedulerFunctionAdd(&computeT, &scheduler);                        //add compute to task queue
         Serial.println("added compute");
         runCompute = false;                                                 //change runCompute boolean value to false
-    } else if (schedulerContains(&computeT, list)) {
+    } else if (schedulerContains(&computeT, newList) == 1) {
         schedulerFunctionDelete(&measureT, &scheduler);                     //delete compute to task queue
         Serial.println("deleted compute");
-
     }
-    //Serial.print("   Current task : ");
-    //Serial.println(newList->placeholder->TCBname);
     newList->placeholder = newList->placeholder->next;                      //placeholder is now equal to placeholder.next
 }
 

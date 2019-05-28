@@ -117,16 +117,9 @@ void loop(void) {                                               //code arduino c
 
 //interupt stuff NEW
 void warningISR() {
-    Serial.println("START interreupotyjrgkwnjkgn");
+    digitalWrite(UNOACK, HIGH);
     communicationT.functionPtr(communicationT.dataPtr);
-    //measureT.functionPtr(measureT.dataPtr);
-    computeT.functionPtr(computeT.dataPtr);
-    statusT.functionPtr(statusT.dataPtr);
-    warningT.functionPtr(warningT.dataPtr);
-    //displayT.functionPtr(displayT.dataPtr);
-    //keypadT.functionPtr(keypadT.dataPtr);
-    //remoteComT.functionPtr(remoteComT.dataPtr);
-    Serial.println("END interreupotyjrgkwnjkgn");
+    digitalWrite(UNOACK, LOW);
     return 0;
 }
 
@@ -163,7 +156,7 @@ void tftSetup(void) {
         identifier=0x9328;                                              //sets the driver id to be 0x9328
 
     }
-    //TODO: fix dimentions and coordinates
+
     tft.begin(identifier);                                                          //initializes the LCD screen
     tft.setRotation(0);                                                             //set the screen to be potrait orientation
     tft.fillScreen(BLACK);                                                          //fills the screen with the color black

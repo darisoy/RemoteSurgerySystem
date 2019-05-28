@@ -45,7 +45,7 @@ void displayFunction(void* displayDataStruct){                                  
     dData->pPulseRateCorrected      = &pulseComputedData;                                    //assign corrected pulse's address to corrected pulse pointer from display struct
     dData->pRespCorrected           = &respComputedData;
     dData->pBatteryState            = &batteryState;                                          //assign battery state's address to battery state pointer from display struct
-    
+
     if (annunciate.justPressed()) {                                                           //execute if annunciate button is just pressed
         annunciate.drawButton(true);                                                          // draw inverted button
         tft.fillScreen(BLACK);                                                                //fill the screen in black
@@ -182,7 +182,6 @@ void displayFunction(void* displayDataStruct){                                  
         tft.print(dData->pPulseRateCorrected->last());                                                  //print the last value of the corrected pulse buffer
         tft.println(" BPM ");                                                                 //print "BPM" on display
 
-        //TODO: fix coordinates
         tft.setTextColor(WHITE, BLACK);                                                       //set font color with black background
         tft.setCursor(0, 125);                                                                //set font color to be white with black background
         tft.print("Resp: ");                                                                  //print "Batt:" on display
@@ -209,6 +208,7 @@ void displayFunction(void* displayDataStruct){                                  
         }
         tft.print((*dData->pBatteryState) / 2);                                               //print half of the value of the battery state pointer that is in the display struct on the display
         tft.println("%      ");                                                               //print "%" on display
+
     } else if (annunciation == 1) {                                                                                  //execute if in execute menu page
         tft.setTextSize(3);                                                                   //set font size to be 3
         tft.setTextColor(RED, BLACK);                                                         //set font color with black background
@@ -277,7 +277,6 @@ void displayFunction(void* displayDataStruct){                                  
         tft.setCursor(165, 156);                                                              //move cursor to the specific x, y location on display
         tft.print(" BPM ");                                                                   //print the string on display
 
-        //TODO: fix cursor coordinates
         tft.setTextSize(3);                                                                   //set font size to be 3
         tft.setTextColor(YELLOW, GREY);                                                      //set font color with black background
         tft.setCursor(8, 186);

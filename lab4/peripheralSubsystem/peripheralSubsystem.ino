@@ -6,6 +6,7 @@
 #define MEGAACK 15
 #define BUTTON1 13
 #define BUTTON2 10
+#define TEMP 16
 
 void setup() {                      //setup portion of the arduino code
     initialize();                   //call the initialize function

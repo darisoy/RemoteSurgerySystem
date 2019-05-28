@@ -55,11 +55,26 @@ void measureFunction(void* data) {                                              
             (dataTransfered[12] == 'P') && (digit13 < 10) && (digit14 < 10) && (digit15 < 10) &&
             (dataTransfered[16] == 'R') && (digit17 < 10) && (digit18 < 10) && (digit19 < 10)) {//make sure all data revieced is valied
             digitalWrite(UNOACK, HIGH);
-            mData->pTemperatureRaw->push((digit1 * 100) + (digit2 * 10) + (digit3 * 1));                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
-            mData->pSystolicPressRaw->push((digit5 * 100) + (digit6 * 10) + (digit7 * 1));                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
-            mData->pDiastolicPressRaw->push((digit9 * 100) + (digit10 * 10) + (digit11 * 1));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
-            mData->pPulseRateRaw->push((digit13 * 100) + (digit14 * 10) + (digit15 * 1));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
-            mData->pRespRaw->push((digit17 * 100) + (digit18 * 10) + (digit19 * 1));
+            double temp = (digit1 * 100) + (digit2 * 10) + (digit3 * 1);
+            double sys = (digit5 * 100) + (digit6 * 10) + (digit7 * 1);
+            double dia = (digit9 * 100) + (digit10 * 10) + (digit11 * 1);
+            double pulse = (digit13 * 100) + (digit14 * 10) + (digit15 * 1);
+            double resp = (digit17 * 100) + (digit18 * 10) + (digit19 * 1);
+            if (mData->pTemperatureRaw->last() * 1.15 >= temp || mData->pTemperatureRaw->last() * 0.85 <= temp) {
+                mData->pTemperatureRaw->push(temp);                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
+            }
+            if (mData->pSystolicPressRaw->last() * 1.15 >= sys || mData->pSystolicPressRaw->last() * 0.85 <= sys) {
+                mData->pSystolicPressRaw->push(sys);                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
+            }
+            if (mData->pDiastolicPressRaw->last() * 1.15 >= dia || mData->pDiastolicPressRaw->last() * 0.85 <= dia) {
+                mData->pDiastolicPressRaw->push(dia);                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
+            }
+            if (mData->pPulseRateRaw->last() * 1.15 >= pulse || mData->pPulseRateRaw->last() * 0.85 <= pulse) {
+                mData->pPulseRateRaw->push(pulse);                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
+            }
+            if (mData->pRespRaw->last() * 1.15 >= resp || mData->pRespRaw->last() * 0.85 <= resp) {
+                mData->pRespRaw->push(resp);
+            }
             runCompute = true;                                                                  //set the boolean to run compute true
             digitalWrite(UNOACK, LOW);
         } else {

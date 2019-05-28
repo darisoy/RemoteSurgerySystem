@@ -14,21 +14,19 @@ void schedulerFunctionAdd(MyTCB* TCBPtr, void* list){                     //Func
 }
 
 int schedulerContains(MyTCB* TCBPtr, LinkedList* newList){
-  MyTCB* cur = newList->front;
+    MyTCB* cur = newList->front;
 
-  for (int i = 0; i < newList->size; i++){
-    if (cur->TCBname == TCBPtr->TCBname){
-
-      Serial.print(cur->TCBname);
-      Serial.print(" is equal to ");
-      Serial.println(TCBPtr->TCBname);
-      return 1;
-
+    for (int i = 0; i < newList->size; i++){
+        if (cur->TCBname == TCBPtr->TCBname){
+            Serial.print(cur->TCBname);
+            Serial.print(" is equal to ");
+            Serial.println(TCBPtr->TCBname);
+            return 1;
+        }
+        cur = cur->next;
     }
-    cur = cur->next;
-  }
-  Serial.println("");
-  return 0;
+    Serial.println("");
+    return 0;
 }
 
 void schedulerFunctionDelete(MyTCB* TCBPtr, void* list){                  //the function takes in a TCB pointer and a void pointer

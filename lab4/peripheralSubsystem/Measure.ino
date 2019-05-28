@@ -20,7 +20,7 @@ void measureFunction(struct controlMeasureData measureData,
     } else if (pinHighPS && (digitalRead(MEGAREQ) == HIGH)) {   //if request pin is true and it has been true
         pinHighNS = true;                                   // keep the current state true
     } else {                                                //in any other case
-      pinHighNS = false;                                    //make current case false
+        pinHighNS = false;                                    //make current case false
     }
 
     if (digitalRead(BUTTON1) == HIGH && !b1HighPS){
@@ -39,7 +39,6 @@ void measureFunction(struct controlMeasureData measureData,
 
     if (digitalRead(MEGAACK) == HIGH) {
         megaAckowledge = true;
-        //Serial.println("MEGA ackowledged");
     }
 
     if (!pinHighPS && pinHighNS && megaAckowledge) {                          //if request pin has turned high after being low, then execute
@@ -91,57 +90,59 @@ void measureFunction(struct controlMeasureData measureData,
     b1HighPS = b1HighNS;
     b2HighPS = b2HighNS;
     pulseRateRawData();
+    if (pulseRateRaw)
     respRawData();
 }
 
 void temperatureRawData(int* pCount) {                      //simulates temperature data, takes an int pointer as input
-    if (tempBool == 1){                                     //if temperature boolean is 1
-        if (*pCount % 2 == 0) {                             //if counter is even
-            temperatureRaw += 2;                            //incremenet temp by 2
-        } else {                                            //if counter is odd
-            temperatureRaw--;                               //decrement temp by 1
-        }
-    } else {                                                //if temperature boolean is 0
-        if (*pCount % 2 == 0){                              //if counter is even
-            temperatureRaw -= 2;                            //decrement temp by 2
-        } else {                                            //if counter is odd
-            temperatureRaw++;                               //incremenet temp by 1
-        }
-    }
-    if (temperatureRaw < 15) {                              //if temperature is less than 15
-        tempBool = 1;                                       //set temperature boolean to 1
-    } else if (temperatureRaw > 50) {                       //if temperature is greater than 50
-        tempBool = 0;                                       //set temperature boolean to 0
-    }
-    (*pCount)++;                                            //incremenet the value of the counter pointer by 1
+    // if (tempBool == 1){                                     //if temperature boolean is 1
+    //     if (*pCount % 2 == 0) {                             //if counter is even
+    //         temperatureRaw += 2;                            //incremenet temp by 2
+    //     } else {                                            //if counter is odd
+    //         temperatureRaw--;                               //decrement temp by 1
+    //     }
+    // } else {                                                //if temperature boolean is 0
+    //     if (*pCount % 2 == 0){                              //if counter is even
+    //         temperatureRaw -= 2;                            //decrement temp by 2
+    //     } else {                                            //if counter is odd
+    //         temperatureRaw++;                               //incremenet temp by 1
+    //     }
+    // }
+    // if (temperatureRaw < 15) {                              //if temperature is less than 15
+    //     tempBool = 1;                                       //set temperature boolean to 1
+    // } else if (temperatureRaw > 50) {                       //if temperature is greater than 50
+    //     tempBool = 0;                                       //set temperature boolean to 0
+    // }
+    // (*pCount)++;                                            //incremenet the value of the counter pointer by 1
+    temperatureRaw = frequency / 4;
 }
 
 void getFrequency() {
-  if (FreqMeasure.available()) {                          //execute if the frequency measurement is available
-      pulseSum = pulseSum + FreqMeasure.read();                     //add the frequency measurement to the running sum count
-      pulseCount = pulseCount + 1;                                  //incremenet the count by one
-      if (pulseCount > 30) {                                   //if counter is greater than 30
-          frequency = (int) FreqMeasure.countToFrequency(pulseSum / pulseCount);      //average the frequency from past 30 counts
-          pulseSum = 0;                                        //reset veriable to 0 for next frequency calculaiton
-          pulseCount = 0;                                      //reset veriable to 0 for next frequency calculaiton
-      }
-  }
+    if (FreqMeasure.available()) {                          //execute if the frequency measurement is available
+        pulseSum = pulseSum + FreqMeasure.read();                     //add the frequency measurement to the running sum count
+        pulseCount = pulseCount + 1;                                  //incremenet the count by one
+        if (pulseCount > 30) {                                   //if counter is greater than 30
+            frequency = (int) FreqMeasure.countToFrequency(pulseSum / pulseCount);      //average the frequency from past 30 counts
+            pulseSum = 0;                                        //reset veriable to 0 for next frequency calculaiton
+            pulseCount = 0;                                      //reset veriable to 0 for next frequency calculaiton
+        }
+    }
 }
 
 void bloodPressureRawData() {
-  if (digitalRead(BUTTON2) == HIGH) {
-      systolicCount++;
-      if (systolicCount >= 10){
-        systolicPressRaw = frequency;
-        systolicCount = 0;
-      }
-  } else {
-      diastolicCount++;
-      if (diastolicCount >= 10){
-        diastolicPressRaw = frequency;
-        diastolicCount = 0;
-      }
-  }
+    if (digitalRead(BUTTON2) == HIGH) {
+        systolicCount++;
+        if (systolicCount >= 10){
+            systolicPressRaw = frequency;
+            systolicCount = 0;
+        }
+    } else {
+        diastolicCount++;
+        if (diastolicCount >= 10){
+            diastolicPressRaw = frequency;
+            diastolicCount = 0;
+        }
+    }
 }
 
 void pulseRateRawData() {                        //simulates diastolic press. data, takes an int pointer as input
@@ -149,5 +150,5 @@ void pulseRateRawData() {                        //simulates diastolic press. da
 }
 
 void respRawData() {
-  respRaw = frequency / 3;
+    respRaw = frequency / 3;
 }

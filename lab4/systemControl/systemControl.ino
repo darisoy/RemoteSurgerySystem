@@ -41,14 +41,14 @@ void setup(void) {                                              //setup portion 
     Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
     Serial2.begin(9600);
     //interupt stuff NEW
-    attachInterrupt(digitalPinToInterrupt(WARN), warningISR, RISING);
+    //attachInterrupt(digitalPinToInterrupt(WARN), warningISR, RISING);
     tftSetup();                                                 //call the method that detects the TFT and it's version
     pinMode(UNOREQ, OUTPUT);                                       //setup pin 22 to be an output
     pinMode(UNOACK, OUTPUT);
     pinMode(WIFIREQ, INPUT);
     pinMode(WIFIACK, INPUT);
     //interupt stuff NEW
-    pinMode(WARN, INPUT_PULLUP);
+    //pinMode(WARN, INPUT_PULLUP);
     initialize();                                               //call the method that initalizes the variables
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the address of the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
@@ -116,12 +116,12 @@ void loop(void) {                                               //code arduino c
 }
 
 //interupt stuff NEW
-void warningISR() {
-    digitalWrite(UNOACK, HIGH);
-    communicationT.functionPtr(communicationT.dataPtr);
-    digitalWrite(UNOACK, LOW);
-    return 0;
-}
+// void warningISR() {
+//     digitalWrite(UNOACK, HIGH);
+//     communicationT.functionPtr(communicationT.dataPtr);
+//     digitalWrite(UNOACK, LOW);
+//     return 0;
+// }
 
 void tftSetup(void) {
     tft.reset();                                                        //resets the TFT LCD display

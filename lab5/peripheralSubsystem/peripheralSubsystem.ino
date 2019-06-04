@@ -7,6 +7,7 @@
 #define BUTTON1 13
 #define BUTTON2 10
 #define TEMP 16
+#define EKGPIN 17
 
 void setup() {                      //setup portion of the arduino code
     initialize();                   //call the initialize function
@@ -16,6 +17,8 @@ void setup() {                      //setup portion of the arduino code
     pinMode(BUTTON1, INPUT);
     pinMode(BUTTON2, INPUT);
     pinMode(TEMP, INPUT);
+    pinMode(EKGPIN, INPUT);
+
     FreqMeasure.begin();            //setup the frequency measurement
 }
 

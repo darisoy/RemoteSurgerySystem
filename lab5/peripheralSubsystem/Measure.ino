@@ -14,6 +14,7 @@ void measureFunction(struct controlMeasureData measureData,
     measureData.pDiastolicPressRaw = &diastolicPressRaw;    //assign raw dia's address to dia pointer from stuct
     measureData.pPulseRateRaw      = &pulseRateRaw;         //assign raw pulse's address to pulse pointer from stuct
     measureData.pRespRaw           = &respRaw;
+    measureData.pFrequency         = &frequency;
 
     if (!pinHighPS && (digitalRead(MEGAREQ) == HIGH)) {         //check if the request pin turned high
         pinHighNS = true;                                   //if so, make the current state true
@@ -83,7 +84,20 @@ void measureFunction(struct controlMeasureData measureData,
         } else if (*measureData.pRespRaw < 100) {      //if value for the raw pulse. pointer is less than 100
             Serial.print("0");                              //print "0" on the serial
         }
-        Serial.println(*measureData.pRespRaw);         //print the value for the raw pulse. pointer on the serial
+        Serial.print(*measureData.pRespRaw);         //print the value for the raw pulse. pointer on the serial
+
+        EKGRawData();                      //call the pulseRateRawData function to generate pulse data
+        frequency = EKGProcessing(void* EKGData);
+        Serial.print("F");                                  //print "VP" on the serial
+        if (*measureData.pFrequency < 10) {              //if value for the raw pulse. pointer is less than 10
+            Serial.print("000");                             //print "00" on the serial
+        } else if (*measureData.pFrequency < 100) {      //if value for the raw pulse. pointer is less than 100
+            Serial.print("00");                              //print "0" on the serial
+        } else if (*measureData.pFrequency < 1000) {
+            Serial.print("0");
+        }
+        Serial.println(*measureData.pFrequency);
+
         megaAckowledge = false;
     }
     pinHighPS = pinHighNS;
@@ -133,4 +147,32 @@ void pulseRateRawData() {                        //simulates diastolic press. da
 
 void respRawData() {
     respRaw = frequency / 3;
+}
+
+void EKGRawData(void* data) {
+  struct controlEKGData* EKGData = (struct controlEKGData*) data;
+  EKGData->EKGRealDataPtr = EKGRealData;
+  EKGData->EKGImagDataPtr = EKGImagData;
+  EKGData->samplingFrequencyPtr = samplingFreq;
+  //double sampleFrequency = 2 * frequency;
+  //decide what frequency to limit our EKG data
+  int startTime = millis();
+  for (int i = 0; i < 256; i++){
+    *EKGData->EKGRealDataPtr[i] = analogRead(EKGPIN) / 1023 * 3.3 - 2.5;
+    *EKGData->EKGImagDataPtr[i] = 0;
+  }
+  int time = millis() - startTime;
+  *EKGData->samplingFrequencyPtr = 256 / time;
+}
+
+int EKGProcessing(void* data) {
+  //double sampleFrequency = 2 * frequency;
+  struct controlEKGData* EKGData = (struct controlEKGData*) data;
+  EKGData->EKGRealDataPtr = EKGRealData;
+  EKGData->EKGImagDataPtr = EKGImagData;
+  EKGData->samplingFrequencyPtr = samplingFreq;
+  int m_index = opfft(EKGData->EKGRealDataPtr, EKG->EKGImagDataPtr);
+  int m = 8;
+  int fftOutput = *EKGData->samplingFrequencyPtr * m_index / pow(2, m);
+  return fftOutput;
 }

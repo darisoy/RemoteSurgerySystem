@@ -11,6 +11,11 @@ unsigned int systolicPressRaw;          //initializes syst. press. variable
 unsigned int diastolicPressRaw;         //initializes dias. press. variable
 unsigned int pulseRateRaw;              //initializes pulse rate variable
 unsigned int respRaw;
+int EKGProcessedData[256];
+int EKGRealData[256];
+int EKGImagData[256];
+int samplingFreq;
+int frequency;
 
 boolean pinHighPS;                      //initializes the boolean values for sending signal states
 boolean pinHighNS;                      //initializes the boolean values for sending signal states
@@ -49,5 +54,12 @@ struct controlMeasureData {             //create the MeasureData struct
     unsigned int* pDiastolicPressRaw;   //struct contains dia. press. data
     unsigned int* pPulseRateRaw;        //struct contains pulse rate data
     unsigned int* pRespRaw;
+    int* pFrequency;
 } MeasureData;                          //struct name
+
+struct controlEKGData {
+  int* EKGRealDataPtr[256];
+  int* EKGImagDataPtr[256];
+  int* samplingFrequencyPtr;
+} EKGData;
 #endif

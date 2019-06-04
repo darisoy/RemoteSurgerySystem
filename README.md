@@ -8,20 +8,18 @@ This project uses the Arduino MEGA, Arduino UNO boards and ESP8266 WIFI board. T
 
 # TODO list:
 MEGA:
-- [ ] FIX doubly linked list
-- [x] Display mode on keypad (coordinates need to be fixed)
-- [x] Respiration variables
-- [x] Warning flashes / new warning stuff
-- [ ] FIX remote peripheral communication
-- [ ] FIX Subsystem communication (ack)
+- [ ] EKG buffers
+- [ ] EKG add to measure, compute, comms, remotecomms, warning, display, touch
+- [ ] add commands
+- [ ] remote comms
 
 UNO:
-- [x] Raw respiration rate from function generator
-- [x] measure pressure with buttons
-- [x] FIX communication (ack)
+- [ ] FIX temp reading
+- [ ] EKG measurement
+- [ ] EKG add to comms
 
 REMOTE:
-- [x] implement website
-- [x] implement communication with mega
-- [x] test
-- [ ] FIX communication (ack)
+- [ ] send commands
+- [ ] get data every 5 seconds
+- [ ] patient name, doc name, product name
+- [ ] display EKG

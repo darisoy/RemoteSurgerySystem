@@ -95,7 +95,8 @@ void measureFunction(struct controlMeasureData measureData,
 }
 
 void temperatureRawData(int* pCount) {                      //simulates temperature data, takes an int pointer as input
-    temperatureRaw = frequency / 4;
+    double tempTemp  = (analogRead(TEMP) / 1023) * 200;
+    temperatureRaw = (int) tempTemp;
 }
 
 void getFrequency() {

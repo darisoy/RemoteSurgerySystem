@@ -22,6 +22,7 @@ double pulse;
 double resp;
 char dataTransfered[20];
 int start;
+bool tempBool = true;
 
 void setup() {
     Serial.begin(9600);
@@ -115,7 +116,14 @@ void loop(){
                         client.println("<body style=\"background-color: #636363;\">");
                         client.println("<div style=\"position: relative; font-size:25px; color: white; text-align: left; left: 50%; transform: translate(-50%); width: 80%;\">");
                         client.println("<p style=\"color: #d1a7a7; text-align: left; font-size: 40px;\">Remote Surgery System</p>");
-                        client.print("<p>Temp: ");
+
+                        if (!tempBool) {
+                            client.print("<p>Temp: ");
+                        } else {
+                            client.print("<p style=\"color: #e84343\">Temp: ");
+                        }
+                        tempBool != tempBool;
+
                         client.print(temp);
                         client.println(" C </p>");
                         client.print("<p>Syst: ");

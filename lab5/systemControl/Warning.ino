@@ -12,6 +12,7 @@ void alarmFunction(void* warningStruct){                                        
     wData->pPulseRateCorrected      = &pulseComputedData;                                           //assign corrected pulse's address to corrected pulse pointer from warning struct
     wData->pRespCorrected           = &respComputedData;
     wData->pBatteryState            = &batteryState;                                                 //assign battery state's address to battery state pointer from warning struct
+    wData->pEKGRaw                  = &ekgRawData;
 
     if ((wData->pTempCorrected->last() <= 39.7) && (wData->pTempCorrected->last() >= 34.3)) {                    //if value of the corrected temp pointer is less than 37.8 and greater than 36.1, make the boolean true, otherwise false
         tempGoodBool = 0;                                                                            //change data text color
@@ -89,6 +90,22 @@ void alarmFunction(void* warningStruct){                                        
             rrGoodBool = 2;                                                                          //change data text color
             if (annunciation == 0) {                                                                      //execute if in annunciation page
                 ack_R.drawButton();                                                                  // draw normal button
+            }
+        }
+    }
+
+    if (wData->pEKGRaw->last() > 35.0 && wData->pEKGRaw->last() < 3750.0) {                                                               //if value of the battery state pointer is greater than 40, make the boolean true, otherwise false
+        ekgGoodBool = 0;                                                                         //change data text color
+        if (annunciation == 0) {                                                                          //execute if in annunciation page
+            ack_E.drawButton(true);                                                                  // draw inverse button
+        }
+    } else {                                                                                         //if data out of range
+        ekgGoodBool = 1;                                                                         //change data text color
+        ekgMeasure++;                                                                                //keep track of how long it has been out of range for
+        if (ekgMeasure > 5) {                                                                        //if data out of range for more than 5 times in a row
+            ekgGoodBool = 2;                                                                     //change data text color
+            if (annunciation == 0) {                                                                      //execute if in annunciation page
+                ack_E.drawButton();                                                                  // draw normal button
             }
         }
     }

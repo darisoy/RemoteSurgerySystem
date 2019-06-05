@@ -104,7 +104,6 @@ void measureFunction(struct controlMeasureData measureData,
     b1HighPS = b1HighNS;
     b2HighPS = b2HighNS;
     pulseRateRawData();
-    if (pulseRateRaw)
     respRawData();
 }
 

@@ -85,6 +85,12 @@ void keypadFunction(void* keypadDataStruct){                                    
         an_R.press(false);                                                                 // tell the button it is NOT pressed
     }
 
+    if (an_E.contains(p.x, p.y)) {                                                         //check is touch was within the button location
+        an_E.press(true);                                                                  // tell the button it is pressed
+    } else {                                                                                //if it doesn't contain it
+        an_E.press(false);                                                                 // tell the button it is NOT pressed
+    }
+
 
     if ((annunciation == 0) && tempGoodBool == 2 && ack_T.contains(p.x, p.y)) {                    //check if the ack button should be removed
         ack_T.drawButton(true);                                                             //draw the inverse of the
@@ -114,5 +120,10 @@ void keypadFunction(void* keypadDataStruct){                                    
     if ((annunciation == 0) && rrGoodBool == 2 && ack_R.contains(p.x, p.y)) {                 //check if the ack button should be removed
         ack_R.drawButton(true);                                                             //draw the inverse of the
         rrMeasure = 0;                                                                     //change data text color
+    }
+
+    if ((annunciation == 0) && ekgGoodBool == 2 && ack_E.contains(p.x, p.y)) {                 //check if the ack button should be removed
+        ack_E.drawButton(true);                                                             //draw the inverse of the
+        ekgMeasure = 0;                                                                     //change data text color
     }
 }

@@ -29,7 +29,6 @@
 #define UNOACK 23
 #define WIFIREQ 53
 #define WIFIACK 52
-//interupt stuff NEW
 #define WARN 20
 
 #include "dataStructs.h"                                        // Iimport the variables used in the file
@@ -40,15 +39,11 @@ void setup(void) {                                              //setup portion 
     Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
     Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
     Serial2.begin(9600);
-    //interupt stuff NEW
-    //attachInterrupt(digitalPinToInterrupt(WARN), warningISR, RISING);
     tftSetup();                                                 //call the method that detects the TFT and it's version
     pinMode(UNOREQ, OUTPUT);                                       //setup pin 22 to be an output
     pinMode(UNOACK, OUTPUT);
     pinMode(WIFIREQ, INPUT);
     pinMode(WIFIACK, INPUT);
-    //interupt stuff NEW
-    //pinMode(WARN, INPUT_PULLUP);
     initialize();                                               //call the method that initalizes the variables
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the address of the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
@@ -115,13 +110,6 @@ void loop(void) {                                               //code arduino c
     schedulerFunctionRun(&scheduler);                           //run the schedulerFunctionRun on the placeholder TCB pointer
 }
 
-//interupt stuff NEW
-// void warningISR() {
-//     digitalWrite(UNOACK, HIGH);
-//     communicationT.functionPtr(communicationT.dataPtr);
-//     digitalWrite(UNOACK, LOW);
-//     return 0;
-// }
 
 void tftSetup(void) {
     tft.reset();                                                        //resets the TFT LCD display
@@ -156,7 +144,7 @@ void tftSetup(void) {
         identifier=0x9328;                                              //sets the driver id to be 0x9328
 
     }
-
+    
     tft.begin(identifier);                                                          //initializes the LCD screen
     tft.setRotation(0);                                                             //set the screen to be potrait orientation
     tft.fillScreen(BLACK);                                                          //fills the screen with the color black
@@ -166,16 +154,18 @@ void tftSetup(void) {
     exp1.initButton(&tft, 120, 260, 60, 30, WHITE, BLUE, WHITE, "exp1", 2);         // set location of button: x, y, w, h, outline, fill, text
     exp2.initButton(&tft, 200, 260, 60, 30, WHITE, BLUE, WHITE, "exp2", 2);         // set location of button: x, y, w, h, outline, fill, text
     an_T.initButton(&tft, 120, 50, 150, 30, BLACK, GREY, YELLOW, "temperature", 2);             // set location of button: x, y, w, h, outline, fill, text
-    an_S.initButton(&tft, 120, 87, 150, 30, BLACK, GREY, YELLOW, "sys press", 2);             // set location of button: x, y, w, h, outline, fill, text
-    an_D.initButton(&tft, 120, 124, 150, 30, BLACK, GREY, YELLOW, "dia press", 2);            // set location of button: x, y, w, h, outline, fill, text
-    an_P.initButton(&tft, 120, 161, 150, 30, BLACK, GREY, YELLOW, "pulse", 2);            // set location of button: x, y, w, h, outline, fill, text
-    an_R.initButton(&tft, 120, 198, 150, 30, BLACK, GREY, YELLOW, "respiration", 2);            // set location of button: x, y, w, h, outline, fill, text
+    an_S.initButton(&tft, 120, 85, 150, 30, BLACK, GREY, YELLOW, "sys press", 2);             // set location of button: x, y, w, h, outline, fill, text
+    an_D.initButton(&tft, 120, 120, 150, 30, BLACK, GREY, YELLOW, "dia press", 2);            // set location of button: x, y, w, h, outline, fill, text
+    an_P.initButton(&tft, 120, 155, 150, 30, BLACK, GREY, YELLOW, "pulse", 2);            // set location of button: x, y, w, h, outline, fill, text
+    an_R.initButton(&tft, 120, 190, 150, 30, BLACK, GREY, YELLOW, "respiration", 2);            // set location of button: x, y, w, h, outline, fill, text
+    an_E.initButton(&tft, 120, 225, 150, 30, BLACK, GREY, YELLOW, "ekg", 2);
     ack_T.initButton(&tft, 230, 30, 20, 20, BLACK, RED, BLACK, "", 3);              // set location of button: x, y, w, h, outline, fill, text
     ack_S.initButton(&tft, 230, 56, 20, 20, BLACK, RED, BLACK, "", 3);              // set location of button: x, y, w, h, outline, fill, text
     ack_D.initButton(&tft, 230, 82, 20, 20, BLACK, RED, BLACK, "", 3);              // set location of button: x, y, w, h, outline, fill, text
     ack_P.initButton(&tft, 230, 108, 20, 20, BLACK, RED, BLACK, "", 3);             // set location of button: x, y, w, h, outline, fill, text
     ack_R.initButton(&tft, 230, 134, 20, 20, BLACK, RED, BLACK, "", 3);             // set location of button: x, y, w, h, outline, fill, text
-    ack_B.initButton(&tft, 230, 160, 20, 20, BLACK, RED, BLACK, "", 3);             // set location of button: x, y, w, h, outline, fill, text
+    ack_E.initButton(&tft, 230, 160, 20, 20, BLACK, RED, BLACK, "", 3);
+    ack_B.initButton(&tft, 230, 188, 20, 20, BLACK, RED, BLACK, "", 3);             // set location of button: x, y, w, h, outline, fill, text
 
     menu.drawButton();                                                              //draw normal button
     annunciate.drawButton();                                                        //draw normal button
@@ -190,6 +180,7 @@ void initialize(void) {
     diaRawData.push(80);          //initializes the raw diastolic value to be 0
     pulseRawData.push(0);               //initializes the raw pulse rate value to be 0
     respRawData.push(0);
+    ekgRawData.push(0);
     batteryState = 200;             //initialized the battery value to be 200
 
     tempGoodBool = true;            //initialize warning boolean for temp to be true

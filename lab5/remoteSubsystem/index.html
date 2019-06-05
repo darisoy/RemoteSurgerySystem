@@ -1,25 +1,41 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="refresh" content="5">
     <head>
         <meta charset="utf-8">
         <title>RemoteSurgery</title>
     </head>
     <body style="background-color: #636363;">
         <div style="position: relative; font-size:25px; color: white; text-align: left; left: 50%; transform: translate(-50%); width: 80%;">
-            <p style="color: #d1a7a7; text-align: left; font-size: 40px;">Remote Surgery System</p>
-            <p style="color: #e84343">Temp: 36.1 C </p>
-            <p style="color: #e84343">Syst: 120.1 mmHg </p>
-            <p style="color: #e84343">Dias: 80.1 mmHg </p>
-            <p style="color: #e84343">Puls: 73.1 BPM </p>
-            <p style="color: #e84343">Resp: 20.1 RR </p>
-            <p style="color: #e84343">ECK: 800 Hz </p>
-            <p style="color: #e84343">Batt: 79% </p>
+            <p style="color: #d1a7a7; text-align: left; font-size: 40px;">Remote Surgery System<br>
+            <a style="font-size: 20px;">Doctor: Dr. James Pecol</a><br>
+            <a style="font-size: 20px;">Patient: Aubrey Graham</a></p>
+            <p style="animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;">Temp: 36.1 C <a style="position: absolute; right: 0%">2</a></p>
+            <p style="animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;">Syst: 120.1 mmHg <a style="position: absolute; right: 0%">2</a></p>
+            <p style="animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;">Dias: 80.1 mmHg <a style="position: absolute; right: 0%">2</a></p>
+            <p style="animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;">Puls: 73.1 BPM <a style="position: absolute; right: 0%">2</a></p>
+            <p style="animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;">Resp: 20.1 RR <a style="position: absolute; right: 0%">2</a></p>
+            <p style="animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;">ECK: 800 Hz <a style="position: absolute; right: 0%">2</a></p>
+            <p style="animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;">Batt: 79% <a style="position: absolute; right: 0%">2</a></p>
             <br>
-            <button href="data" type="button" style="position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;">Get Data</button>
+            <button href="init" type="button" style="position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;">Initialize</button>
+            <button href="start" type="button" style="position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;">Start</button>
+            <button href="pause" type="button" style="position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;">Pause</button>
+            <button href="disp" type="button" style="position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;">Display</button>
+            <button href="measure" type="button" style="position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;">Measure</button>
+            <button href="warn" type="button" style="position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;">Warning</button>
+            <p style="position: relative; width: 100%; background-color: #4c4c4c; border-style: solid; border-color: white; border-width: 2px;">
+                Messages:
+                <br><br>
+                <a style="font-family: Courier New, monospace; font-size: 18px;">3 warnings, 4 alarms</a></p>
         </div>
         <style>
-        PUT ANIMATIONS HERE
+            @keyframes flash {
+                0%   {color:white;}
+                50%  {color:#ad3442;}
+                100% {color:white;}
+            }
         </style>
     </body>
 </html>

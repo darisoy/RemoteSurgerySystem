@@ -5,7 +5,7 @@
 #include <stddef.h>
 
 void remoteComFunction(void* remoteData) {
-    Serial.println("in REMOTECOM1");
+    //Serial.println("in REMOTECOM1");
     struct controlRemoteComData *rData = (struct controlRemoteComData*) remoteData;          //deference the display struct
     rData->pTemperatureRaw     = &tempRawData;                                               //assign raw temp's address to raw temp pointer from measure struct
     rData->pSystolicPressRaw   = &sysRawData;                                             //assign raw sys's address to raw sys pointer from measure struct
@@ -68,13 +68,13 @@ void remoteComFunction(void* remoteData) {
         }
         Serial2.print((int)rData->pRespRaw->last());
 
-        Serial.print("F");                                  //print "VP" on the serial
+        Serial2.print("F");                                  //print "VP" on the serial
         if ((int)rData->pEKGRaw->last() < 10) {              //if value for the raw pulse. pointer is less than 10
-            Serial.print("000");                             //print "00" on the serial
+            Serial2.print("000");                             //print "00" on the serial
         } else if ((int)rData->pEKGRaw->last() < 100) {      //if value for the raw pulse. pointer is less than 100
-            Serial.print("00");                              //print "0" on the serial
+            Serial2.print("00");                              //print "0" on the serial
         } else if ((int)rData->pEKGRaw->last() < 1000) {
-            Serial.print("0");
+            Serial2.print("0");
         }
         Serial.print((int)rData->pEKGRaw->last());
 
@@ -85,6 +85,7 @@ void remoteComFunction(void* remoteData) {
             Serial2.print("0");                              //print "0" on the serial
         }
         Serial2.println((int)rData->pBatteryState);
+        Serial.println("PRINTED TO THE WIFI BOARD");
         wifiAckowledge = false;
     }
 

@@ -18,14 +18,14 @@ int schedulerContains(MyTCB* TCBPtr, LinkedList* newList){
 
     for (int i = 0; i < newList->size; i++){
         if (cur->TCBname == TCBPtr->TCBname){
-            Serial.print(cur->TCBname);
-            Serial.print(" is equal to ");
-            Serial.println(TCBPtr->TCBname);
+            //Serial.print(cur->TCBname);
+            //Serial.print(" is equal to ");
+            //Serial.println(TCBPtr->TCBname);
             return 1;
         }
         cur = cur->next;
     }
-    Serial.println("");
+    //Serial.println("");
     return 0;
 }
 
@@ -46,18 +46,18 @@ void schedulerFunctionRun(void* list){                                    //func
     struct LinkedList* newList = (struct LinkedList*) list;                 //the void pointer is dereferenced into a linkedlist pointer
     (*newList->placeholder->timedActionPtr).check();                        //the check method is run on the timedActionPtr of the MyTCB
     MyTCB* cur = newList->placeholder;                                      //the MyTCB pointer cur is now pointing to the placeholder
-    Serial.print(runCompute);
-    Serial.println(" is Compute");
+    //Serial.print(runCompute);
+    //Serial.println(" is Compute");
     int output = schedulerContains(&computeT, newList);
-    Serial.print(output);
-    Serial.println(" is scheduler");
+    //Serial.print(output);
+    //Serial.println(" is scheduler");
     if (runCompute && schedulerContains(&computeT, newList) == 0) {                                                       //if compute needs to be run
         schedulerFunctionAdd(&computeT, &scheduler);                        //add compute to task queue
-        Serial.println("added compute");
+        //Serial.println("added compute");
         runCompute = false;                                                 //change runCompute boolean value to false
     } else if (schedulerContains(&computeT, newList) == 1) {
         schedulerFunctionDelete(&measureT, &scheduler);                     //delete compute to task queue
-        Serial.println("deleted compute");
+        //Serial.println("deleted compute");
     }
     newList->placeholder = newList->placeholder->next;                      //placeholder is now equal to placeholder.next
 }

@@ -38,7 +38,7 @@ TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);              // Touch screen 
 void setup(void) {                                              //setup portion of the arduino code
     Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
     Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
-    Serial2.begin(9600);
+    Serial2.begin(115200);
     tftSetup();                                                 //call the method that detects the TFT and it's version
     pinMode(UNOREQ, OUTPUT);                                       //setup pin 22 to be an output
     pinMode(UNOACK, OUTPUT);
@@ -144,7 +144,7 @@ void tftSetup(void) {
         identifier=0x9328;                                              //sets the driver id to be 0x9328
 
     }
-    
+
     tft.begin(identifier);                                                          //initializes the LCD screen
     tft.setRotation(0);                                                             //set the screen to be potrait orientation
     tft.fillScreen(BLACK);                                                          //fills the screen with the color black

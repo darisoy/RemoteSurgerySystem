@@ -1,5 +1,6 @@
 // Load Wi-Fi library
 #include <ESP8266WiFi.h>
+#include <TimedAction.h>
 
 // Replace with your network credentials
 const char* ssid     = "d1r1karsy";
@@ -22,8 +23,16 @@ double pulse;
 double resp;
 double ekg;
 double bat;
+double oldtemp;
+double oldsys;
+double olddia;
+double oldpulse;
+double oldresp;
+double oldekg;
+double oldbat;
 char dataTransfered[29];
 int start;
+int tempWarningCount;
 int sysWarningCount;
 int diaWarningCount;
 int pulseWarningCount;
@@ -31,8 +40,16 @@ int respWarningCount;
 int batWarningCount;
 int ekgWarningCount;
 
+
+void requestdata() {
+    digitalWrite(megareq, HIGH);
+    //Serial.println("PIN HIGH DELETE THIS LINE");
+}
+
+TimedAction request = TimedAction(5000, requestdata);
+
 void getDataFromMega() {
-    if (Serial.read() == 'V') {                                                                //execture if the letter 'V' is read
+    if (Serial.available() && Serial.read() == 'V') {                                                                //execture if the letter 'V' is read
         Serial.readBytes(dataTransfered, 29);                                                  //store the next 4 characters written on serial one to dataTranfered character array
         unsigned int digit1  = dataTransfered[1]  - '0';                                          //convert the characters to digits
         unsigned int digit2  = dataTransfered[2]  - '0';                                          //convert the characters to digits
@@ -65,6 +82,13 @@ void getDataFromMega() {
             (dataTransfered[20] == 'F') && (digit21 < 10) && (digit22 < 10) && (digit23 < 10) && (digit24 < 10) &&
             (dataTransfered[25] == 'B') && (digit26 < 10) && (digit27 < 10) && (digit28 < 10)) {//make sure all data revieced is valied
             digitalWrite(megaack, HIGH);
+            oldtemp = temp;
+            oldsys = sys;
+            olddia = dia;
+            oldpulse = pulse;
+            oldresp = resp;
+            oldekg = ekg;
+            oldbat = bat;
             temp =  5 + (0.75 * ((digit1  * 100) + (digit2  * 10)  + (digit3 * 1)));                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
             sys =   9 + (2    * ((digit5  * 100) + (digit6  * 10)  + (digit7 * 1)));                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
             dia =   6 + (1.5  * ((digit9  * 100) + (digit10 * 10) + (digit11 * 1)));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
@@ -107,8 +131,13 @@ void setup() {
     batWarningCount = 0;
     ekg = 0;
     ekgWarningCount = 0;
-
-
+    oldtemp = temp;
+    oldsys = sys;
+    olddia = dia;
+    oldpulse = pulse;
+    oldresp = resp;
+    oldekg = ekg;
+    oldbat = bat;
 }
 
 void loop(){
@@ -116,6 +145,7 @@ void loop(){
 
     if (client) {                             // If a new client connects,
         String currentLine = "";                // make a String to hold incoming data from the client
+        Serial.println("TEST");
         while (client.connected()) {            // loop while the client's connected
             if (client.available()) {             // if there's bytes to read from the client,
                 char c = client.read();             // read a byte, then
@@ -131,12 +161,34 @@ void loop(){
                         client.println("Connection: close");
                         client.println();
 
-                        // turns the GPIOs on and off
-                        if (header.indexOf("GET /data") >= 0) {
-                            digitalWrite(megareq, HIGH);
+                        request.check();
+                        getDataFromMega();
+
+                        if (header.indexOf("GET /init") >= 0) {
+                            //Serial.println("I");
                         }
 
-                        getDataFromMega();
+                        if (header.indexOf("GET /start") >= 0) {
+                            //Serial.println("S");
+                        }
+
+                        if (header.indexOf("GET /pause") >= 0) {
+                            //Serial.println("P");
+                        }
+
+                        if (header.indexOf("GET /disp") >= 0) {
+                            //Serial.println("D");
+                        }
+
+                        if (header.indexOf("GET /measure") >= 0) {
+                            //Serial.println("M");
+                        }
+
+                        if (header.indexOf("GET /warn") >= 0) {
+                            //Serial.println("W");
+                        }
+
+
 
                         // Display the HTML web page
                         client.println("<!DOCTYPE html>");
@@ -149,11 +201,13 @@ void loop(){
                         client.println("</head>");
                         client.println("<body style=\"background-color: #636363;\">");
                         client.println("<div style=\"position: relative; font-size:25px; color: white; text-align: left; left: 50%; transform: translate(-50%); width: 80%;\">");
-                        client.println("<p style=\"color: #d1a7a7; text-align: left; font-size: 40px;\">Remote Surgery System<br><a style=\"font-size: 20px;\">Doctor: Dr. James Pecol</a><br><a style=\"font-size: 20px;\">Patient: Aubrey Graham</a></p>");
+                        client.println("<p style=\"color: #d1a7a7; text-align: left; font-size: 40px;\">Remote Surgery System<br><a style=\"font-size: 20px;\">Doctor: Dr. James Peckol</a><br><a style=\"font-size: 20px;\">Patient: Aubrey Graham</a></p>");
 
-                        if ((temp <= 39.7) && (temp >= 34.3)) {
+                        if (!((temp <= 39.7) && (temp >= 34.3))) {
                             client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
-                            tempWarningCount++;
+                            if (temp != oldtemp) {
+                                tempWarningCount++;
+                            }
                         } else {
                             client.print("<p>");
                         }
@@ -163,9 +217,11 @@ void loop(){
                         client.print(tempWarningCount);
                         client.println("</a></p>");
 
-                        if ((sys >= 114) && (sys <= 136.5)) {
+                        if (!((sys >= 114) && (sys <= 136.5))) {
                             client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
-                            sysWarningCount++;
+                            if (sys != oldsys) {
+                                sysWarningCount++;
+                            }
                         } else {
                             client.print("<p>");
                         }
@@ -177,7 +233,9 @@ void loop(){
 
                         if (!((dia >= 66.5) && (dia <= 84))) {
                             client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
-                            diaWarningCount++;
+                            if (dia != olddia) {
+                                diaWarningCount++;
+                            }
                         } else {
                             client.print("<p>");
                         }
@@ -189,7 +247,9 @@ void loop(){
 
                         if (!((pulse >= 57) && (pulse <= 105))) {
                             client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
-                            pulseWarningCount++;
+                            if (pulse != oldpulse) {
+                                pulseWarningCount++;
+                            }
                         } else {
                             client.print("<p>");
                         }
@@ -201,7 +261,9 @@ void loop(){
 
                         if (!((resp >= 11.4) && (resp <= 26.25))) {
                             client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
-                            respWarningCount++;
+                            if (resp != oldresp) {
+                                respWarningCount++;
+                            }
                         } else {
                             client.print("<p>");
                         }
@@ -213,7 +275,9 @@ void loop(){
 
                         if (!((ekg > 35) && (ekg < 3750))) {
                             client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
-                            ekgWarningCount++;
+                            if (ekg != oldekg) {
+                                ekgWarningCount++;
+                            }
                         } else {
                             client.print("<p>");
                         }
@@ -225,7 +289,9 @@ void loop(){
 
                         if (!(bat > 20)) {
                             client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
-                            batWarningCount++;
+                            if (bat != oldbat) {
+                                batWarningCount++;
+                            }
                         } else {
                             client.print("<p>");
                         }
@@ -237,18 +303,19 @@ void loop(){
 
                         client.println("<br>");
 
-                        client.println("<button href=\"init\" type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Initialize</button>");
-                        client.println("<button href=\"start\" type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Start</button>")
-                        client.println("<button href=\"pause\" type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Pause</button>");
-                        client.println("<button href=\"disp\" type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Display</button>");
-                        client.println("<button href=\"measure\" type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Measure</button>");
-                        client.println("<button href=\"warn\" type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Warning</button>");
+                        client.println("<a href = \"/init\"><button type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Initialize</button></a>");
+                        client.println("<a href = \"/start\"><button type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Start</button></a>");
+                        client.println("<a href = \"/pause\"><button type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Pause</button></a>");
+                        client.println("<a href = \"/disp\"><button type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Display</button></a>");
+                        client.println("<a href = \"/measure\"><button type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Measure</button></a>");
+                        client.println("<a href = \"/warn\"><button ype=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Warning</button></a>");
 
                         client.println("<p style=\"position: relative; width: 100%; background-color: #4c4c4c; border-style: solid; border-color: white; border-width: 2px;\">");
                         client.println("Messages:");
                         client.println("<br><br>");
                         client.print("<a style=\"font-family: Courier New, monospace; font-size: 18px;\">");
-                        client.print(message);
+                        client.print("5 warnings");
+                        //message
                         client.println("</a></p>");
                         client.println("</div>");
                         client.println("<style>");

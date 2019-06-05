@@ -3,6 +3,7 @@
 #include <stdio.h>                                          //import necessary header files
 #include <stdbool.h>                                        //import necessary header files
 #include <stddef.h>                                         //import necessary header files
+#include "optfft.h"
 
 void measureFunction(struct controlMeasureData measureData,
                      int* pTempCount,
@@ -14,7 +15,7 @@ void measureFunction(struct controlMeasureData measureData,
     measureData.pDiastolicPressRaw = &diastolicPressRaw;    //assign raw dia's address to dia pointer from stuct
     measureData.pPulseRateRaw      = &pulseRateRaw;         //assign raw pulse's address to pulse pointer from stuct
     measureData.pRespRaw           = &respRaw;
-    measureData.pFrequency         = &frequency;
+    measureData.pFrequency         = &EKGFrequency;
 
     if (!pinHighPS && (digitalRead(MEGAREQ) == HIGH)) {         //check if the request pin turned high
         pinHighNS = true;                                   //if so, make the current state true
@@ -86,8 +87,8 @@ void measureFunction(struct controlMeasureData measureData,
         }
         Serial.print(*measureData.pRespRaw);         //print the value for the raw pulse. pointer on the serial
 
-        EKGRawData();                      //call the pulseRateRawData function to generate pulse data
-        frequency = EKGProcessing(void* EKGData);
+        EKGRawData((void*) &EKGData);                      
+        EKGFrequency = EKGProcessing((void*) &EKGData);
         Serial.print("F");                                  //print "VP" on the serial
         if (*measureData.pFrequency < 10) {              //if value for the raw pulse. pointer is less than 10
             Serial.print("000");                             //print "00" on the serial
@@ -151,9 +152,9 @@ void respRawData() {
 
 void EKGRawData(void* data) {
   struct controlEKGData* EKGData = (struct controlEKGData*) data;
-  EKGData->EKGRealDataPtr = EKGRealData;
-  EKGData->EKGImagDataPtr = EKGImagData;
-  EKGData->samplingFrequencyPtr = samplingFreq;
+  EKGData->EKGRealDataPtr = &EKGRealData;
+  EKGData->EKGImagDataPtr = &EKGImagData;
+  EKGData->samplingFrequencyPtr = &samplingFreq;
   //double sampleFrequency = 2 * frequency;
   //decide what frequency to limit our EKG data
   int startTime = millis();
@@ -170,8 +171,8 @@ int EKGProcessing(void* data) {
   struct controlEKGData* EKGData = (struct controlEKGData*) data;
   EKGData->EKGRealDataPtr = EKGRealData;
   EKGData->EKGImagDataPtr = EKGImagData;
-  EKGData->samplingFrequencyPtr = samplingFreq;
-  int m_index = opfft(EKGData->EKGRealDataPtr, EKG->EKGImagDataPtr);
+  EKGData->samplingFrequencyPtr = &samplingFreq;
+  int m_index = opfft(EKGData->EKGRealDataPtr, EKGData->EKGImagDataPtr);
   int m = 8;
   int fftOutput = *EKGData->samplingFrequencyPtr * m_index / pow(2, m);
   return fftOutput;

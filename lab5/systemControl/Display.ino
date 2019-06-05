@@ -10,6 +10,7 @@ boolean bool_S = false;                                                         
 boolean bool_D = false;                                                                       //initialize boolean values for this file
 boolean bool_P = false;                                                                       //initialize boolean values for this file
 boolean bool_R = false;
+boolean bool_E = false;
 
 boolean tempflash = true;
 boolean pulseflash = true;
@@ -45,6 +46,7 @@ void displayFunction(void* displayDataStruct){                                  
     dData->pPulseRateCorrected      = &pulseComputedData;                                    //assign corrected pulse's address to corrected pulse pointer from display struct
     dData->pRespCorrected           = &respComputedData;
     dData->pBatteryState            = &batteryState;                                          //assign battery state's address to battery state pointer from display struct
+    dData->pEKGRaw                  = &ekgRawData;
 
     if (annunciate.justPressed()) {                                                           //execute if annunciate button is just pressed
         annunciate.drawButton(true);                                                          // draw inverted button
@@ -195,9 +197,21 @@ void displayFunction(void* displayDataStruct){                                  
         tft.print(dData->pRespCorrected->last());                                                  //print the last value of the corrected pulse buffer
         tft.println(" RR ");
 
-        //TODO: fix coordinates
         tft.setTextColor(WHITE, BLACK);                                                       //set font color with black background
         tft.setCursor(0, 150);                                                                //set font color to be white with black background
+        tft.print("EKG : ");                                                                  //print "Batt:" on display
+        if (ekgGoodBool == 0) {                                                           //if battery is within range
+            tft.setTextColor(GREEN, BLACK);                                                   //set font color to be green with black background
+        } else if (ekgGoodBool == 1) {                                                     //if battery is out of range
+            tft.setTextColor(ORANGE, BLACK);                                                  //set font color with black background
+        } else {                                                                              //if temperature is out of range for too long
+            tft.setTextColor(RED, BLACK);                                                     //set font color to be red with black background
+        }
+        tft.print(dData->pEKGRaw->last());                                                  //print the last value of the corrected pulse buffer
+        tft.println(" Hz ");
+
+        tft.setTextColor(WHITE, BLACK);                                                       //set font color with black background
+        tft.setCursor(0, 175);                                                                //set font color to be white with black background
         tft.print("Batt: ");                                                                  //print "Batt:" on display
         if (batteryGoodBool == 0) {                                                           //if battery is within range
             tft.setTextColor(GREEN, BLACK);                                                   //set font color to be green with black background
@@ -209,11 +223,12 @@ void displayFunction(void* displayDataStruct){                                  
         tft.print((*dData->pBatteryState) / 2);                                               //print half of the value of the battery state pointer that is in the display struct on the display
         tft.println("%      ");                                                               //print "%" on display
 
-    } else if (annunciation == 1) {                                                                                  //execute if in execute menu page
+    } else if (annunciation == 1) {                                                                                  //execute if in menu page
         tft.setTextSize(3);                                                                   //set font size to be 3
         tft.setTextColor(RED, BLACK);                                                         //set font color with black background
         tft.setCursor(75, 10);                                                                //move cursor to the specific x, y location on display
         tft.print("MENU");                                                                    //print the string on display
+
         tft.setTextColor(YELLOW, GREY);                                                      //set font color with black background
         tft.setCursor(8, 38);                                                                  //move cursor to the specific x, y location on display
         tft.print("T");
@@ -231,67 +246,83 @@ void displayFunction(void* displayDataStruct){                                  
 
         tft.setTextSize(3);                                                                   //set font size to be 3
         tft.setTextColor(YELLOW, GREY);                                                      //set font color with black background
-        tft.setCursor(8, 75);                                                                 //move cursor to the specific x, y location on display
+        tft.setCursor(8, 73);                                                                 //move cursor to the specific x, y location on display
         tft.print("S");
         if (bool_S) {                                                                         //execute if boolean color select is true
             tft.setTextColor(WHITE, BLACK);                                                   //set font color with black background
         } else {                                                                              //if false
             tft.setTextColor(BLACK, BLACK);                                                   //set font color with black background
         }
-        tft.setCursor(35, 75);                                                                //move cursor to the specific x, y location on display
+        tft.setCursor(35, 73);                                                                //move cursor to the specific x, y location on display
         tft.print(dData->pSystolicPressCorrected->last());                                                    //print the last value of the corrected sys buffer
         tft.print("  ");                                                                      //print the space on display
         tft.setTextSize(2);                                                                   //set font size to be 2
-        tft.setCursor(165, 82);                                                               //move cursor to the specific x, y location on display
+        tft.setCursor(165, 80);                                                               //move cursor to the specific x, y location on display
         tft.print(" mmHg ");                                                                  //print "mm Hg" on display
 
         tft.setTextSize(3);                                                                   //set font size to be 3
         tft.setTextColor(YELLOW, GREY);                                                      //set font color with black background
-        tft.setCursor(8, 112);                                                                //move cursor to the specific x, y location on display
+        tft.setCursor(8, 108);                                                                //move cursor to the specific x, y location on display
         tft.print("D");
         if (bool_D) {                                                                         //execute if boolean color select is true
             tft.setTextColor(WHITE, BLACK);                                                   //set font color with black background
         } else {                                                                              //if false
             tft.setTextColor(BLACK, BLACK);                                                   //set font color with black background
         }
-        tft.setCursor(35, 112);                                                               //move cursor to the specific x, y location on display
+        tft.setCursor(35, 108);                                                               //move cursor to the specific x, y location on display
         tft.print(dData->pDiastolicPressCorrected->last());                                                    //print the last value of the corrected dia buffer
         tft.print("  ");                                                                      //print the space on display
         tft.setTextSize(2);                                                                   //set font size to be 2
-        tft.setCursor(165, 119);                                                              //move cursor to the specific x, y location on display
+        tft.setCursor(165, 115);                                                              //move cursor to the specific x, y location on display
         tft.print(" mmHg ");                                                                  //print "mm Hg" on display
 
         tft.setTextSize(3);                                                                   //set font size to be 3
         tft.setTextColor(YELLOW, GREY);                                                      //set font color with black background
-        tft.setCursor(8, 149);                                                                //move cursor to the specific x, y location on display
+        tft.setCursor(8, 143);                                                                //move cursor to the specific x, y location on display
         tft.print("P");
         if (bool_P) {                                                                         //execute if boolean color select is true
             tft.setTextColor(WHITE, BLACK);                                                   //set font color with black background
         } else {                                                                              //if false
             tft.setTextColor(BLACK, BLACK);                                                   //set font color with black background
         }
-        tft.setCursor(35, 149);                                                               //move cursor to the specific x, y location on display
+        tft.setCursor(35, 143);                                                               //move cursor to the specific x, y location on display
         tft.print(dData->pPulseRateCorrected->last());                                                  //print the value of the corrected pulse pointer that is in the display struct on the display
         tft.print("  ");                                                                      //print the space on display
         tft.setTextSize(2);                                                                   //set font size to be 2
-        tft.setCursor(165, 156);                                                              //move cursor to the specific x, y location on display
+        tft.setCursor(165, 150);                                                              //move cursor to the specific x, y location on display
         tft.print(" BPM ");                                                                   //print the string on display
 
         tft.setTextSize(3);                                                                   //set font size to be 3
         tft.setTextColor(YELLOW, GREY);                                                      //set font color with black background
-        tft.setCursor(8, 186);
+        tft.setCursor(8, 178);
         tft.print("R");                                                              //move cursor to the specific x, y location on display
         if (bool_R) {                                                                         //execute if boolean color select is true
             tft.setTextColor(WHITE, BLACK);                                                   //set font color with black background
         } else {                                                                              //if false
             tft.setTextColor(BLACK, BLACK);                                                   //set font color with black background
         }
-        tft.setCursor(35, 186);                                                               //move cursor to the specific x, y location on display
+        tft.setCursor(35, 178);                                                               //move cursor to the specific x, y location on display
         tft.print(dData->pRespCorrected->last());                                                  //print the value of the corrected pulse pointer that is in the display struct on the display
         tft.print("  ");                                                                      //print the space on display
         tft.setTextSize(2);                                                                   //set font size to be 2
-        tft.setCursor(165, 193);                                                              //move cursor to the specific x, y location on display
+        tft.setCursor(165, 185);                                                              //move cursor to the specific x, y location on display
         tft.print(" RR ");
+
+        tft.setTextSize(3);                                                                   //set font size to be 3
+        tft.setTextColor(YELLOW, GREY);                                                      //set font color with black background
+        tft.setCursor(8, 213);
+        tft.print("E");                                                              //move cursor to the specific x, y location on display
+        if (bool_E) {                                                                         //execute if boolean color select is true
+            tft.setTextColor(WHITE, BLACK);                                                   //set font color with black background
+        } else {                                                                              //if false
+            tft.setTextColor(BLACK, BLACK);                                                   //set font color with black background
+        }
+        tft.setCursor(35, 213);                                                               //move cursor to the specific x, y location on display
+        tft.print(dData->pEKGRaw->last());                                                  //print the value of the corrected pulse pointer that is in the display struct on the display
+        tft.print("  ");                                                                      //print the space on display
+        tft.setTextSize(2);                                                                   //set font size to be 2
+        tft.setCursor(165, 220);                                                              //move cursor to the specific x, y location on display
+        tft.print(" Hz ");
     } else { //display
         tft.setTextSize(3);                                                                   //set font size to be 3
         tft.setTextColor(RED, BLACK);                                                         //set font color with black background
@@ -341,6 +372,15 @@ void displayFunction(void* displayDataStruct){                                  
         }
         if (an_R.justReleased()) {                                                             //if button is just pressed, execute
             bool_R = !bool_R;                                                                 //invert the boolean select
+        }
+
+        if (bool_E) {
+            an_E.drawButton(true);
+        } else {
+            an_E.drawButton();                                                                    // draw normal button
+        }
+        if (an_E.justReleased()) {                                                             //if button is just pressed, execute
+            bool_E = !bool_E;                                                                 //invert the boolean select
         }
     }
 }

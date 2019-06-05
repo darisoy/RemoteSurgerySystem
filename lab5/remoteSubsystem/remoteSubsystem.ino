@@ -20,9 +20,63 @@ double sys;
 double dia;
 double pulse;
 double resp;
-char dataTransfered[20];
+double ekg;
+double bat;
+char dataTransfered[29];
 int start;
-bool tempBool = true;
+int sysWarningCount;
+int diaWarningCount;
+int pulseWarningCount;
+int respWarningCount;
+int batWarningCount;
+int ekgWarningCount;
+
+void getDataFromMega() {
+    if (Serial.read() == 'V') {                                                                //execture if the letter 'V' is read
+        Serial.readBytes(dataTransfered, 29);                                                  //store the next 4 characters written on serial one to dataTranfered character array
+        unsigned int digit1  = dataTransfered[1]  - '0';                                          //convert the characters to digits
+        unsigned int digit2  = dataTransfered[2]  - '0';                                          //convert the characters to digits
+        unsigned int digit3  = dataTransfered[3]  - '0';                                          //convert the characters to digits
+        unsigned int digit5  = dataTransfered[5]  - '0';                                          //convert the characters to digits
+        unsigned int digit6  = dataTransfered[6]  - '0';                                          //convert the characters to digits
+        unsigned int digit7  = dataTransfered[7]  - '0';                                          //convert the characters to digits
+        unsigned int digit9  = dataTransfered[9]  - '0';                                          //convert the characters to digits
+        unsigned int digit10 = dataTransfered[10] - '0';                                        //convert the characters to digits
+        unsigned int digit11 = dataTransfered[11] - '0';                                        //convert the characters to digits
+        unsigned int digit13 = dataTransfered[13] - '0';                                        //convert the characters to digits
+        unsigned int digit14 = dataTransfered[14] - '0';                                        //convert the characters to digits
+        unsigned int digit15 = dataTransfered[15] - '0';                                        //convert the characters to digits
+        unsigned int digit17 = dataTransfered[17] - '0';                                        //convert the characters to digits
+        unsigned int digit18 = dataTransfered[18] - '0';                                        //convert the characters to digits
+        unsigned int digit19 = dataTransfered[19] - '0';                                        //convert the characters to digits
+        unsigned int digit21 = dataTransfered[21] - '0';                                        //convert the characters to digits
+        unsigned int digit22 = dataTransfered[22] - '0';                                        //convert the characters to digits
+        unsigned int digit23 = dataTransfered[23] - '0';                                        //convert the characters to digits
+        unsigned int digit24 = dataTransfered[24] - '0';                                        //convert the characters to digits
+        unsigned int digit26 = dataTransfered[26] - '0';                                        //convert the characters to digits
+        unsigned int digit27 = dataTransfered[27] - '0';                                        //convert the characters to digits
+        unsigned int digit28 = dataTransfered[28] - '0';                                        //convert the characters to digits
+
+        if ((dataTransfered[0] == 'T')  && (digit1 < 10)  && (digit2 < 10)  && (digit3 < 10)  &&
+            (dataTransfered[4] == 'S')  && (digit5 < 10)  && (digit6 < 10)  && (digit7 < 10)  &&
+            (dataTransfered[8] == 'D')  && (digit9 < 10)  && (digit10 < 10) && (digit11 < 10) &&
+            (dataTransfered[12] == 'P') && (digit13 < 10) && (digit14 < 10) && (digit15 < 10) &&
+            (dataTransfered[16] == 'R') && (digit17 < 10) && (digit18 < 10) && (digit19 < 10) &&
+            (dataTransfered[20] == 'F') && (digit21 < 10) && (digit22 < 10) && (digit23 < 10) && (digit24 < 10) &&
+            (dataTransfered[25] == 'B') && (digit26 < 10) && (digit27 < 10) && (digit28 < 10)) {//make sure all data revieced is valied
+            digitalWrite(megaack, HIGH);
+            temp =  5 + (0.75 * ((digit1  * 100) + (digit2  * 10)  + (digit3 * 1)));                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
+            sys =   9 + (2    * ((digit5  * 100) + (digit6  * 10)  + (digit7 * 1)));                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
+            dia =   6 + (1.5  * ((digit9  * 100) + (digit10 * 10) + (digit11 * 1)));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
+            pulse = 8 + (3    * ((digit13 * 100) + (digit14 * 10) + (digit15 * 1)));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
+            resp =  7 + (3    * ((digit17 * 100) + (digit18 * 10) + (digit19 * 1)));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
+            bat =               ((digit26 * 100) + (digit27 * 10) + (digit28 * 1)) / 2;
+            ekg = (digit21 * 1000) + (digit22 * 100) + (digit23 * 10) + (digit24 * 1);
+            digitalWrite(megaack, LOW);
+            digitalWrite(megareq, LOW);
+        }
+    }
+}
 
 void setup() {
     Serial.begin(9600);
@@ -40,10 +94,21 @@ void setup() {
     server.begin();
     start = 0;
     temp = 0;
+    tempWarningCount = 0;
     sys = 0;
+    sysWarningCount = 0;
     dia = 0;
+    diaWarningCount = 0;
     pulse = 0;
+    pulseWarningCount = 0;
     resp = 0;
+    respWarningCount = 0;
+    bat = 0;
+    batWarningCount = 0;
+    ekg = 0;
+    ekgWarningCount = 0;
+
+
 }
 
 void loop(){
@@ -71,76 +136,124 @@ void loop(){
                             digitalWrite(megareq, HIGH);
                         }
 
-                        if (Serial.read() == 'V') {                                                                //execture if the letter 'V' is read
-                            Serial.readBytes(dataTransfered, 20);                                                  //store the next 4 characters written on serial one to dataTranfered character array
-                            unsigned int digit1 = dataTransfered[1] - '0';                                          //convert the characters to digits
-                            unsigned int digit2 = dataTransfered[2] - '0';                                          //convert the characters to digits
-                            unsigned int digit3 = dataTransfered[3] - '0';                                          //convert the characters to digits
-                            unsigned int digit5 = dataTransfered[5] - '0';                                          //convert the characters to digits
-                            unsigned int digit6 = dataTransfered[6] - '0';                                          //convert the characters to digits
-                            unsigned int digit7 = dataTransfered[7] - '0';                                          //convert the characters to digits
-                            unsigned int digit9 = dataTransfered[9] - '0';                                          //convert the characters to digits
-                            unsigned int digit10 = dataTransfered[10] - '0';                                        //convert the characters to digits
-                            unsigned int digit11 = dataTransfered[11] - '0';                                        //convert the characters to digits
-                            unsigned int digit13 = dataTransfered[13] - '0';                                        //convert the characters to digits
-                            unsigned int digit14 = dataTransfered[14] - '0';                                        //convert the characters to digits
-                            unsigned int digit15 = dataTransfered[15] - '0';                                        //convert the characters to digits
-                            unsigned int digit17 = dataTransfered[17] - '0';                                        //convert the characters to digits
-                            unsigned int digit18 = dataTransfered[18] - '0';                                        //convert the characters to digits
-                            unsigned int digit19 = dataTransfered[19] - '0';                                        //convert the characters to digits
-
-                            if ((dataTransfered[0] == 'T')  && (digit1 < 10)  && (digit2 < 10)  && (digit3 < 10)  &&
-                                (dataTransfered[4] == 'S')  && (digit5 < 10)  && (digit6 < 10)  && (digit7 < 10)  &&
-                                (dataTransfered[8] == 'D')  && (digit9 < 10)  && (digit10 < 10) && (digit11 < 10) &&
-                                (dataTransfered[12] == 'P') && (digit13 < 10) && (digit14 < 10) && (digit15 < 10) &&
-                                (dataTransfered[16] == 'R') && (digit17 < 10) && (digit18 < 10) && (digit19 < 10)) {//make sure all data revieced is valied
-                                digitalWrite(megaack, HIGH);
-                                temp =  5 + (0.75 * ((digit1  * 100) + (digit2  * 10)  + (digit3 * 1)));                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
-                                sys =   9 + (2    * ((digit5  * 100) + (digit6  * 10)  + (digit7 * 1)));                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
-                                dia =   6 + (1.5  * ((digit9  * 100) + (digit10 * 10) + (digit11 * 1)));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
-                                pulse = 8 + (3    * ((digit13 * 100) + (digit14 * 10) + (digit15 * 1)));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
-                                resp =  7 + (3    * ((digit17 * 100) + (digit18 * 10) + (digit19 * 1)));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
-                                digitalWrite(megaack, LOW);
-                                digitalWrite(megareq, LOW);
-                            }
-                        }
+                        getDataFromMega();
 
                         // Display the HTML web page
                         client.println("<!DOCTYPE html>");
                         client.println("<html lang=\"en\" dir=\"ltr\">");
                         client.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
+                        client.println("<meta http-equiv=\"refresh\" content=\"10\">"); //refresh every 10 seconds
                         client.println("<head>");
                         client.println("<meta charset=\"utf-8\">");
                         client.println("<title>RemoteSurgery</title>");
                         client.println("</head>");
                         client.println("<body style=\"background-color: #636363;\">");
                         client.println("<div style=\"position: relative; font-size:25px; color: white; text-align: left; left: 50%; transform: translate(-50%); width: 80%;\">");
-                        client.println("<p style=\"color: #d1a7a7; text-align: left; font-size: 40px;\">Remote Surgery System</p>");
+                        client.println("<p style=\"color: #d1a7a7; text-align: left; font-size: 40px;\">Remote Surgery System<br><a style=\"font-size: 20px;\">Doctor: Dr. James Pecol</a><br><a style=\"font-size: 20px;\">Patient: Aubrey Graham</a></p>");
 
-                        if (!tempBool) {
-                            client.print("<p>Temp: ");
+                        if ((temp <= 39.7) && (temp >= 34.3)) {
+                            client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
+                            tempWarningCount++;
                         } else {
-                            client.print("<p style=\"color: #e84343\">Temp: ");
+                            client.print("<p>");
                         }
-                        tempBool != tempBool;
-
+                        client.print("Temp: ");
                         client.print(temp);
-                        client.println(" C </p>");
-                        client.print("<p>Syst: ");
+                        client.print(" C <a style=\"position: absolute; right: 0%\">");
+                        client.print(tempWarningCount);
+                        client.println("</a></p>");
+
+                        if ((sys >= 114) && (sys <= 136.5)) {
+                            client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
+                            sysWarningCount++;
+                        } else {
+                            client.print("<p>");
+                        }
+                        client.print("Syst: ");
                         client.print(sys);
-                        client.println(" mmHg </p>");
-                        client.print("<p>Dias: ");
+                        client.print(" mmHg <a style=\"position: absolute; right: 0%\">");
+                        client.print(sysWarningCount);
+                        client.println("</a></p>");
+
+                        if (!((dia >= 66.5) && (dia <= 84))) {
+                            client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
+                            diaWarningCount++;
+                        } else {
+                            client.print("<p>");
+                        }
+                        client.print("Dias: ");
                         client.print(dia);
-                        client.println(" mmHg </p>");
-                        client.print("<p>Puls: ");
+                        client.print(" mmHg <a style=\"position: absolute; right: 0%\">");
+                        client.print(diaWarningCount);
+                        client.println("</a></p>");
+
+                        if (!((pulse >= 57) && (pulse <= 105))) {
+                            client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
+                            pulseWarningCount++;
+                        } else {
+                            client.print("<p>");
+                        }
+                        client.print("Puls: ");
                         client.print(pulse);
-                        client.println(" BPM </p>");
-                        client.print("<p>Resp: ");
+                        client.print(" BPM <a style=\"position: absolute; right: 0%\">");
+                        client.print(pulseWarningCount);
+                        client.println("</a></p>");
+
+                        if (!((resp >= 11.4) && (resp <= 26.25))) {
+                            client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
+                            respWarningCount++;
+                        } else {
+                            client.print("<p>");
+                        }
+                        client.print("Resp: ");
                         client.print(resp);
-                        client.println(" RR </p>");
+                        client.print(" RR <a style=\"position: absolute; right: 0%\">");
+                        client.print(respWarningCount);
+                        client.println("</a></p>");
+
+                        if (!((ekg > 35) && (ekg < 3750))) {
+                            client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
+                            ekgWarningCount++;
+                        } else {
+                            client.print("<p>");
+                        }
+                        client.print("EKG: ");
+                        client.print(ekg);
+                        client.print(" Hz <a style=\"position: absolute; right: 0%\">");
+                        client.print(ekgWarningCount);
+                        client.println("</a></p>");
+
+                        if (!(bat > 20)) {
+                            client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
+                            batWarningCount++;
+                        } else {
+                            client.print("<p>");
+                        }
+                        client.print("Batt: ");
+                        client.print(bat);
+                        client.print("% <a style=\"position: absolute; right: 0%\">");
+                        client.print(batWarningCount);
+                        client.println("</a></p>");
+
                         client.println("<br>");
-                        client.println("<a href = \"/data\"><button type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Get Data</button></a>");
+
+                        client.println("<button href=\"init\" type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Initialize</button>");
+                        client.println("<button href=\"start\" type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Start</button>")
+                        client.println("<button href=\"pause\" type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Pause</button>");
+                        client.println("<button href=\"disp\" type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Display</button>");
+                        client.println("<button href=\"measure\" type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Measure</button>");
+                        client.println("<button href=\"warn\" type=\"button\" style=\"position: relative; font-size: 25px;  background-color: #4b74b7; color: #d6d6d6;\">Warning</button>");
+
+                        client.println("<p style=\"position: relative; width: 100%; background-color: #4c4c4c; border-style: solid; border-color: white; border-width: 2px;\">");
+                        client.println("Messages:");
+                        client.println("<br><br>");
+                        client.print("<a style=\"font-family: Courier New, monospace; font-size: 18px;\">");
+                        client.print(message);
+                        client.println("</a></p>");
                         client.println("</div>");
+                        client.println("<style>");
+                        client.println("@keyframes flash {0% {color:white;} 50% {color:#ad3442;} 100% {color:white;}}");
+                        client.println("</style>");
                         client.println("</body>");
                         client.println("</html>");
                         // The HTTP response ends with another blank line

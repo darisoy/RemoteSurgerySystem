@@ -16,12 +16,13 @@ int sysGoodBool;                        //initialized the warning boolean for sy
 int diaGoodBool;                        //initialized the warning boolean for diastolic
 int prGoodBool;                         //initialized the warning boolean for pulse
 int rrGoodBool;                         //initialized the warning boolean for pulse
+int ekgGoodBool;
 int batteryGoodBool;                    //initialized the warning boolean for battery
 
 boolean wifiAckowledge;
 
 int timer;                              //initializes timer that will schedule when data will be requested
-char dataTransfered[20];                //initializes 5 long character array that will hold read values on serial
+char dataTransfered[25];                //initializes 5 long character array that will hold read values on serial
 
 int tempMeasure;                        //initialize variables that select data colors
 int sysMeasure;                         //initialize variables that select data colors
@@ -29,6 +30,7 @@ int diaMeasure;                         //initialize variables that select data 
 int prMeasure;                          //initialize variables that select data colors
 int batMeasure;                         //initialize variables that select data colors
 int rrMeasure;                          //initialize variables that select data colors
+int ekgMeasure;
 
 Elegoo_GFX_Button menu;                 //initialize the button
 Elegoo_GFX_Button annunciate;           //initialize the button
@@ -41,6 +43,7 @@ Elegoo_GFX_Button an_S;                 //initialize the button
 Elegoo_GFX_Button an_D;                 //initialize the button
 Elegoo_GFX_Button an_P;                 //initialize the button
 Elegoo_GFX_Button an_R;                 //initialize the button
+Elegoo_GFX_Button an_E;                 //initialize the button
 
 Elegoo_GFX_Button ack_T;                //initialize the button
 Elegoo_GFX_Button ack_S;                //initialize the button
@@ -48,23 +51,25 @@ Elegoo_GFX_Button ack_D;                //initialize the button
 Elegoo_GFX_Button ack_P;                //initialize the button
 Elegoo_GFX_Button ack_B;                //initialize the button
 Elegoo_GFX_Button ack_R;                //initialize the button
+Elegoo_GFX_Button ack_E;                 //initialize the button
 
 boolean pinHighPS;                      //initializes the boolean values for sending signal states
 boolean pinHighNS;                      //initializes the boolean values for sending signal states
 
-CircularBuffer<double,8> tempRawData;                                      //initialize raw buffer
-CircularBuffer<double,8> pulseRawData;                                     //initialize raw buffer
-CircularBuffer<double,8> sysRawData;                                       //initialize raw buffer
-CircularBuffer<double,8> diaRawData;                                       //initialize raw buffer
+CircularBuffer<double, 8> tempRawData;                                      //initialize raw buffer
+CircularBuffer<double, 8> pulseRawData;                                     //initialize raw buffer
+CircularBuffer<double, 8> sysRawData;                                       //initialize raw buffer
+CircularBuffer<double, 8> diaRawData;                                       //initialize raw buffer
 //CircularBuffer[2] bpRawBuffer = {sysRawData, diaRawData};                  //initialize raw combined buffer
-CircularBuffer<double,8> respRawData;                                       //initialize raw buffer
+CircularBuffer<double, 8> respRawData;                                       //initialize raw buffer
+CircularBuffer<double, 8> ekgRawData;
 
-CircularBuffer<double,8> tempComputedData;                                 //initalize computed buffer
-CircularBuffer<double,8> pulseComputedData;                                //initalize computed buffer
-CircularBuffer<double,8> sysComputedData;                                  //initalize computed buffer
-CircularBuffer<double,8> diaComputedData;                                  //initalize computed buffer
+CircularBuffer<double, 8> tempComputedData;                                 //initalize computed buffer
+CircularBuffer<double, 8> pulseComputedData;                                //initalize computed buffer
+CircularBuffer<double, 8> sysComputedData;                                  //initalize computed buffer
+CircularBuffer<double, 8> diaComputedData;                                  //initalize computed buffer
 //CircularBuffer[2] bpComputedBuffer = {sysComputedData, diaComputedData};   //initialize corrected combined buffer
-CircularBuffer<double,8> respComputedData;                                       //initialize raw buffer
+CircularBuffer<double, 8> respComputedData;                                       //initialize raw buffer
 
 boolean runCompute;                                                        //initalize boolean that determines when to run compute
 
@@ -76,6 +81,7 @@ struct controlMeasureData {             //create the MeasureData struct
     CircularBuffer<double, 8>* pPulseRateRaw;        //struct contains raw pulse rate data
     unsigned int* pMeasurementSelection;
     CircularBuffer<double, 8>* pRespRaw;
+    CircularBuffer<double, 8>* pEKGRaw;
 } MeasureData;                          //struct name
 
 struct controlComputeData {             //create the controlComputeData struct
@@ -97,6 +103,7 @@ struct controlDisplayData {             //create the controlDisplayData struct
     CircularBuffer<double, 8>* pDiastolicPressCorrected;   //struct contains corrected dia. press. data
     CircularBuffer<double, 8>* pPulseRateCorrected;        //struct contains corrected pulse rate data
     CircularBuffer<double, 8>* pRespCorrected;
+    CircularBuffer<double, 8>* pEKGRaw;
     unsigned short* pBatteryState;      //struct contians battery data
 } DisplayData;                          //struct name
 
@@ -106,6 +113,7 @@ struct controlWarningAlarmData {        //create the controlWarningAlarmData str
     CircularBuffer<double, 8>* pDiastolicPressCorrected;   //struct contains corrected dia. press. data
     CircularBuffer<double, 8>* pPulseRateCorrected;        //struct contains corrected pulse rate data
     CircularBuffer<double, 8>* pRespCorrected;
+    CircularBuffer<double, 8>* pEKGRaw;
     unsigned short* pBatteryState;      //struct contians battery data
 } AlarmData;                            //struct name
 
@@ -133,6 +141,8 @@ struct controlRemoteComData {
   CircularBuffer<double, 8>* pPulseRateRaw;        //struct contains raw pulse rate data
   unsigned int* pMeasurementSelection;
   CircularBuffer<double, 8>* pRespRaw;
+  CircularBuffer<double, 8>* pEKGRaw;
+  unsigned short* pBatteryState;
 } RemoteComData;
 
 struct MyTCB {                          //create the task control block struct

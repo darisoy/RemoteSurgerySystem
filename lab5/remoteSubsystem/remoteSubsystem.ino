@@ -13,8 +13,8 @@ WiFiServer server(80);
 String header;
 
 // Assign output variables to GPIO pins
-const int megareq = 4;
-const int megaack = 0;
+// const int megareq = 4;
+// const int megaack = 0;
 
 double temp;
 double sys;
@@ -45,13 +45,13 @@ boolean display;
 boolean measure;
 boolean warn;
 
-void requestdata() {
-    digitalWrite(megareq, HIGH);
-    delay(1000);
-    digitalWrite(megareq, LOW);
-}
+// void requestdata() {
+//     digitalWrite(megareq, HIGH);
+//     delay(1000);
+//     digitalWrite(megareq, LOW);
+// }
 
-TimedAction request = TimedAction(3000, requestdata);
+//TimedAction request = TimedAction(3000, requestdata);
 
 void getDataFromMega() {
     if (Serial.read() == 'V') {                                                                //execture if the letter 'V' is read

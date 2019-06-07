@@ -15,21 +15,21 @@ void remoteComFunction(void* remoteData) {
     rData->ekgDataPtr             = &ekgData;
     rData->pBatteryState       = &batteryState;
 
-    if (!pinHighPS && (digitalRead(WIFIREQ) == HIGH)) {         //check if the request pin turned high
-        pinHighNS = true;                                   //if so, make the current state true
-    } else if (pinHighPS && (digitalRead(WIFIREQ) == HIGH)) {   //if request pin is true and it has been true
-        pinHighNS = true;                                   // keep the current state true
-    } else {                                                //in any other case
-        pinHighNS = false;                                    //make current case false
-    }
-
-    if (digitalRead(WIFIACK) == HIGH) {
-        wifiAckowledge = true;
-    }
+    // if (!pinHighPS && (digitalRead(WIFIREQ) == HIGH)) {         //check if the request pin turned high
+    //     pinHighNS = true;                                   //if so, make the current state true
+    // } else if (pinHighPS && (digitalRead(WIFIREQ) == HIGH)) {   //if request pin is true and it has been true
+    //     pinHighNS = true;                                   // keep the current state true
+    // } else {                                                //in any other case
+    //     pinHighNS = false;                                    //make current case false
+    // }
+    //
+    // if (digitalRead(WIFIACK) == HIGH) {
+    //     wifiAckowledge = true;
+    // }
     //Serial.print("WIFI ACK: ");
     //Serial.println(wifiAckowledge);
     //Serial.println(!pinHighPS && pinHighNS);
-    if (!pinHighPS && pinHighNS) {
+    // if (!pinHighPS && pinHighNS) {
         Serial2.print("VT");                                 //print "VT" on the serial
         if ((int)rData->pTemperatureRaw->last() < 10) {            //if value for the raw temp. pointer is less than 10
             Serial2.print("00");                             //print "00" on the serial
@@ -89,7 +89,7 @@ void remoteComFunction(void* remoteData) {
         Serial2.println(*rData->pBatteryState);
         Serial.println("PRINTED TO THE WIFI BOARD");
         wifiAckowledge = false;
-    }
+    // }
 
-    pinHighPS = pinHighNS;
+    // pinHighPS = pinHighNS;
 }

@@ -54,7 +54,7 @@ void schedulerFunctionRun(void* list){                                    //func
     //Serial.println(" is scheduler");
     if (runCompute && schedulerContains(&computeT, newList) == 0) {                                                       //if compute needs to be run
         schedulerFunctionAdd(&computeT, &scheduler);                        //add compute to task queue
-        //Serial.println("added compute");                                              
+        //Serial.println("added compute");
     } else if (schedulerContains(&computeT, newList) == 1) {
         schedulerFunctionDelete(&measureT, &scheduler);                     //delete compute to task queue
         //Serial.println("deleted compute");
@@ -67,6 +67,11 @@ void schedulerFunctionRun(void* list){                                    //func
     } else if (schedulerContains(&EKGProcessT, newList) == 1){
       //Serial.println("EKGProcessT has been deleted");
       schedulerFunctionDelete(&EKGMeasureT, &scheduler);
+    }
+    if (trafficSwitch) {
+      schedulerFunctionAdd(&trafficT, &scheduler);
+    } else {
+      schedulerFunctionDelete(trafficT.prev, &scheduler);
     }
     newList->placeholder = newList->placeholder->next;                      //placeholder is now equal to placeholder.next
 }

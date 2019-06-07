@@ -33,6 +33,7 @@
 #define EKGPIN 82
 #define BLUEPIN 28
 #define REDPIN 27
+#define WHITEPIN 30
 
 #include "dataStructs.h"                                        // Iimport the variables used in the file
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);   // TFT setup
@@ -51,7 +52,7 @@ void setup(void) {                                              //setup portion 
 
     Serial.begin(115200);
     sampling_period_us = round(1000000*(1.0/SAMPLING_FREQUENCY));
-    
+
     initialize();                                               //call the method that initalizes the variables
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the address of the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer

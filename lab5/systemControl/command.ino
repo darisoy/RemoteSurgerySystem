@@ -1,6 +1,7 @@
-void command() {
+void commandFunction() {
+    //Serial.println("Command is called");
     if (Serial2.available()) {
-        Serial.print("Serial 2: ");
+        //Serial.print("Serial 2: ");
         if (Serial2.read() == 68) {
             Serial.println("D");
             displayEnabled = !displayEnabled;

@@ -3,6 +3,7 @@
 #define dataStructs                     //assigns definiton to dataStructs
 #include <stdbool.h>                    //import necessary files
 #include "arduinoFFT.h"
+#include "command.h"
 
 enum _myBool { FALSE = 0, TRUE = 1 };   //define boolean values
 typedef enum _myBool Bool;              //creates the boolean variable
@@ -192,7 +193,8 @@ MyTCB measureT,                         //initialize the measureT object using M
       remoteComT,
       EKGMeasureT,
       EKGProcessT,
-      trafficT;
+      trafficT,
+      commandT;
 
 struct LinkedList{                      //create the LinkedList struct
   MyTCB* front;                         //struct contains TCB pointer to front of the list
@@ -233,6 +235,9 @@ void calltask8(){
 void calltask9(){
   EKGProcessT.functionPtr(EKGProcessT.dataPtr);
 }
+void calltask10(){
+  commandT.functionPtr(commandT.dataPtr);
+}
 
 TimedAction task0 = TimedAction(100, calltask0);            //initalize TimedAction to make sure function runs only every Xms
 TimedAction task1 = TimedAction(5000, calltask1);            //initalize TimedAction to make sure function runs only every Xms
@@ -244,5 +249,6 @@ TimedAction task6 = TimedAction(5000, calltask6);           //initalize TimedAct
 TimedAction task7 = TimedAction(100, calltask7);
 TimedAction task8 = TimedAction(5000, calltask8);
 TimedAction task9 = TimedAction(5000, calltask9);
+TimedAction task10 = TimedAction(5000, calltask10);
 
 #endif

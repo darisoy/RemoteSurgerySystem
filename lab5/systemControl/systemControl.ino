@@ -33,6 +33,7 @@
 #define EKGPIN 82
 #define BLUEPIN 28
 #define REDPIN 27
+#define WHITEPIN 30
 
 #include "dataStructs.h"                                        // Iimport the variables used in the file
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);   // TFT setup

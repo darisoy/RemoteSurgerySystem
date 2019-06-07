@@ -17,7 +17,7 @@ void EKGProcessFunction(void* data) {
   (*EKGData->EKGFrequencyPtr).push(FFT.MajorPeak(vReal, SAMPLES, SAMPLING_FREQUENCY));
   
 
-  Serial.println((*EKGData->EKGFrequencyPtr).last());
+  //Serial.println((*EKGData->EKGFrequencyPtr).last());
   
   runEKGProcess = false;
 }

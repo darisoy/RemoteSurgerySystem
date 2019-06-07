@@ -231,5 +231,9 @@ void initialize(void) {
     pinHighPS = false;              //set the inital state for pin mode
     pinHighNS = false;              //set the inital state for pin mode
 
+<<<<<<< HEAD
+    displayEnabled = true;
+=======
     displayEnabled = false;
+>>>>>>> 537929fd5c39a22d166f377c00b0b6c80bcfbf03
 }

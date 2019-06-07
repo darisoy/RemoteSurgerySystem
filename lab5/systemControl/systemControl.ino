@@ -41,7 +41,7 @@ TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);              // Touch screen 
 void setup(void) {                                              //setup portion of the arduino code
     //Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
     Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
-    Serial2.begin(115200);
+    Serial2.begin(9600);
     tftSetup();                                                 //call the method that detects the TFT and it's version
     pinMode(UNOREQ, OUTPUT);                                       //setup pin 22 to be an output
     pinMode(UNOACK, OUTPUT);
@@ -229,4 +229,6 @@ void initialize(void) {
 
     pinHighPS = false;              //set the inital state for pin mode
     pinHighNS = false;              //set the inital state for pin mode
+
+    displayEnabled = true;
 }

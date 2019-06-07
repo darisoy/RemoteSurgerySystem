@@ -26,8 +26,10 @@ void remoteComFunction(void* remoteData) {
     if (digitalRead(WIFIACK) == HIGH) {
         wifiAckowledge = true;
     }
+    //Serial.print("WIFI ACK: ");
+    //Serial.println(wifiAckowledge);
     Serial.println(!pinHighPS && pinHighNS);
-    if (!pinHighPS && pinHighNS && wifiAckowledge) {
+    if (!pinHighPS && pinHighNS) {
         Serial2.print("VT");                                 //print "VT" on the serial
         if ((int)rData->pTemperatureRaw->last() < 10) {            //if value for the raw temp. pointer is less than 10
             Serial2.print("00");                             //print "00" on the serial
@@ -76,18 +78,18 @@ void remoteComFunction(void* remoteData) {
         } else if ((int)rData->pEKGRaw->last() < 1000) {
             Serial2.print("0");
         }
-        Serial.print((int)rData->pEKGRaw->last());
+        Serial2.print((int)rData->pEKGRaw->last());
 
         Serial2.print("B");                                  //print "VP" on the serial
-        if ((int)rData->pBatteryState < 10) {              //if value for the raw pulse. pointer is less than 10
+        if (*rData->pBatteryState < 10) {              //if value for the raw pulse. pointer is less than 10
             Serial2.print("00");                             //print "00" on the serial
         } else if ((int)rData->pBatteryState < 100) {      //if value for the raw pulse. pointer is less than 100
             Serial2.print("0");                              //print "0" on the serial
         }
-        Serial2.println((int)rData->pBatteryState);
+        Serial2.println(*rData->pBatteryState);
         Serial.println("PRINTED TO THE WIFI BOARD");
         wifiAckowledge = false;
     }
-
+    
     pinHighPS = pinHighNS;
 }

@@ -22,7 +22,7 @@ int batteryGoodBool;                    //initialized the warning boolean for ba
 boolean wifiAckowledge;
 
 int timer;                              //initializes timer that will schedule when data will be requested
-char dataTransfered[25];                //initializes 5 long character array that will hold read values on serial
+char dataTransfered[20];                //initializes 5 long character array that will hold read values on serial
 
 int tempMeasure;                        //initialize variables that select data colors
 int sysMeasure;                         //initialize variables that select data colors
@@ -52,6 +52,8 @@ Elegoo_GFX_Button ack_P;                //initialize the button
 Elegoo_GFX_Button ack_B;                //initialize the button
 Elegoo_GFX_Button ack_R;                //initialize the button
 Elegoo_GFX_Button ack_E;                 //initialize the button
+
+boolean displayEnabled;
 
 boolean pinHighPS;                      //initializes the boolean values for sending signal states
 boolean pinHighNS;                      //initializes the boolean values for sending signal states

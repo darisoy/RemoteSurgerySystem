@@ -51,7 +51,7 @@ void setup(void) {                                              //setup portion 
 
     Serial.begin(115200);
     sampling_period_us = round(1000000*(1.0/SAMPLING_FREQUENCY));
-    
+
     initialize();                                               //call the method that initalizes the variables
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the address of the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
@@ -230,5 +230,5 @@ void initialize(void) {
     pinHighPS = false;              //set the inital state for pin mode
     pinHighNS = false;              //set the inital state for pin mode
 
-    displayEnabled = true;
+    displayEnabled = false;
 }

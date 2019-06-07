@@ -13,7 +13,7 @@ WiFiServer server(80);
 String header;
 
 // Assign output variables to GPIO pins
-const int megareq = 5;
+const int megareq = 4;
 const int megaack = 0;
 
 double temp;
@@ -51,7 +51,7 @@ void requestdata() {
     digitalWrite(megareq, LOW);
 }
 
-TimedAction request = TimedAction(5000, requestdata);
+TimedAction request = TimedAction(3000, requestdata);
 
 void getDataFromMega() {
     if (Serial.read() == 'V') {                                                                //execture if the letter 'V' is read
@@ -367,7 +367,7 @@ void loop(){
                         client.println("Messages:");
                         client.println("<br><br>");
                         client.print("<a style=\"font-family: Courier New, monospace; font-size: 18px;\">");
-                        client.print(dataTranfered);
+                        client.print(dataTransfered);
                         client.println("</a></p>");
                         client.println("</div>");
                         client.println("<style>");

@@ -1,0 +1,1 @@
+void EKGProcessFunction(void* data);

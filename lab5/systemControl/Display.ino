@@ -46,7 +46,7 @@ void displayFunction(void* displayDataStruct){                                  
     dData->pPulseRateCorrected      = &pulseComputedData;                                    //assign corrected pulse's address to corrected pulse pointer from display struct
     dData->pRespCorrected           = &respComputedData;
     dData->pBatteryState            = &batteryState;                                          //assign battery state's address to battery state pointer from display struct
-    dData->pEKGRaw                  = &ekgRawData;
+    dData->ekgDataPtr                  = &ekgData;
 
     if (annunciate.justPressed()) {                                                           //execute if annunciate button is just pressed
         annunciate.drawButton(true);                                                          // draw inverted button
@@ -207,7 +207,7 @@ void displayFunction(void* displayDataStruct){                                  
         } else {                                                                              //if temperature is out of range for too long
             tft.setTextColor(RED, BLACK);                                                     //set font color to be red with black background
         }
-        tft.print(dData->pEKGRaw->last());                                                  //print the last value of the corrected pulse buffer
+        tft.print(dData->ekgDataPtr->last());                                                  //print the last value of the corrected pulse buffer
         tft.println(" Hz ");
 
         tft.setTextColor(WHITE, BLACK);                                                       //set font color with black background
@@ -318,7 +318,7 @@ void displayFunction(void* displayDataStruct){                                  
             tft.setTextColor(BLACK, BLACK);                                                   //set font color with black background
         }
         tft.setCursor(35, 213);                                                               //move cursor to the specific x, y location on display
-        tft.print(dData->pEKGRaw->last());                                                  //print the value of the corrected pulse pointer that is in the display struct on the display
+        tft.print(dData->ekgDataPtr->last());                                                  //print the value of the corrected pulse pointer that is in the display struct on the display
         tft.print("  ");                                                                      //print the space on display
         tft.setTextSize(2);                                                                   //set font size to be 2
         tft.setCursor(165, 220);                                                              //move cursor to the specific x, y location on display

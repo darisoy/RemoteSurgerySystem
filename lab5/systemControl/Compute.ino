@@ -22,4 +22,5 @@ void computeFunction(void* computeDataStruct){                                  
     cData->pDiastolicPressCorrected->push(6 + (1.5  * (cData->pDiastolicPressRaw->last())));                            //convert raw dia and push it to the buffer
     cData->pPulseRateCorrected->push(8 + (3    * (cData->pPulseRateRaw->last())));                        //convert raw pulse and push it to the buffer
     cData->pRespCorrected->push(7 + (3    * (cData->pRespRaw->last())));                        //convert raw pulse and push it to the buffer
+    runCompute = false;                                                         //change runCompute boolean value to false
 }

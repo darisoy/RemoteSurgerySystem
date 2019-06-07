@@ -2,6 +2,7 @@
 #ifndef dataStructs                     //check to see if variables are defined elsewhere
 #define dataStructs                     //assigns definiton to dataStructs
 #include <stdbool.h>                    //import necessary files
+#include "arduinoFFT.h"
 
 enum _myBool { FALSE = 0, TRUE = 1 };   //define boolean values
 typedef enum _myBool Bool;              //creates the boolean variable
@@ -62,7 +63,7 @@ CircularBuffer<double, 8> sysRawData;                                       //in
 CircularBuffer<double, 8> diaRawData;                                       //initialize raw buffer
 //CircularBuffer[2] bpRawBuffer = {sysRawData, diaRawData};                  //initialize raw combined buffer
 CircularBuffer<double, 8> respRawData;                                       //initialize raw buffer
-CircularBuffer<double, 8> ekgRawData;
+CircularBuffer<double, 16> ekgData;
 
 CircularBuffer<double, 8> tempComputedData;                                 //initalize computed buffer
 CircularBuffer<double, 8> pulseComputedData;                                //initalize computed buffer
@@ -81,7 +82,7 @@ struct controlMeasureData {             //create the MeasureData struct
     CircularBuffer<double, 8>* pPulseRateRaw;        //struct contains raw pulse rate data
     unsigned int* pMeasurementSelection;
     CircularBuffer<double, 8>* pRespRaw;
-    CircularBuffer<double, 8>* pEKGRaw;
+    CircularBuffer<double, 16>* ekgDataPtr;
 } MeasureData;                          //struct name
 
 struct controlComputeData {             //create the controlComputeData struct
@@ -103,7 +104,7 @@ struct controlDisplayData {             //create the controlDisplayData struct
     CircularBuffer<double, 8>* pDiastolicPressCorrected;   //struct contains corrected dia. press. data
     CircularBuffer<double, 8>* pPulseRateCorrected;        //struct contains corrected pulse rate data
     CircularBuffer<double, 8>* pRespCorrected;
-    CircularBuffer<double, 8>* pEKGRaw;
+    CircularBuffer<double, 16>* ekgDataPtr;
     unsigned short* pBatteryState;      //struct contians battery data
 } DisplayData;                          //struct name
 
@@ -113,7 +114,7 @@ struct controlWarningAlarmData {        //create the controlWarningAlarmData str
     CircularBuffer<double, 8>* pDiastolicPressCorrected;   //struct contains corrected dia. press. data
     CircularBuffer<double, 8>* pPulseRateCorrected;        //struct contains corrected pulse rate data
     CircularBuffer<double, 8>* pRespCorrected;
-    CircularBuffer<double, 8>* pEKGRaw;
+    CircularBuffer<double, 16>* ekgDataPtr;
     unsigned short* pBatteryState;      //struct contians battery data
 } AlarmData;                            //struct name
 
@@ -141,9 +142,34 @@ struct controlRemoteComData {
   CircularBuffer<double, 8>* pPulseRateRaw;        //struct contains raw pulse rate data
   unsigned int* pMeasurementSelection;
   CircularBuffer<double, 8>* pRespRaw;
-  CircularBuffer<double, 8>* pEKGRaw;
+  CircularBuffer<double, 16>* ekgDataPtr;
   unsigned short* pBatteryState;
 } RemoteComData;
+
+#define SAMPLES 256
+#define SAMPLING_FREQUENCY 8000
+
+arduinoFFT FFT = arduinoFFT();
+unsigned int sampling_period_us;
+unsigned long microseconds;
+
+double vReal[SAMPLES];
+double vImag[SAMPLES];
+
+double EKGFrequency;
+boolean runEKGProcess;
+
+struct controlEKGData {
+  double (*EKGRealDataPtr)[256];
+  double (*EKGImagDataPtr)[256];
+  CircularBuffer<double, 16>* EKGFrequencyPtr;
+} EKGData;
+
+boolean trafficSwitch;
+
+struct controlTraffic {
+  boolean* pSwitch;
+} trafficData;
 
 struct MyTCB {                          //create the task control block struct
   void (*functionPtr)(void*);           //struct contains a pointer to a function
@@ -161,7 +187,10 @@ MyTCB measureT,                         //initialize the measureT object using M
       displayT,                         //initialize the displayT object using MyTCB struct
       keypadT,                          //initialize the keypadT object using MyTCB struct
       communicationT,                   //initialize the communicationT object using MyTCB struct
-      remoteComT;
+      remoteComT,
+      EKGMeasureT,
+      EKGProcessT,
+      trafficT;
 
 struct LinkedList{                      //create the LinkedList struct
   MyTCB* front;                         //struct contains TCB pointer to front of the list
@@ -196,6 +225,12 @@ void calltask6(){                                           //function that simp
 void calltask7(){                                           //function that simply runs a task
   remoteComT.functionPtr(remoteComT.dataPtr);       //run the communication function with communication data of that task
 }
+void calltask8(){
+  EKGMeasureT.functionPtr(EKGMeasureT.dataPtr);
+}
+void calltask9(){
+  EKGProcessT.functionPtr(EKGProcessT.dataPtr);
+}
 
 TimedAction task0 = TimedAction(100, calltask0);            //initalize TimedAction to make sure function runs only every Xms
 TimedAction task1 = TimedAction(5000, calltask1);            //initalize TimedAction to make sure function runs only every Xms
@@ -205,5 +240,7 @@ TimedAction task4 = TimedAction(5000, calltask4);            //initalize TimedAc
 TimedAction task5 = TimedAction(100, calltask5);             //initalize TimedAction to make sure function runs only every Xms
 TimedAction task6 = TimedAction(5000, calltask6);           //initalize TimedAction to make sure function runs only every Xms
 TimedAction task7 = TimedAction(100, calltask7);
+TimedAction task8 = TimedAction(5000, calltask8);
+TimedAction task9 = TimedAction(5000, calltask9);
 
 #endif

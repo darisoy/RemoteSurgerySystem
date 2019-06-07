@@ -12,7 +12,7 @@ void remoteComFunction(void* remoteData) {
     rData->pDiastolicPressRaw  = &diaRawData;                                            //assign raw dia's address to raw dia pointer from measure struct
     rData->pPulseRateRaw       = &pulseRawData;
     rData->pRespRaw            = &respRawData;
-    rData->pEKGRaw             = &ekgRawData;
+    rData->ekgDataPtr             = &ekgData;
     rData->pBatteryState       = &batteryState;
 
     if (!pinHighPS && (digitalRead(WIFIREQ) == HIGH)) {         //check if the request pin turned high
@@ -26,7 +26,7 @@ void remoteComFunction(void* remoteData) {
     if (digitalRead(WIFIACK) == HIGH) {
         wifiAckowledge = true;
     }
-    Serial.println(!pinHighPS && pinHighNS);
+    //Serial.println(!pinHighPS && pinHighNS);
     if (!pinHighPS && pinHighNS && wifiAckowledge) {
         Serial2.print("VT");                                 //print "VT" on the serial
         if ((int)rData->pTemperatureRaw->last() < 10) {            //if value for the raw temp. pointer is less than 10
@@ -69,14 +69,14 @@ void remoteComFunction(void* remoteData) {
         Serial2.print((int)rData->pRespRaw->last());
 
         Serial2.print("F");                                  //print "VP" on the serial
-        if ((int)rData->pEKGRaw->last() < 10) {              //if value for the raw pulse. pointer is less than 10
+        if ((int)rData->ekgDataPtr->last() < 10) {              //if value for the raw pulse. pointer is less than 10
             Serial2.print("000");                             //print "00" on the serial
-        } else if ((int)rData->pEKGRaw->last() < 100) {      //if value for the raw pulse. pointer is less than 100
+        } else if ((int)rData->ekgDataPtr->last() < 100) {      //if value for the raw pulse. pointer is less than 100
             Serial2.print("00");                              //print "0" on the serial
-        } else if ((int)rData->pEKGRaw->last() < 1000) {
+        } else if ((int)rData->ekgDataPtr->last() < 1000) {
             Serial2.print("0");
         }
-        Serial.print((int)rData->pEKGRaw->last());
+        Serial.print((int)rData->ekgDataPtr->last());
 
         Serial2.print("B");                                  //print "VP" on the serial
         if ((int)rData->pBatteryState < 10) {              //if value for the raw pulse. pointer is less than 10

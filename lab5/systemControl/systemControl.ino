@@ -30,13 +30,16 @@
 #define WIFIREQ 53
 #define WIFIACK 52
 #define WARN 20
+#define EKGPIN 82
+#define BLUEPIN 28
+#define REDPIN 27
 
 #include "dataStructs.h"                                        // Iimport the variables used in the file
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);   // TFT setup
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);              // Touch screen setup
 
 void setup(void) {                                              //setup portion of the arduino code
-    Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
+    //Serial.begin(9600);                                         //initialize the serial with 9600 baud rate
     Serial1.begin(9600);                                        //initialize the serial1 with 9600 baud rate
     Serial2.begin(115200);
     tftSetup();                                                 //call the method that detects the TFT and it's version
@@ -44,11 +47,16 @@ void setup(void) {                                              //setup portion 
     pinMode(UNOACK, OUTPUT);
     pinMode(WIFIREQ, INPUT);
     pinMode(WIFIACK, INPUT);
+    pinMode(EKGPIN, INPUT);
+
+    Serial.begin(115200);
+    sampling_period_us = round(1000000*(1.0/SAMPLING_FREQUENCY));
+    
     initialize();                                               //call the method that initalizes the variables
     measureT.functionPtr = measureFunction;                     //set the functionPtr of measureT to be the address of the measureFunction
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
     measureT.timedActionPtr = &task0;                           //set the timedActionPtr of measureT to be the address of task0
-    measureT.next = &statusT;                                   //set the TCB pointer next to the address of statusT
+    measureT.next = &EKGMeasureT;                                   //set the TCB pointer next to the address of statusT
     measureT.prev = &remoteComT;                                   //set the TCB pointer prev to the address of keypadT
     measureT.TCBname = 1;
 
@@ -59,11 +67,25 @@ void setup(void) {                                              //setup portion 
     computeT.prev = NULL;                                       //set the prev TCB pointer to nothing
     computeT.TCBname = 2;
 
+    EKGMeasureT.functionPtr = EKGMeasureFunction;
+    EKGMeasureT.dataPtr = (void*) &EKGData;
+    EKGMeasureT.timedActionPtr = &task8;
+    EKGMeasureT.next = &statusT;
+    EKGMeasureT.prev = &measureT;
+    EKGMeasureT.TCBname = 9;
+
+    EKGProcessT.functionPtr = EKGProcessFunction;
+    EKGProcessT.dataPtr = (void*) &EKGData;
+    EKGProcessT.timedActionPtr = &task9;
+    EKGProcessT.next = NULL;
+    EKGProcessT.prev = NULL;
+    EKGProcessT.TCBname = 10;
+
     statusT.functionPtr = statusFunction;                       //set the functionPtr of statusT to be the statusFunction
     statusT.dataPtr = (void*) &StatusData;                      //set the dataPtr of statusT to be the address of the StatusData pointer
     statusT.timedActionPtr = &task2;                            //set the timedActionPtr of statusT to be the address of task2
     statusT.next = &warningT;                                   //set the next TCB pointer to the address of warningT
-    statusT.prev = &measureT;                                   //set the prev TCB pointer to the address of measureT
+    statusT.prev = &EKGMeasureT;                                   //set the prev TCB pointer to the address of measureT
     statusT.TCBname = 3;
 
     warningT.functionPtr = alarmFunction;                       //set the functionPtr of warningT to be the alarmFunction
@@ -100,10 +122,16 @@ void setup(void) {                                              //setup portion 
     remoteComT.prev = &communicationT;
     remoteComT.TCBname = 8;
 
+    trafficT.functionPtr = trafficFunction;
+    trafficT.dataPtr = (void*) &trafficData;
+    trafficT.next = NULL;
+    trafficT.prev = NULL;
+    trafficT.TCBname = 11;
+
     scheduler.front = &measureT;                                //set the front TCB pointer of scheduler to be the address of measureT
     scheduler.back = &remoteComT;                                  //set the back TCB pointer of scheduler to be the address of keypadT
     scheduler.placeholder = scheduler.front;                    //set the placeholder TCB pointer of scheduler to be equal to the scheduler.front TCB pointer
-    scheduler.size = 7;                                         //set the size of scheduler to be 7
+    scheduler.size = 8;                                         //set the size of scheduler to be 7
 }
 
 void loop(void) {                                               //code arduino constatly loops through
@@ -180,7 +208,7 @@ void initialize(void) {
     diaRawData.push(80);          //initializes the raw diastolic value to be 0
     pulseRawData.push(0);               //initializes the raw pulse rate value to be 0
     respRawData.push(0);
-    ekgRawData.push(0);
+    ekgData.push(0);
     batteryState = 200;             //initialized the battery value to be 200
 
     tempGoodBool = true;            //initialize warning boolean for temp to be true
@@ -195,6 +223,7 @@ void initialize(void) {
     prMeasure = 0;                  //initialize the prMeasure value to be 0
     batMeasure = 0;                 //initialize the batMeasure value to be 0
     runCompute = false;              //initialize the compute boolean to be true
+    runEKGProcess = false;
 
     wifiAckowledge = true;
 

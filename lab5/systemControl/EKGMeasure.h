@@ -1,0 +1,1 @@
+void EKGMeasureFunction(void* data);

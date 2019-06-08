@@ -10,18 +10,15 @@ This project uses the Arduino MEGA, Arduino UNO boards and ESP8266 WIFI board. T
 MEGA:
 - [x] EKG add to comms
 - [x] EKG add to measure, compute, comms, remotecomms, warning, display, touch
-- [ ] add commands
-- [ ] remote comms
-- [ ] test
+- [x] add commands
+- [x] remote comms
+- [x] test
 
 UNO:
 - [x] FIX temp reading
-- [x] EKG buffers
-- [x] EKG measurement
-- [ ] test
 
 REMOTE:
-- [ ] send commands
-- [ ] get data every 5 seconds
-- [ ] patient name, doc name, product name
-- [ ] display EKG
+- [x] send commands
+- [x] get data every 5 seconds
+- [x] patient name, doc name, product name
+- [x] display EKG

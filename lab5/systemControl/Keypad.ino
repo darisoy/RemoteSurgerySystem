@@ -45,12 +45,14 @@ void keypadFunction(void* keypadDataStruct){                                    
 
     if (exp1.contains(p.x, p.y)) {                                                          //check is touch was within the button location
         exp1.press(true);                                                                   // tell the button it is pressed
+        trafficSwitch = 1;
     } else {                                                                                //if it doesn't contain it
         exp1.press(false);                                                                  // tell the button it is NOT pressed
     }
 
     if (exp2.contains(p.x, p.y)) {                                                          //check is touch was within the button location
         exp2.press(true);                                                                   // tell the button it is pressed
+        trafficSwitch = 0;
     } else {                                                                                //if it doesn't contain it
         exp2.press(false);                                                                  // tell the button it is NOT pressed
     }

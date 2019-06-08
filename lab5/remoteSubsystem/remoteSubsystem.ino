@@ -13,8 +13,10 @@ WiFiServer server(80);
 String header;
 
 // Assign output variables to GPIO pins
-// const int megareq = 4;
-// const int megaack = 0;
+const int ipin = 5;
+const int sppin = 4;
+const int dpin = 0;
+const int wpin = 2;
 
 double temp;
 double sys;
@@ -44,6 +46,7 @@ boolean pause;
 boolean display;
 boolean measure;
 boolean warn;
+boolean displayon;
 
 // void requestdata() {
 //     digitalWrite(megareq, HIGH);
@@ -86,7 +89,7 @@ void getDataFromMega() {
             (dataTransfered[16] == 'R') && (digit17 < 10) && (digit18 < 10) && (digit19 < 10) &&
             (dataTransfered[20] == 'F') && (digit21 < 10) && (digit22 < 10) && (digit23 < 10) && (digit24 < 10) &&
             (dataTransfered[25] == 'B') && (digit26 < 10) && (digit27 < 10) && (digit28 < 10)) {//make sure all data revieced is valied
-            digitalWrite(megaack, HIGH);
+            //digitalWrite(megaack, HIGH);
             temp =  5 + (0.75 * ((digit1  * 100) + (digit2  * 10)  + (digit3 * 1)));                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
             sys =   9 + (2    * ((digit5  * 100) + (digit6  * 10)  + (digit7 * 1)));                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
             dia =   6 + (1.5  * ((digit9  * 100) + (digit10 * 10) + (digit11 * 1)));                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
@@ -94,7 +97,7 @@ void getDataFromMega() {
             resp =  7 + (3    * ((digit17 * 100) + (digit18 * 10) + (digit19 * 1)));                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
             bat =               ((digit26 * 100) + (digit27 * 10) + (digit28 * 1)) / 2;
             ekg = (digit21 * 1000) + (digit22 * 100) + (digit23 * 10) + (digit24 * 1);
-            digitalWrite(megaack, LOW);
+            //digitalWrite(megaack, LOW);
         }
         // } else if (dataTranfered[0] == 'W' && dataTranfered[1] == 'A' && dataTranfered[2] == 'R' &&
         //            dataTranfered[3] == 'N' && dataTranfered[4] == 'I' && dataTranfered[5] == 'N' &&
@@ -110,11 +113,15 @@ void getDataFromMega() {
 void setup() {
     Serial.begin(9600);
     // Initialize the output variables as outputs
-    pinMode(megareq, OUTPUT);
-    pinMode(megaack, OUTPUT);
-    pinMode(0, OUTPUT);
+    pinMode(ipin, OUTPUT);
+    pinMode(sppin, OUTPUT);
+    pinMode(dpin, OUTPUT);
+    pinMode(wpin, OUTPUT);
     // Set outputs to LOW
-    digitalWrite(megareq, LOW);
+    digitalWrite(ipin, LOW);
+    digitalWrite(sppin, HIGH);
+    digitalWrite(dpin, HIGH);
+    digitalWrite(wpin, LOW);
     // Connect to Wi-Fi network with SSID and password
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
@@ -149,6 +156,7 @@ void setup() {
     display = true;
     measure = true;
     warn = true;
+    displayon = true;
 }
 
 void loop(){
@@ -158,13 +166,14 @@ void loop(){
         String currentLine = "";                // make a String to hold incoming data from the client
         //Serial.println("TEST");
         while (client.connected()) {            // loop while the client's connected
-            oldtemp = temp;
-            oldsys = sys;
-            olddia = dia;
-            oldpulse = pulse;
-            oldresp = resp;
-            oldekg = ekg;
-            oldbat = bat;
+            getDataFromMega();
+            // oldtemp = temp;
+            // oldsys = sys;
+            // olddia = dia;
+            // oldpulse = pulse;
+            // oldresp = resp;
+            // oldekg = ekg;
+            // oldbat = bat;
             if (client.available()) {             // if there's bytes to read from the client,
                 char c = client.read();             // read a byte, then
                 header += c;
@@ -179,11 +188,11 @@ void loop(){
                         client.println("Connection: close");
                         client.println();
 
-                        request.check();
-                        getDataFromMega();
+                        //request.check();
 
                         if (header.indexOf("GET /init") >= 0 && initial) {
-                            Serial.println("I");
+                            //Serial.println("I");
+                            digitalWrite(ipin, HIGH);
                             initial = false;
                             start = true;
                             pause = true;
@@ -193,7 +202,8 @@ void loop(){
                         }
 
                         if (header.indexOf("GET /start") >= 0 && start) {
-                            Serial.println("S");
+                            //Serial.println("S");
+                            digitalWrite(sppin, HIGH);
                             initial = true;
                             start = false;
                             pause = true;
@@ -203,7 +213,8 @@ void loop(){
                         }
 
                         if (header.indexOf("GET /pause") >= 0 && pause) {
-                            Serial.println("P");
+                            //Serial.println("P");
+                            digitalWrite(sppin, LOW);
                             initial = true;
                             start = true;
                             pause = false;
@@ -213,7 +224,13 @@ void loop(){
                         }
 
                         if (header.indexOf("GET /disp") >= 0 && display) {
-                            Serial.println("D");
+                            //Serial.println("D");
+                            displayon = !displayon;
+                            if (displayon) {
+                                digitalWrite(dpin, HIGH);
+                            } else {
+                                digitalWrite(dpin, LOW);
+                            }
                             initial = true;
                             start = true;
                             pause = true;
@@ -222,32 +239,11 @@ void loop(){
                             warn = true;
                         }
 
-                        if (header.indexOf("GET /measure") >= 0 && measure) {
-                            //Serial.println("M");
-                            requestdata();
-                            initial = true;
-                            start = true;
-                            pause = true;
-                            display = true;
-                            measure = false;
-                            warn = true;
-                        }
-
-                        if (header.indexOf("GET /warn") >= 0 && warn) {
-                            Serial.println("W");
-                            initial = true;
-                            start = true;
-                            pause = true;
-                            display = true;
-                            measure = true;
-                            warn = false;
-                        }
-
                         // Display the HTML web page
                         client.println("<!DOCTYPE html>");
                         client.println("<html lang=\"en\" dir=\"ltr\">");
                         client.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
-                        client.println("<meta http-equiv=\"refresh\" content=\"10\">"); //refresh every 10 seconds
+                        client.println("<meta http-equiv=\"refresh\" content=\"5\">"); //refresh every 10 seconds
                         client.println("<head>");
                         client.println("<meta charset=\"utf-8\">");
                         client.println("<title>RemoteSurgery</title>");
@@ -260,6 +256,7 @@ void loop(){
                             client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
                             if (temp != oldtemp) {
                                 ++tempWarningCount;
+                                oldtemp = temp;
                             }
                         } else {
                             client.print("<p>");
@@ -274,6 +271,7 @@ void loop(){
                             client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
                             if (sys != oldsys) {
                                 ++sysWarningCount;
+                                oldsys = sys;
                             }
                         } else {
                             client.print("<p>");
@@ -288,6 +286,7 @@ void loop(){
                             client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
                             if (dia != olddia) {
                                 ++diaWarningCount;
+                                olddia = dia;
                             }
                         } else {
                             client.print("<p>");
@@ -302,6 +301,7 @@ void loop(){
                             client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
                             if (pulse != oldpulse) {
                                 ++pulseWarningCount;
+                                oldpulse = pulse;
                             }
                         } else {
                             client.print("<p>");
@@ -316,6 +316,7 @@ void loop(){
                             client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
                             if (resp != oldresp) {
                                 ++respWarningCount;
+                                oldresp = resp;
                             }
                         } else {
                             client.print("<p>");
@@ -330,6 +331,7 @@ void loop(){
                             client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
                             if (ekg != oldekg) {
                                 ++ekgWarningCount;
+                                oldekg = ekg;
                             }
                         } else {
                             client.print("<p>");
@@ -344,6 +346,7 @@ void loop(){
                             client.print("<p style=\"animation-name: flash; animation-duration: 1s; animation-iteration-count: infinite;\">");
                             if (bat != oldbat) {
                                 ++batWarningCount;
+                                oldbat = bat;
                             }
                         } else {
                             client.print("<p>");
@@ -367,7 +370,33 @@ void loop(){
                         client.println("Messages:");
                         client.println("<br><br>");
                         client.print("<a style=\"font-family: Courier New, monospace; font-size: 18px;\">");
-                        client.print(dataTransfered);
+
+                        if (header.indexOf("GET /measure") >= 0 && measure) {
+                            //Serial.println("M");
+                            //requestdata();
+                            client.print(dataTransfered);
+                            initial = true;
+                            start = true;
+                            pause = true;
+                            display = true;
+                            measure = false;
+                            warn = true;
+                        }
+
+                        if (header.indexOf("GET /warn") >= 0 && warn) {
+                            //Serial.println("W");
+                            initial = true;
+                            start = true;
+                            pause = true;
+                            display = true;
+                            measure = true;
+                            warn = false;
+                            digitalWrite(wpin, HIGH);
+                            delay(5000);
+                            digitalWrite(wpin, LOW);
+                            client.print(dataTransfered);
+                        }
+
                         client.println("</a></p>");
                         client.println("</div>");
                         client.println("<style>");

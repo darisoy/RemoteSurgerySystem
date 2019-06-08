@@ -83,7 +83,7 @@ void remoteComFunction(void* remoteData) {
         Serial2.print("B");                                  //print "VP" on the serial
         if (*rData->pBatteryState < 10) {              //if value for the raw pulse. pointer is less than 10
             Serial2.print("00");                             //print "00" on the serial
-        } else if ((int)rData->pBatteryState < 100) {      //if value for the raw pulse. pointer is less than 100
+        } else if (*rData->pBatteryState < 100) {      //if value for the raw pulse. pointer is less than 100
             Serial2.print("0");                              //print "0" on the serial
         }
         Serial2.println(*rData->pBatteryState);

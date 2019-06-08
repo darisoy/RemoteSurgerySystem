@@ -22,6 +22,7 @@ int ekgGoodBool;
 int batteryGoodBool;                    //initialized the warning boolean for battery
 
 boolean wifiAckowledge;
+boolean collectData;
 
 int timer;                              //initializes timer that will schedule when data will be requested
 char dataTransfered[20];                //initializes 5 long character array that will hold read values on serial
@@ -168,10 +169,10 @@ struct controlEKGData {
   CircularBuffer<double, 16>* EKGFrequencyPtr;
 } EKGData;
 
-boolean trafficSwitch;
+int trafficSwitch;
 
 struct controlTraffic {
-  boolean* pSwitch;
+  int* pSwitch;
 } trafficData;
 
 struct MyTCB {                          //create the task control block struct
@@ -206,37 +207,40 @@ struct LinkedList{                      //create the LinkedList struct
 LinkedList scheduler;                                       //initalize scheduler
 
 void calltask0() {                                          //function that simply runs a task
-  measureT.functionPtr(measureT.dataPtr);                   //run the measure function with measure data of that task
+    measureT.functionPtr(measureT.dataPtr);                   //run the measure function with measure data of that task
 }
 void calltask1() {                                          //function that simply runs a task
-  computeT.functionPtr(computeT.dataPtr);                   //run the compute function with compute data of that task
+    computeT.functionPtr(computeT.dataPtr);                   //run the compute function with compute data of that task
 }
 void calltask2() {                                          //function that simply runs a task
-  statusT.functionPtr(statusT.dataPtr);                     //run the status function with status data of that task
+    statusT.functionPtr(statusT.dataPtr);                     //run the status function with status data of that task
 }
 void calltask3() {                                          //function that simply runs a task
-  keypadT.functionPtr(keypadT.dataPtr);                     //run the keypad function with keypad data of that task
+    keypadT.functionPtr(keypadT.dataPtr);                     //run the keypad function with keypad data of that task
 }
 void calltask4() {                                          //function that simply runs a task
-  warningT.functionPtr(warningT.dataPtr);                   //run the warning function with warning data of that task
+    warningT.functionPtr(warningT.dataPtr);                   //run the warning function with warning data of that task
 }
 void calltask5() {                                          //function that simply runs a task
-  displayT.functionPtr(displayT.dataPtr);                   //run the display function with display data of that task
+    displayT.functionPtr(displayT.dataPtr);                   //run the display function with display data of that task
 }
 void calltask6(){                                           //function that simply runs a task
-  communicationT.functionPtr(communicationT.dataPtr);       //run the communication function with communication data of that task
+    communicationT.functionPtr(communicationT.dataPtr);       //run the communication function with communication data of that task
 }
 void calltask7(){                                           //function that simply runs a task
-  remoteComT.functionPtr(remoteComT.dataPtr);       //run the communication function with communication data of that task
+    remoteComT.functionPtr(remoteComT.dataPtr);       //run the communication function with communication data of that task
 }
 void calltask8(){
-  EKGMeasureT.functionPtr(EKGMeasureT.dataPtr);
+    EKGMeasureT.functionPtr(EKGMeasureT.dataPtr);
 }
 void calltask9(){
-  EKGProcessT.functionPtr(EKGProcessT.dataPtr);
+    EKGProcessT.functionPtr(EKGProcessT.dataPtr);
 }
 void calltask10(){
-  commandT.functionPtr(commandT.dataPtr);
+    commandT.functionPtr(commandT.dataPtr);
+}
+void calltask11() {
+    trafficT.functionPtr(trafficT.dataPtr);
 }
 
 TimedAction task0 = TimedAction(100, calltask0);            //initalize TimedAction to make sure function runs only every Xms
@@ -250,5 +254,6 @@ TimedAction task7 = TimedAction(5000, calltask7);
 TimedAction task8 = TimedAction(5000, calltask8);
 TimedAction task9 = TimedAction(5000, calltask9);
 TimedAction task10 = TimedAction(5000, calltask10);
+TimedAction task11 = TimedAction(100, calltask11);
 
 #endif

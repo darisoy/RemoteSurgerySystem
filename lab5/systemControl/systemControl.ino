@@ -27,13 +27,17 @@
 
 #define UNOREQ 22                                                  // Initializes RED 22
 #define UNOACK 23
-#define WIFIREQ 53
-#define WIFIACK 52
-#define WARN 20
+// #define WIFIREQ 53
+// #define WIFIACK 52
+// #define WARN 20
 #define EKGPIN 82
-#define BLUEPIN 28
-#define REDPIN 27
-#define WHITEPIN 30
+#define BLUEPIN 53
+#define REDPIN 51
+#define WHITEPIN 50
+#define IPIN 25
+#define SPPIN 27
+#define DPIN 29
+#define WPIN 31
 
 #include "dataStructs.h"                                        // Iimport the variables used in the file
 Elegoo_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);   // TFT setup
@@ -46,9 +50,13 @@ void setup(void) {                                              //setup portion 
     tftSetup();                                                 //call the method that detects the TFT and it's version
     pinMode(UNOREQ, OUTPUT);                                       //setup pin 22 to be an output
     pinMode(UNOACK, OUTPUT);
-    pinMode(WIFIREQ, INPUT);
-    pinMode(WIFIACK, INPUT);
+    // pinMode(WIFIREQ, INPUT);
+    // pinMode(WIFIACK, INPUT);
     pinMode(EKGPIN, INPUT);
+    pinMode(IPIN, INPUT);
+    pinMode(SPPIN, INPUT);
+    pinMode(DPIN, INPUT);
+    pinMode(WPIN, INPUT);
 
     Serial.begin(115200);
     sampling_period_us = round(1000000*(1.0/SAMPLING_FREQUENCY));
@@ -58,7 +66,7 @@ void setup(void) {                                              //setup portion 
     measureT.dataPtr = (void*) &MeasureData;                    //set the dataPtr of measureT to be the address of the MeasureData pointer
     measureT.timedActionPtr = &task0;                           //set the timedActionPtr of measureT to be the address of task0
     measureT.next = &EKGMeasureT;                                   //set the TCB pointer next to the address of statusT
-    measureT.prev = &remoteComT;                                   //set the TCB pointer prev to the address of keypadT
+    measureT.prev = &trafficT;                                   //set the TCB pointer prev to the address of keypadT
     measureT.TCBname = 1;
 
     computeT.functionPtr = computeFunction;                     //set the functionPtr of computeT to be the computeFunction
@@ -119,20 +127,27 @@ void setup(void) {                                              //setup portion 
     remoteComT.functionPtr = remoteComFunction;
     remoteComT.dataPtr = (void*) &RemoteComData;
     remoteComT.timedActionPtr = &task7;
-    remoteComT.next = &measureT;
+    remoteComT.next = &trafficT;
     remoteComT.prev = &communicationT;
     remoteComT.TCBname = 8;
 
     trafficT.functionPtr = trafficFunction;
     trafficT.dataPtr = (void*) &trafficData;
-    trafficT.next = NULL;
-    trafficT.prev = NULL;
+    trafficT.timedActionPtr = &task11;
+    trafficT.next = &commandT;
+    trafficT.prev = &remoteComT;
     trafficT.TCBname = 11;
 
+    commandT.functionPtr = command;
+    commandT.timedActionPtr = &task10;
+    commandT.next = &measureT;
+    commandT.prev = &trafficT;
+    commandT.TCBname = 12;
+
     scheduler.front = &measureT;                                //set the front TCB pointer of scheduler to be the address of measureT
-    scheduler.back = &remoteComT;                                  //set the back TCB pointer of scheduler to be the address of keypadT
+    scheduler.back = &commandT;                                  //set the back TCB pointer of scheduler to be the address of keypadT
     scheduler.placeholder = scheduler.front;                    //set the placeholder TCB pointer of scheduler to be equal to the scheduler.front TCB pointer
-    scheduler.size = 8;                                         //set the size of scheduler to be 7
+    scheduler.size = 10;                                         //set the size of scheduler to be 7
 }
 
 void loop(void) {                                               //code arduino constatly loops through
@@ -231,9 +246,6 @@ void initialize(void) {
     pinHighPS = false;              //set the inital state for pin mode
     pinHighNS = false;              //set the inital state for pin mode
 
-<<<<<<< HEAD
-    displayEnabled = true;
-=======
     displayEnabled = false;
->>>>>>> 537929fd5c39a22d166f377c00b0b6c80bcfbf03
+    collectData = false;
 }

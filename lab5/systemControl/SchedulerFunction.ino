@@ -17,7 +17,7 @@ int schedulerContains(MyTCB* TCBPtr, LinkedList* newList){
     MyTCB* cur = newList->front;
 
     for (int i = 0; i < newList->size; i++){
-//      Serial.print(cur->TCBname);
+        //Serial.print(cur->TCBname);
         if (cur->TCBname == TCBPtr->TCBname){
             //Serial.print(cur->TCBname);
             //Serial.print(" is equal to ");
@@ -26,7 +26,7 @@ int schedulerContains(MyTCB* TCBPtr, LinkedList* newList){
         }
         cur = cur->next;
     }
-//    Serial.println("");
+    //Serial.println("");
     return 0;
 }
 
@@ -68,11 +68,11 @@ void schedulerFunctionRun(void* list){                                    //func
       //Serial.println("EKGProcessT has been deleted");
       schedulerFunctionDelete(&EKGMeasureT, &scheduler);
     }
-    if (trafficSwitch) {
-      schedulerFunctionAdd(&trafficT, &scheduler);
-    } else {
-      schedulerFunctionDelete(trafficT.prev, &scheduler);
-    }
+    // if (trafficSwitch) {
+    //   schedulerFunctionAdd(&trafficT, &scheduler);
+    // } else {
+    //   schedulerFunctionDelete(trafficT.prev, &scheduler);
+    // }
     newList->placeholder = newList->placeholder->next;                      //placeholder is now equal to placeholder.next
 }
 

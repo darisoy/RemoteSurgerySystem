@@ -12,7 +12,7 @@ void measureFunction(void* data) {                                              
     mData->pPulseRateRaw       = &pulseRawData;
     mData->pRespRaw            = &respRawData;                                               //assign raw pulse's address to raw pulse pointer from measure struct
     mData->ekgDataPtr             = &ekgData;
-    if (Serial1.read() == 'V' && collectData) {                                                                //execture if the letter 'V' is read
+    if (Serial1.read() == 'V') {                                                                //execture if the letter 'V' is read
         Serial1.readBytes(dataTransfered, 20);                                                  //store the next 4 characters written on serial one to dataTranfered character array
         Serial.print(dataTransfered[0]);                                                        //print the charater array on serial for troubleshooting purposes
         Serial.print(dataTransfered[1]);                                                        //print the charater array on serial for troubleshooting purposes
@@ -51,45 +51,40 @@ void measureFunction(void* data) {                                              
         unsigned int digit18 = dataTransfered[18] - '0';                                        //convert the characters to digits
         unsigned int digit19 = dataTransfered[19] - '0';                                        //convert the characters to digits
 
+        digitalWrite(UNOACK, HIGH);
         if ((dataTransfered[0] == 'T')  && (digit1 < 10)  && (digit2 < 10)  && (digit3 < 10)  &&
             (dataTransfered[4] == 'S')  && (digit5 < 10)  && (digit6 < 10)  && (digit7 < 10)  &&
             (dataTransfered[8] == 'D')  && (digit9 < 10)  && (digit10 < 10) && (digit11 < 10) &&
             (dataTransfered[12] == 'P') && (digit13 < 10) && (digit14 < 10) && (digit15 < 10) &&
-            (dataTransfered[16] == 'R') && (digit17 < 10) && (digit18 < 10) && (digit19 < 10)) {//make sure all data revieced is valied
-
-            digitalWrite(UNOACK, HIGH);
+            (dataTransfered[16] == 'R') && (digit17 < 10) && (digit18 < 10) && (digit19 < 10) &&
+            collectData) {//make sure all data revieced is valied
 
             double temp = (digit1 * 100) + (digit2 * 10) + (digit3 * 1);
             double sys = (digit5 * 100) + (digit6 * 10) + (digit7 * 1);
             double dia = (digit9 * 100) + (digit10 * 10) + (digit11 * 1);
             double pulse = (digit13 * 100) + (digit14 * 10) + (digit15 * 1);
             double resp = (digit17 * 100) + (digit18 * 10) + (digit19 * 1);
-            //double ekg = (digit21 * 1000) + (digit22 * 100) + (digit23 * 10) + (digit24 * 1);
-
-            //if (mData->pTemperatureRaw->last() * 1.15 < temp || mData->pTemperatureRaw->last() * 0.85 > temp) {
+            if (mData->pTemperatureRaw->last() * 1.15 < temp || mData->pTemperatureRaw->last() * 0.85 > temp) {
                 mData->pTemperatureRaw->push(temp);                    //assign the value of the temperature raw pointer from the measure struct to corrected buffer
-            //}
-            //if (mData->pSystolicPressRaw->last() * 1.15 < sys || mData->pSystolicPressRaw->last() * 0.85 > sys) {
+            }
+            if (mData->pSystolicPressRaw->last() * 1.15 < sys || mData->pSystolicPressRaw->last() * 0.85 > sys) {
                 mData->pSystolicPressRaw->push(sys);                     //assign the value of the systolic raw pointer from the measure struct to corrected buffer
-            //}
-            //if (mData->pDiastolicPressRaw->last() * 1.15 < dia || mData->pDiastolicPressRaw->last() * 0.85 > dia) {
+            }
+            if (mData->pDiastolicPressRaw->last() * 1.15 < dia || mData->pDiastolicPressRaw->last() * 0.85 > dia) {
                 mData->pDiastolicPressRaw->push(dia);                   //assign the value of the diastolic raw pointer from the measure struct to corrected buffer
-            //}
-            //if (mData->pPulseRateRaw->last() * 1.15 < pulse || mData->pPulseRateRaw->last() * 0.85 > pulse) {
+            }
+            if (mData->pPulseRateRaw->last() * 1.15 < pulse || mData->pPulseRateRaw->last() * 0.85 > pulse) {
                 mData->pPulseRateRaw->push(pulse);                //assign the value of the pulse raw pointer from the measure struct to corrected buffer
-            //}
-            //if (mData->pRespRaw->last() * 1.15 < resp || mData->pRespRaw->last() * 0.85 > resp) {
+            }
+            if (mData->pRespRaw->last() * 1.15 < resp || mData->pRespRaw->last() * 0.85 > resp) {
                 mData->pRespRaw->push(resp);
-            //}
-            //if (mData->pEKGRaw->last() * 1.15 < ekg || mData->pEKGRaw->last() * 0.85 > ekg) {
-                //mData->pEKGRaw->push(ekg);
-            //}
-
+            }
             runCompute = true;                                                                  //set the boolean to run compute true
-            digitalWrite(UNOACK, LOW);
+
         } else {
             runCompute = false;                                                                 //set the boolean to run compute false
         }
+        digitalWrite(UNOACK, LOW);
     } else {
         runCompute = false;                                                                     //set the boolean to run compute false
     }

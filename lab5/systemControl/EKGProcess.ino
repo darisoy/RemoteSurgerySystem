@@ -11,13 +11,15 @@ void EKGProcessFunction(void* data) {
   EKGData->EKGImagDataPtr = &vImag;
   EKGData->EKGFrequencyPtr = &ekgData;
 
-  FFT.Windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
-  FFT.Compute(vReal, vImag, SAMPLES, FFT_FORWARD);
-  FFT.ComplexToMagnitude(vReal, vImag, SAMPLES);
-  (*EKGData->EKGFrequencyPtr).push(FFT.MajorPeak(vReal, SAMPLES, SAMPLING_FREQUENCY));
-  
+    if (collectData) {
+        FFT.Windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
+        FFT.Compute(vReal, vImag, SAMPLES, FFT_FORWARD);
+        FFT.ComplexToMagnitude(vReal, vImag, SAMPLES);
+        (*EKGData->EKGFrequencyPtr).push(FFT.MajorPeak(vReal, SAMPLES, SAMPLING_FREQUENCY));
+    }
+
 
   //Serial.println((*EKGData->EKGFrequencyPtr).last());
-  
+
   runEKGProcess = false;
 }
